@@ -11,3 +11,243 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum role_user {
+  admin
+  user
+}
+
+enum jenis_kriteria {
+  benefit
+  cost
+}
+
+enum status_kelayakan {
+  layak
+  tidak_layak
+  cadangan
+}
+
+enum status_verifikasi {
+  pending
+  terverifikasi
+  ditolak
+  perlu_perbaikan
+}
+
+enum status_dokumen {
+  pending
+  diterima
+  ditolak
+}
+
+enum mode_penentuan_status {
+  threshold
+  kuota
+}
+
+model users {
+  id            String    @id @default(uuid()) @db.Uuid
+  nama          String
+  email         String    @unique
+  password_hash String?
+  role          role_user @default(user)
+  image         String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  keluarga_dibuat keluarga[]            @relation("created_by_user")
+  keluarga_akun   keluarga[]            @relation("keluarga_user")
+  riwayat         riwayat_perhitungan[]
+  audit_logs      audit_log[]
+  dokumen_review  dokumen_keluarga[]    @relation("dokumen_reviewer")
+  override_hasil  hasil_spk[]           @relation("override_admin")
+}
+
+model keluarga {
+  id                   String            @id @default(uuid()) @db.Uuid
+  user_id              String?           @db.Uuid
+  nama_kepala_keluarga String
+  nik                  String            @unique
+  alamat               String?
+  kelurahan            String?
+  dusun                String?
+  jumlah_anggota       Int?
+  status_verifikasi    status_verifikasi @default(pending)
+  catatan_admin        String?
+  created_by           String?           @db.Uuid
+  created_at           DateTime          @default(now())
+  updated_at           DateTime          @updatedAt
+
+  user    users? @relation("keluarga_user", fields: [user_id], references: [id])
+  creator users? @relation("created_by_user", fields: [created_by], references: [id])
+
+  penilaian penilaian[]
+  hasil_spk hasil_spk[]
+  dokumen   dokumen_keluarga[]
+
+  @@index([kelurahan])
+  @@index([dusun])
+  @@index([status_verifikasi])
+}
+
+model kriteria {
+  id         String         @id @default(uuid()) @db.Uuid
+  kode       String         @unique
+  nama       String
+  jenis      jenis_kriteria
+  bobot_ahp  Decimal?       @db.Decimal(10, 6)
+  aktif      Boolean        @default(true)
+  urutan     Int?
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+
+  sub_kriteria sub_kriteria[]
+  penilaian    penilaian[]
+
+  perbandingan_kriteria_1 ahp_perbandingan[] @relation("kriteria_1")
+  perbandingan_kriteria_2 ahp_perbandingan[] @relation("kriteria_2")
+}
+
+model sub_kriteria {
+  id          String   @id @default(uuid()) @db.Uuid
+  kriteria_id String   @db.Uuid
+  nama        String
+  nilai       Decimal  @db.Decimal(10, 4)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  kriteria  kriteria    @relation(fields: [kriteria_id], references: [id], onDelete: Cascade)
+  penilaian penilaian[]
+
+  @@index([kriteria_id])
+}
+
+model penilaian {
+  id                String   @id @default(uuid()) @db.Uuid
+  keluarga_id       String   @db.Uuid
+  kriteria_id       String   @db.Uuid
+  sub_kriteria_id   String?  @db.Uuid
+  nilai_awal        Decimal  @db.Decimal(10, 4)
+  nilai_normalisasi Decimal? @db.Decimal(10, 6)
+  nilai_terbobot    Decimal? @db.Decimal(10, 6)
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+
+  keluarga     keluarga      @relation(fields: [keluarga_id], references: [id], onDelete: Cascade)
+  kriteria     kriteria      @relation(fields: [kriteria_id], references: [id], onDelete: Cascade)
+  sub_kriteria sub_kriteria? @relation(fields: [sub_kriteria_id], references: [id], onDelete: SetNull)
+
+  @@unique([keluarga_id, kriteria_id])
+  @@index([keluarga_id])
+  @@index([kriteria_id])
+}
+
+model ahp_perbandingan {
+  id            String   @id @default(uuid()) @db.Uuid
+  kriteria_1_id String   @db.Uuid
+  kriteria_2_id String   @db.Uuid
+  nilai         Decimal  @db.Decimal(10, 6)
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  kriteria_1 kriteria @relation("kriteria_1", fields: [kriteria_1_id], references: [id], onDelete: Cascade)
+  kriteria_2 kriteria @relation("kriteria_2", fields: [kriteria_2_id], references: [id], onDelete: Cascade)
+
+  @@unique([kriteria_1_id, kriteria_2_id])
+}
+
+model riwayat_perhitungan {
+  id                String                @id @default(uuid()) @db.Uuid
+  nama_perhitungan  String
+  metode            String                @default("AHP-SAW")
+  jumlah_data       Int
+  consistency_ratio Decimal?              @db.Decimal(10, 6)
+  mode_status       mode_penentuan_status
+  threshold         Decimal?              @db.Decimal(10, 6)
+  kuota             Int?
+  tanggal_hitung    DateTime              @default(now())
+  dihitung_oleh     String?               @db.Uuid
+
+  user      users?      @relation(fields: [dihitung_oleh], references: [id], onDelete: SetNull)
+  hasil_spk hasil_spk[]
+}
+
+model hasil_spk {
+  id                     String            @id @default(uuid()) @db.Uuid
+  keluarga_id            String            @db.Uuid
+  riwayat_perhitungan_id String?           @db.Uuid
+  total_nilai            Decimal           @db.Decimal(10, 6)
+  ranking                Int
+  status_sistem          status_kelayakan
+  status_final           status_kelayakan?
+  alasan_override        String?
+  override_by            String?           @db.Uuid
+  override_at            DateTime?
+  tanggal_hitung         DateTime          @default(now())
+
+  keluarga            keluarga             @relation(fields: [keluarga_id], references: [id], onDelete: Cascade)
+  riwayat_perhitungan riwayat_perhitungan? @relation(fields: [riwayat_perhitungan_id], references: [id], onDelete: SetNull)
+  admin_override      users?               @relation("override_admin", fields: [override_by], references: [id], onDelete: SetNull)
+
+  @@index([keluarga_id])
+  @@index([ranking])
+  @@index([status_sistem])
+}
+
+model import_batch {
+  id           String   @id @default(uuid()) @db.Uuid
+  nama_file    String
+  jumlah_baris Int      @default(0)
+  jumlah_valid Int      @default(0)
+  jumlah_error Int      @default(0)
+  uploaded_by  String?  @db.Uuid
+  created_at   DateTime @default(now())
+
+  raw_rows import_keluarga_raw[]
+}
+
+model import_keluarga_raw {
+  id              String   @id @default(uuid()) @db.Uuid
+  import_batch_id String   @db.Uuid
+  raw_json        Json
+  status_validasi String
+  error_message   String?
+  created_at      DateTime @default(now())
+
+  import_batch import_batch @relation(fields: [import_batch_id], references: [id], onDelete: Cascade)
+
+  @@index([import_batch_id])
+}
+
+model dokumen_keluarga {
+  id                String         @id @default(uuid()) @db.Uuid
+  keluarga_id       String         @db.Uuid
+  jenis_dokumen     String
+  file_url          String
+  status_verifikasi status_dokumen @default(pending)
+  catatan           String?
+  reviewed_by       String?        @db.Uuid
+  reviewed_at       DateTime?
+  created_at        DateTime       @default(now())
+  updated_at        DateTime       @updatedAt
+
+  keluarga keluarga @relation(fields: [keluarga_id], references: [id], onDelete: Cascade)
+  reviewer users?   @relation("dokumen_reviewer", fields: [reviewed_by], references: [id], onDelete: SetNull)
+}
+
+model audit_log {
+  id          String   @id @default(uuid()) @db.Uuid
+  user_id     String?  @db.Uuid
+  aksi        String
+  tabel       String
+  record_id   String?
+  before_json Json?
+  after_json  Json?
+  created_at  DateTime @default(now())
+
+  user users? @relation(fields: [user_id], references: [id], onDelete: SetNull)
+
+  @@index([tabel])
+  @@index([aksi])
+}
