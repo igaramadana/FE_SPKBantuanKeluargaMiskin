@@ -12,23 +12,23 @@ import {
 export const landingNavigation = [
   {
     label: "Beranda",
-    href: "#beranda",
-    active: true,
+    href: "/",
+    match: "/",
   },
   {
     label: "Tentang",
-    href: "#tentang",
-    active: false,
+    href: "/tentang",
+    match: "/tentang",
   },
   {
     label: "Fitur",
-    href: "#fitur",
-    active: false,
+    href: "/#fitur",
+    match: "/#fitur",
   },
   {
     label: "Kontak",
-    href: "#kontak",
-    active: false,
+    href: "/#kontak",
+    match: "/#kontak",
   },
 ];
 

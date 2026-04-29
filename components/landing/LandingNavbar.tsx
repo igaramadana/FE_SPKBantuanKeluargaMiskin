@@ -1,8 +1,26 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+
 import { landingBrand, landingNavigation } from "@/constants/landing";
 import { cn } from "@/lib/cn";
 
 export function LandingNavbar() {
+  const pathname = usePathname();
+
+  function isActive(href: string) {
+    if (href === "/") {
+      return pathname === "/";
+    }
+
+    if (href.startsWith("/#")) {
+      return false;
+    }
+
+    return pathname === href || pathname.startsWith(`${href}/`);
+  }
+
   return (
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white shadow-sm">
       <nav className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-5 md:px-8">
@@ -20,22 +38,26 @@ export function LandingNavbar() {
         </Link>
 
         <div className="hidden items-center gap-10 text-sm font-medium text-black md:flex">
-          {landingNavigation.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "relative transition hover:text-[#1B5E20]",
-                item.active && "text-[#1B5E20]"
-              )}
-            >
-              {item.label}
+          {landingNavigation.map((item) => {
+            const active = isActive(item.href);
 
-              {item.active && (
-                <span className="absolute -bottom-3 left-0 h-[2px] w-full rounded-full bg-[#3E5F44]" />
-              )}
-            </a>
-          ))}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "relative transition hover:text-[#1B5E20]",
+                  active && "text-[#1B5E20]"
+                )}
+              >
+                {item.label}
+
+                {active && (
+                  <span className="absolute -bottom-3 left-0 h-[2px] w-full rounded-full bg-[#3E5F44]" />
+                )}
+              </Link>
+            );
+          })}
         </div>
 
         <div className="flex items-center gap-3">
