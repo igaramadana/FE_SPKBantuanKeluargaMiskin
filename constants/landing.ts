@@ -12,12 +12,12 @@ import {
 export const landingNavigation = [
   {
     label: "Beranda",
-    href: "#beranda",
-    active: true,
+    href: "/",
+    active: false,
   },
   {
     label: "Tentang",
-    href: "#tentang",
+    href: "/tentang",
     active: false,
   },
   {
