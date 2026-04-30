@@ -26,6 +26,11 @@ export const landingNavigation = [
     match: "/#fitur",
   },
   {
+    label: "Pusat Bantuan",
+    href: "/pusat-bantuan",
+    match: "/#pusat-bantuan",
+  },
+  {
     label: "Kontak",
     href: "/#kontak",
     match: "/#kontak",
