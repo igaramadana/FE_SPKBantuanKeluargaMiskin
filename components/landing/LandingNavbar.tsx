@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { landingBrand, landingNavigation } from "@/constants/landing";
@@ -25,8 +26,14 @@ export function LandingNavbar() {
     <header className="sticky top-0 z-50 border-b border-black/5 bg-white shadow-sm">
       <nav className="mx-auto flex h-[88px] max-w-7xl items-center justify-between px-5 md:px-8">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-[#1B5E20] text-lg font-bold text-white shadow-md">
-            {landingBrand.shortName}
+          <div className="flex h-14 w-14 items-center justify-center rounded-2xl overflow-hidden bg-transparent">
+            <Image
+              src="/logo-spkbansos.jpeg" 
+              alt="Logo SPK Bansos"
+              width={56} 
+              height={56}
+              className="object-contain"
+            />
           </div>
 
           <div className="leading-tight">
