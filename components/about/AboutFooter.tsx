@@ -3,9 +3,14 @@ export function AboutFooter() {
     <footer className="bg-[#062010] px-5 py-10 md:px-8">
       <div className="mx-auto flex max-w-7xl flex-col justify-between gap-6 md:flex-row md:items-center">
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-lg font-bold text-[#1B5E20]">
+          <img
+            src="/logo.png"
+            alt="SPK Logo"
+            className="h-20 w-15 rounded-full transition-transform duration-300 hover:scale-110"
+          />
+          {/* <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white text-lg font-bold text-[#1B5E20]">
             SPK
-          </div>
+          </div> */}
 
           <div>
             <p className="text-sm font-bold text-white">

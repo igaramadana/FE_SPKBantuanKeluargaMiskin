@@ -4,9 +4,14 @@ import { aboutValues } from "@/constants/about";
 export function AboutHero() {
   return (
     <section className="relative overflow-hidden bg-white">
-      <div className="absolute inset-x-0 top-0 h-[560px] bg-[linear-gradient(90deg,#F5F8F1,#FFFFFF)]" />
-
-      <div className="relative mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 md:px-8 lg:grid-cols-[1fr_440px]">
+    
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/bg-rumah.jpg')" }}
+      >
+        <div className="absolute inset-0 bg-[#F5F8F1]/85" />
+      </div>
+      <div className="relative z-10 mx-auto grid max-w-7xl items-center gap-12 px-5 py-20 md:px-8 lg:grid-cols-[1fr_440px]">
         <div>
           <div className="inline-flex rounded-full bg-[#E8F5E9] px-4 py-2 text-sm font-semibold text-[#1B5E20]">
             Tentang Sistem
