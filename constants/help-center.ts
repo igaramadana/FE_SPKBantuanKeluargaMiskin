@@ -1,4 +1,5 @@
-import { HelpCircle, FileText, Phone } from "lucide-react";
+import { Phone, MapPin, Mail } from "lucide-react";
+import { FaWhatsapp } from "react-icons/fa";
 
 export const helpCenterHero = {
   title: "Pusat Bantuan & Layanan Pengaduan",
@@ -75,19 +76,19 @@ export const helpCenterContact = {
       type: "phone",
     },
     {
-      icon: FileText,
+      icon: Mail,
       label: "Email",
       value: "bantuan@desasejahtera.go.id",
       type: "email",
     },
     {
-      icon: HelpCircle,
+      icon: FaWhatsapp,
       label: "WhatsApp Care Center",
       value: "+62 812-3456-7890",
       type: "whatsapp",
     },
     {
-      icon: HelpCircle,
+      icon: MapPin,
       label: "Alamat",
       value:
         "Gedung Pelayanan Sosial Terpadu\nJl. Kemerdekaan No. 45, Kota Bahagia",

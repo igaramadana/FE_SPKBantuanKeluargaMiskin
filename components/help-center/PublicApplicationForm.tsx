@@ -2,13 +2,47 @@
 
 import { useState } from "react";
 import { Upload } from "lucide-react";
-import { publicFormFields } from "@/constants/help-center";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
+const ALLOWED_MIME_TYPES = new Set([
+  "image/jpeg",
+  "image/png",
+  "application/pdf",
+]);
+const ALLOWED_EXTENSIONS = new Set(["jpg", "jpeg", "png", "pdf"]);
+
+const getFileExtension = (fileName: string) =>
+  fileName.split(".").pop()?.toLowerCase() ?? "";
+
+const validateFile = (file: File | null) => {
+  if (!file) {
+    return null;
+  }
+
+  const extension = getFileExtension(file.name);
+  const isAllowedType =
+    ALLOWED_MIME_TYPES.has(file.type) || ALLOWED_EXTENSIONS.has(extension);
+
+  if (!isAllowedType) {
+    return "Format file tidak sesuai. Gunakan JPG, PNG, atau PDF.";
+  }
+
+  if (file.size > MAX_FILE_SIZE) {
+    return "Ukuran file melebihi 5 MB. Silakan unggah file yang lebih kecil.";
+  }
+
+  return null;
+};
 
 export function PublicApplicationForm() {
   const [formData, setFormData] = useState<Record<string, string | File | null>>(
     {}
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
+  const [formKey, setFormKey] = useState(0);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -22,6 +56,19 @@ export function PublicApplicationForm() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
+    const errorMessage = validateFile(file);
+
+    setFileError(errorMessage);
+
+    if (errorMessage) {
+      e.target.value = "";
+      setFormData((prev) => ({
+        ...prev,
+        file: null,
+      }));
+      return;
+    }
+
     setFormData((prev) => ({
       ...prev,
       file,
@@ -30,17 +77,58 @@ export function PublicApplicationForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const fileToSend = formData.file instanceof File ? formData.file : null;
+    const fileValidationError = validateFile(fileToSend);
+
+    if (fileValidationError) {
+      setFileError(fileValidationError);
+      return;
+    }
+
     setIsSubmitting(true);
+    setFileError(null);
+    setErrorMessage(null);
+    setSuccessMessage(null);
 
     try {
-      // Simulate form submission
-      console.log("Form submitted:", formData);
-      // Add your API call here
-      alert("Pengaduan Anda berhasil dikirim");
+      const payload = new FormData();
+      payload.append("nik", String(formData.nik ?? ""));
+      payload.append("name", String(formData.name ?? ""));
+      payload.append("phone", String(formData.phone ?? ""));
+      payload.append("description", String(formData.description ?? ""));
+
+      if (fileToSend) {
+        payload.append("file", fileToSend);
+      }
+
+      const response = await fetch("/api/help-center/complaint", {
+        method: "POST",
+        body: payload,
+      });
+
+      const responseData = await response.json().catch(() => null);
+
+      if (!response.ok) {
+        throw new Error(
+          responseData?.message || "Terjadi kesalahan saat mengirim pengaduan"
+        );
+      }
+
+      const successMsg =
+        responseData?.message || "Pengaduan Anda berhasil dikirim";
+      setSuccessMessage(successMsg);
       setFormData({});
+      setFormKey((prev) => prev + 1);
+
+      // Hapus success message setelah 5 detik
+      setTimeout(() => setSuccessMessage(null), 5000);
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("Terjadi kesalahan saat mengirim pengaduan");
+      const errorMsg =
+        error instanceof Error
+          ? error.message
+          : "Terjadi kesalahan saat mengirim pengaduan";
+      setErrorMessage(errorMsg);
     } finally {
       setIsSubmitting(false);
     }
@@ -59,7 +147,21 @@ export function PublicApplicationForm() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Success Message */}
+        {successMessage && (
+          <div className="mb-6 rounded-lg border border-green-200 bg-green-50 p-4">
+            <p className="text-sm font-medium text-green-800">{successMessage}</p>
+          </div>
+        )}
+
+        {/* Error Message */}
+        {errorMessage && (
+          <div className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4">
+            <p className="text-sm font-medium text-red-800">{errorMessage}</p>
+          </div>
+        )}
+
+        <form key={formKey} onSubmit={handleSubmit} className="space-y-6">
           <div className="grid gap-6 md:grid-cols-2">
             {/* NIK Pelapor */}
             <div>
@@ -70,7 +172,7 @@ export function PublicApplicationForm() {
                 type="text"
                 id="nik"
                 name="nik"
-                value={formData.nik || ""}
+                value={typeof formData.nik === "string" ? formData.nik : ""}
                 onChange={handleInputChange}
                 required
                 className="mt-2 w-full rounded-lg border border-[#DDD] bg-white px-4 py-3 text-black placeholder-[#999] focus:border-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-[#1B5E20]/10"
@@ -86,7 +188,7 @@ export function PublicApplicationForm() {
                 type="text"
                 id="name"
                 name="name"
-                value={formData.name || ""}
+                value={typeof formData.name === "string" ? formData.name : ""}
                 onChange={handleInputChange}
                 required
                 className="mt-2 w-full rounded-lg border border-[#DDD] bg-white px-4 py-3 text-black placeholder-[#999] focus:border-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-[#1B5E20]/10"
@@ -103,7 +205,7 @@ export function PublicApplicationForm() {
               type="tel"
               id="phone"
               name="phone"
-              value={formData.phone || ""}
+              value={typeof formData.phone === "string" ? formData.phone : ""}
               onChange={handleInputChange}
               required
               className="mt-2 w-full rounded-lg border border-[#DDD] bg-white px-4 py-3 text-black placeholder-[#999] focus:border-[#1B5E20] focus:outline-none focus:ring-2 focus:ring-[#1B5E20]/10"
@@ -118,7 +220,7 @@ export function PublicApplicationForm() {
             <textarea
               id="description"
               name="description"
-              value={formData.description || ""}
+              value={typeof formData.description === "string" ? formData.description : ""}
               onChange={handleInputChange}
               required
               rows={5}
@@ -155,14 +257,20 @@ export function PublicApplicationForm() {
                     </p>
                   </div>
 
-                  {formData.file && (
+                  {formData.file instanceof File && (
                     <p className="text-sm font-medium text-[#1B5E20]">
-                      {(formData.file as File).name}
+                      {formData.file.name}
                     </p>
                   )}
                 </div>
               </label>
             </div>
+
+            {fileError && (
+              <p className="mt-3 text-sm font-medium text-red-600">
+                {fileError}
+              </p>
+            )}
           </div>
 
           {/* Submit Button */}
