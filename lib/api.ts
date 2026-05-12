@@ -35,3 +35,22 @@ export async function apiPost<TResponse, TBody>(
 
   return response.json();
 }
+
+export async function apiPut<TResponse, TBody>(
+  endpoint: string,
+  body: TBody
+): Promise<TResponse> {
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+
+  if (!response.ok) {
+    throw new Error("Gagal memperbarui data.");
+  }
+
+  return response.json();
+}

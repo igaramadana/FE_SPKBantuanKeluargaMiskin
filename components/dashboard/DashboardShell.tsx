@@ -24,6 +24,7 @@ type DashboardShellProps = {
     label: string;
     href: string;
   }[];
+  activeHref?: string;
 };
 
 const menuIcons: Record<string, React.ReactNode> = {
@@ -38,6 +39,7 @@ export function DashboardShell({
   children,
   userName,
   menu,
+  activeHref,
 }: DashboardShellProps) {
   return (
     <main className="min-h-screen bg-[#F5F7F4]">
@@ -90,14 +92,19 @@ export function DashboardShell({
 
             <nav className="space-y-2">
 
-              {menu.map((item, index) => (
+              {menu.map((item, index) => {
+                const isActive = activeHref
+                  ? activeHref === item.href
+                  : index === 0;
+
+                return (
                 <Link
                   key={item.href}
                   href={item.href}
                   className={`
                     flex items-center gap-3 rounded-2xl px-4 py-4 text-sm font-semibold transition-all duration-300
                     ${
-                      index === 0
+                      isActive
                         ? "bg-[#DDEEDF] text-[#166534] shadow-sm"
                         : "text-slate-600 hover:bg-white hover:text-[#166534]"
                     }
@@ -111,7 +118,8 @@ export function DashboardShell({
                   <span>{item.label}</span>
 
                 </Link>
-              ))}
+              );
+              })}
 
             </nav>
 
