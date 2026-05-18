@@ -1,7 +1,7 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 
-export default async function UserLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -12,9 +12,9 @@ export default async function UserLayout({
     redirect("/login");
   }
 
-  if (session.user.role !== "user") {
-    redirect("/admin/dashboard");
+  if (session.user.role !== "admin") {
+    redirect("/user/dashboard");
   }
 
-  return children;
+  return <>{children}</>;
 }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { landingBrand, landingNavigation } from "@/constants/landing";
 import { cn } from "@/lib/cn";
+import { LoginButtonLanding } from "@/components/auth/LoginButtonLanding"; // <-- Import di sini
 
 export function LandingNavbar() {
   const pathname = usePathname();
@@ -59,12 +60,13 @@ export function LandingNavbar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Link
-            href="/login"
+          {/* SEBELUMNYA: <Link href="/login">Login</Link> */}
+          {/* SEKARANG: Menggunakan Tombol Pintar dengan Style Asli Anda */}
+          <LoginButtonLanding 
             className="rounded-xl border border-[#1B5E20]/20 px-4 py-2 text-sm font-semibold text-[#1B5E20] transition hover:bg-[#F5F8F1]"
           >
             Login
-          </Link>
+          </LoginButtonLanding>
 
           <Link
             href="#cek-nik"
