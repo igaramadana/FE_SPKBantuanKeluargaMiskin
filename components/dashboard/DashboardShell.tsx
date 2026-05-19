@@ -17,6 +17,8 @@ import {
   Menu,
   ChevronDown,
   LogOut,
+  UploadCloud,
+  Trophy,
 } from "lucide-react";
 
 type DashboardShellProps = {
@@ -35,8 +37,10 @@ type DashboardShellProps = {
 const menuIcons: Record<string, React.ReactNode> = {
   Dashboard: <LayoutDashboard className="h-5 w-5" />,
   "Data Warga": <Users className="h-5 w-5" />,
+  "Import Dataset": <UploadCloud className="h-5 w-5" />,
   "Kriteria & Bobot": <SlidersHorizontal className="h-5 w-5" />,
   "Penilaian SAW": <BarChart3 className="h-5 w-5" />,
+  "Hasil Ranking": <Trophy className="h-5 w-5" />,
   Bantuan: <HandHelping className="h-5 w-5" />,
 };
 
