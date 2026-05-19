@@ -1,6 +1,6 @@
 import { auth } from "@/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
-import { KriteriaStatusAction } from "@/components/admin/KriteriaStatusAction";
+import { KriteriaRowActions } from "@/components/admin/kriteria/KriteriaRowActions";
 import { ambilSemuaKriteria } from "@/services/kriteria.service";
 import type { Kriteria } from "@/types/kriteria";
 import {
@@ -187,9 +187,11 @@ export default async function AdminKriteriaPage() {
               </p>
             </div>
 
-            <div className="flex items-center gap-3 rounded-2xl border border-green-100 bg-[#F6FBF6] px-4 py-3 text-sm font-semibold text-[#1B5E20]">
-              <span className="h-2 w-2 rounded-full bg-[#1B5E20]" />
-              Total {totalKriteria} kriteria terdata
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-3 rounded-2xl border border-green-100 bg-[#F6FBF6] px-4 py-3 text-sm font-semibold text-[#1B5E20]">
+                <span className="h-2 w-2 rounded-full bg-[#1B5E20]" />
+                Total {totalKriteria} kriteria terdata
+              </div>
             </div>
           </div>
 
@@ -238,21 +240,20 @@ export default async function AdminKriteriaPage() {
                         {item.urutan ?? "-"}
                       </td>
                       <td className="px-4 py-5 text-sm">
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            item.aktif
-                              ? "bg-green-100 text-green-700"
-                              : "bg-slate-200 text-slate-600"
-                          }`}
-                        >
-                          {item.aktif ? "Aktif" : "Nonaktif"}
-                        </span>
+                        {item.aktif ? (
+                          <div className="inline-flex items-center justify-center rounded-full bg-green-100 p-2 text-green-700">
+                            <CheckCircle2 className="h-4 w-4" />
+                            <span className="sr-only">Aktif</span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center justify-center rounded-full bg-red-100 p-2 text-red-700">
+                            <XCircle className="h-4 w-4" />
+                            <span className="sr-only">Nonaktif</span>
+                          </div>
+                        )}
                       </td>
                       <td className="rounded-r-2xl px-4 py-5 text-sm">
-                        <KriteriaStatusAction
-                          kriteriaId={item.id}
-                          isActive={item.aktif}
-                        />
+                        <KriteriaRowActions kriteria={item} />
                       </td>
                     </tr>
                   ))}
