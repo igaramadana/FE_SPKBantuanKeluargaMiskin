@@ -13,9 +13,18 @@ export type Kriteria = {
 };
 
 export type KriteriaCreatePayload = {
-    kode: String;
-    nama: String;
+    kode: string;
+    nama: string;
     jenis: JenisKriteria;
     aktif?: boolean;
     urutan?: number;
+};
+
+export type KriteriaUpdatePayload = {
+    kode?: string;
+    nama?: string;
+    jenis?: JenisKriteria;
+    aktif?: boolean;
+    urutan?: number;
+    bobot_ahp?: string | null;
 };

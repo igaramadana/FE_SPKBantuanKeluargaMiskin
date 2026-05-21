@@ -44,6 +44,7 @@ export default async function AdminDashboardPage() {
       userName={session?.user?.name || "Admin"}
       role="admin"
       menu={adminMenu}
+      activeHref="/admin/dashboard"
     >
       <div className="space-y-8">
 

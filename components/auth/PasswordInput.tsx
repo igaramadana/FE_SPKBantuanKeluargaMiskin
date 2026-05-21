@@ -1,3 +1,5 @@
+"use client";
+
 import { Eye, EyeOff, LockKeyhole } from "lucide-react";
 import { useState } from "react";
 
@@ -18,13 +20,13 @@ export function PasswordInput({
     <div>
       <label
         htmlFor="password"
-        className="block text-sm font-bold uppercase tracking-wide text-black md:text-base"
+        className="block text-sm font-bold uppercase tracking-widest text-black/60 md:text-xs"
       >
         Password
       </label>
 
-      <div className="relative mt-4">
-        <LockKeyhole className="absolute left-6 top-1/2 h-6 w-6 -translate-y-1/2 text-[#B3B3B3]" />
+      <div className="relative mt-3">
+        <LockKeyhole className="absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-[#B3B3B3]" />
 
         <input
           id="password"
@@ -34,20 +36,20 @@ export function PasswordInput({
           disabled={disabled}
           placeholder="Masukkan Password"
           onChange={(event) => onChange(event.target.value)}
-          className="h-16 w-full rounded-2xl border-[3px] border-[#5C9C63] bg-white pl-16 pr-16 text-base font-semibold text-black outline-none transition placeholder:text-[#C7C7C7] focus:border-[#1B5E20] focus:ring-4 focus:ring-[#84B179]/20 disabled:cursor-not-allowed disabled:opacity-70 md:h-[74px] md:text-lg"
+          className="h-[60px] w-full rounded-2xl border-2 border-[#5C9C63]/60 bg-white pl-14 pr-14 text-base font-medium text-black outline-none transition-all placeholder:text-[#C7C7C7] focus:border-[#1B5E20] focus:shadow-[0_0_0_4px_rgba(27,94,32,0.08)] disabled:cursor-not-allowed disabled:opacity-60 md:h-[66px] md:text-[15px]"
         />
 
         <button
           type="button"
           disabled={disabled}
           onClick={() => setShowPassword((current) => !current)}
-          className="absolute right-6 top-1/2 -translate-y-1/2 text-[#B3B3B3] transition hover:text-[#1B5E20] disabled:cursor-not-allowed"
+          className="absolute right-5 top-1/2 -translate-y-1/2 text-[#B3B3B3] transition hover:text-[#1B5E20] disabled:cursor-not-allowed"
           aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
         >
           {showPassword ? (
-            <EyeOff className="h-6 w-6" />
+            <EyeOff className="h-5 w-5" />
           ) : (
-            <Eye className="h-6 w-6" />
+            <Eye className="h-5 w-5" />
           )}
         </button>
       </div>

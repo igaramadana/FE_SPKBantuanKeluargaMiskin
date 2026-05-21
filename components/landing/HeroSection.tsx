@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, HandHeart } from "lucide-react";
 import { landingHero } from "@/constants/landing";
 import { HeroPreviewCard } from "./HeroPreviewCard";
+import { LoginButtonLanding } from "@/components/auth/LoginButtonLanding"; // <-- Import di sini
 
 export function HeroSection() {
   return (
@@ -61,6 +62,14 @@ export function HeroSection() {
               {landingHero.primaryAction}
               <ArrowRight className="h-5 w-5 transition group-hover:translate-x-1" />
             </Link>
+            {/* SEBELUMNYA: <Link href="/login">...</Link> */}
+            {/* SEKARANG: Menggunakan Tombol Pintar dengan Style Asli Anda */}
+            <LoginButtonLanding
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-[linear-gradient(90deg,#3F7D47,#5C9C63)] px-7 py-4 text-base font-semibold text-white shadow-lg transition hover:scale-[1.02]"
+            >
+              {landingHero.primaryAction}
+              <ArrowRight className="h-5 w-5" />
+            </LoginButtonLanding>
 
           </div>
         </div>
