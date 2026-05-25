@@ -1,6 +1,7 @@
 import { auth } from "@/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { KriteriaRowActions } from "@/components/admin/kriteria/KriteriaRowActions";
+import { KriteriaCreateButton } from "@/components/admin/kriteria/KriteriaCreateButton";
 import { ambilSemuaKriteria } from "@/services/kriteria.service";
 import type { Kriteria } from "@/types/kriteria";
 
@@ -193,6 +194,7 @@ export default async function AdminKriteriaPage() {
                 <span className="h-2 w-2 rounded-full bg-[#1B5E20]" />
                 Total {totalKriteria} kriteria terdata
               </div>
+              <KriteriaCreateButton />
             </div>
           </div>
 

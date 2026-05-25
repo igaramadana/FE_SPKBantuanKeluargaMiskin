@@ -1,5 +1,14 @@
 export type JenisKriteria = "benefit" | "cost";
 
+export type SubKriteria = {
+    id: string;
+    kriteria_id: string;
+    nama: string;
+    nilai: string | number;
+    created_at: string;
+    updated_at: string;
+};
+
 export type Kriteria = {
     id: string;
     kode: string;
@@ -8,6 +17,7 @@ export type Kriteria = {
     bobot_ahp?: string | null;
     aktif: boolean;
     urutan?: number | null;
+    sub_kriteria?: SubKriteria[];
     created_at: string;
     updated_at: string
 };

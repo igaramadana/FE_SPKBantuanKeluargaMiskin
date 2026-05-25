@@ -1,4 +1,4 @@
-import { apiGet, apiPost, apiPut } from "@/lib/api";
+import { apiDelete, apiGet, apiPost, apiPut } from "@/lib/api";
 import type {
     Kriteria,
     KriteriaCreatePayload,
@@ -7,6 +7,10 @@ import type {
 
 export function ambilSemuaKriteria() {
     return apiGet<Kriteria[]>("/kriteria");
+}
+
+export function ambilDetailKriteria(kriteriaId: string) {
+    return apiGet<Kriteria>(`/kriteria/${kriteriaId}`);
 }
 
 export function bikinKriteriaBaru(payload: KriteriaCreatePayload) {
@@ -18,4 +22,8 @@ export function updateKriteria(kriteriaId: string, payload: KriteriaUpdatePayloa
         `/kriteria/${kriteriaId}`,
         payload
     );
+}
+
+export function hapusKriteria(kriteriaId: string) {
+    return apiDelete<{ message: string }>(`/kriteria/${kriteriaId}`);
 }
