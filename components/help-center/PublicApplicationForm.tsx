@@ -1,7 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Upload } from "lucide-react";
+
+declare global {
+  interface Window {
+    grecaptcha?: {
+      render: (
+        container: HTMLElement,
+        params: {
+          sitekey: string;
+          callback: (token: string) => void;
+          "expired-callback"?: () => void;
+          "error-callback"?: () => void;
+        }
+      ) => number;
+      reset: (widgetId?: number) => void;
+    };
+    onRecaptchaLoad?: () => void;
+  }
+}
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_MIME_TYPES = new Set([
@@ -43,6 +61,70 @@ export function PublicApplicationForm() {
   const [formKey, setFormKey] = useState(0);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [recaptchaToken, setRecaptchaToken] = useState<string | null>(null);
+  const [recaptchaError, setRecaptchaError] = useState<string | null>(null);
+  const recaptchaRef = useRef<HTMLDivElement | null>(null);
+  const recaptchaWidgetIdRef = useRef<number | null>(null);
+  const recaptchaSiteKey = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY;
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    if (!recaptchaSiteKey) {
+      return;
+    }
+
+    recaptchaWidgetIdRef.current = null;
+    setRecaptchaToken(null);
+    setRecaptchaError(null);
+
+    const renderRecaptcha = () => {
+      if (!window.grecaptcha || !recaptchaRef.current) {
+        return;
+      }
+
+      if (recaptchaWidgetIdRef.current !== null) {
+        window.grecaptcha.reset(recaptchaWidgetIdRef.current);
+        return;
+      }
+
+      recaptchaWidgetIdRef.current = window.grecaptcha.render(
+        recaptchaRef.current,
+        {
+          sitekey: recaptchaSiteKey,
+          callback: (token: string) => {
+            setRecaptchaToken(token);
+            setRecaptchaError(null);
+          },
+          "expired-callback": () => {
+            setRecaptchaToken(null);
+          },
+          "error-callback": () => {
+            setRecaptchaToken(null);
+          },
+        }
+      );
+    };
+
+    if (window.grecaptcha) {
+      renderRecaptcha();
+      return;
+    }
+
+    window.onRecaptchaLoad = renderRecaptcha;
+
+    if (!document.getElementById("recaptcha-script")) {
+      const script = document.createElement("script");
+      script.id = "recaptcha-script";
+      script.src =
+        "https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit";
+      script.async = true;
+      script.defer = true;
+      document.body.appendChild(script);
+    }
+  }, [formKey, recaptchaSiteKey]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -85,10 +167,21 @@ export function PublicApplicationForm() {
       return;
     }
 
+    if (!recaptchaSiteKey) {
+      setRecaptchaError("reCAPTCHA belum dikonfigurasi.");
+      return;
+    }
+
+    if (!recaptchaToken) {
+      setRecaptchaError("Silakan verifikasi bahwa Anda bukan robot.");
+      return;
+    }
+
     setIsSubmitting(true);
     setFileError(null);
     setErrorMessage(null);
     setSuccessMessage(null);
+    setRecaptchaError(null);
 
     try {
       const payload = new FormData();
@@ -96,6 +189,7 @@ export function PublicApplicationForm() {
       payload.append("name", String(formData.name ?? ""));
       payload.append("phone", String(formData.phone ?? ""));
       payload.append("description", String(formData.description ?? ""));
+      payload.append("recaptchaToken", recaptchaToken);
 
       if (fileToSend) {
         payload.append("file", fileToSend);
@@ -119,6 +213,11 @@ export function PublicApplicationForm() {
       setSuccessMessage(successMsg);
       setFormData({});
       setFormKey((prev) => prev + 1);
+      setRecaptchaToken(null);
+
+      if (recaptchaWidgetIdRef.current !== null) {
+        window.grecaptcha?.reset(recaptchaWidgetIdRef.current);
+      }
 
       // Hapus success message setelah 5 detik
       setTimeout(() => setSuccessMessage(null), 5000);
@@ -273,11 +372,28 @@ export function PublicApplicationForm() {
             )}
           </div>
 
+            {/* reCAPTCHA */}
+            <div className="space-y-3">
+              <div className="flex justify-center">
+                <div ref={recaptchaRef} />
+              </div>
+              {!recaptchaSiteKey && (
+                <p className="text-center text-sm font-medium text-red-600">
+                  reCAPTCHA belum dikonfigurasi.
+                </p>
+              )}
+              {recaptchaError && (
+                <p className="text-center text-sm font-medium text-red-600">
+                  {recaptchaError}
+                </p>
+              )}
+            </div>
+
           {/* Submit Button */}
           <div className="flex justify-center pt-6">
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !recaptchaToken || !recaptchaSiteKey}
               className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#1B5E20] px-8 py-3 font-semibold text-white transition hover:bg-[#144A18] disabled:opacity-50"
             >
               {isSubmitting ? "Mengirim..." : "Kirim"}

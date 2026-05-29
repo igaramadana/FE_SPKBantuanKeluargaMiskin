@@ -44,17 +44,92 @@ const validateFile = (file: File | null) => {
   return null;
 };
 
+const verifyRecaptcha = async (
+  token: string,
+  remoteIp: string | null,
+  secret: string
+) => {
+  const params = new URLSearchParams({
+    secret,
+    response: token,
+  });
+
+  if (remoteIp) {
+    params.append("remoteip", remoteIp);
+  }
+
+  const response = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: params.toString(),
+  });
+
+  return response.json() as Promise<{
+    success: boolean;
+    "error-codes"?: string[];
+  }>;
+};
+
 export async function POST(request: Request) {
   const formData = await request.formData();
   const nik = readRequiredField(formData, "nik");
   const name = readRequiredField(formData, "name");
   const phone = readRequiredField(formData, "phone");
   const description = readRequiredField(formData, "description");
+  const recaptchaToken = readRequiredField(formData, "recaptchaToken");
 
   if (!nik || !name || !phone || !description) {
     return NextResponse.json(
       { message: "Mohon lengkapi semua field yang wajib diisi." },
       { status: 400 }
+    );
+  }
+
+  if (!recaptchaToken) {
+    return NextResponse.json(
+      { message: "Silakan verifikasi reCAPTCHA terlebih dahulu." },
+      { status: 400 }
+    );
+  }
+
+  const recaptchaSecret = process.env.RECAPTCHA_SECRET_KEY;
+
+  if (!recaptchaSecret) {
+    console.error("❌ reCAPTCHA secret key missing");
+    return NextResponse.json(
+      { message: "Konfigurasi reCAPTCHA belum lengkap. Periksa .env" },
+      { status: 500 }
+    );
+  }
+
+  const remoteIp = request.headers
+    .get("x-forwarded-for")
+    ?.split(",")[0]
+    ?.trim();
+
+  try {
+    const recaptchaResult = await verifyRecaptcha(
+      recaptchaToken,
+      remoteIp ?? null,
+      recaptchaSecret
+    );
+
+    if (!recaptchaResult.success) {
+      console.error("❌ reCAPTCHA verification failed", {
+        errorCodes: recaptchaResult["error-codes"],
+      });
+      return NextResponse.json(
+        { message: "Verifikasi reCAPTCHA gagal. Silakan coba lagi." },
+        { status: 400 }
+      );
+    }
+  } catch (error) {
+    console.error("❌ reCAPTCHA verification error:", error);
+    return NextResponse.json(
+      { message: "Gagal memverifikasi reCAPTCHA." },
+      { status: 500 }
     );
   }
 
