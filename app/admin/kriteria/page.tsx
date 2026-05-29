@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { KriteriaRowActions } from "@/components/admin/kriteria/KriteriaRowActions";
 import { KriteriaCreateButton } from "@/components/admin/kriteria/KriteriaCreateButton";
+import { adminMenu } from "@/constants/admin-menu";
 import { ambilSemuaKriteria } from "@/services/kriteria.service";
 import type { Kriteria } from "@/types/kriteria";
 
@@ -12,29 +13,6 @@ import {
   Layers,
   Scale,
 } from "lucide-react";
-
-const adminMenu = [
-  {
-    label: "Dashboard",
-    href: "/admin/dashboard",
-  },
-  {
-    label: "Data Warga",
-    href: "/admin/keluarga",
-  },
-  {
-    label: "Kriteria & Bobot",
-    href: "/admin/kriteria",
-  },
-  {
-    label: "Penilaian SAW",
-    href: "/admin/saw",
-  },
-  {
-    label: "Bantuan",
-    href: "/admin/bantuan",
-  },
-];
 
 const formatBobot = (value?: string | null) => {
   if (!value) {

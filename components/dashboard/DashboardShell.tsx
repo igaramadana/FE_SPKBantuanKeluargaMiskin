@@ -89,7 +89,7 @@ export function DashboardShell({
               {/* LOGO IMAGE */}
               <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-white p-2 shadow-sm">
                 <Image
-                  src="/logo.png"
+                  src="/logo-spkbansos.jpeg"
                   alt="SIMBANTU"
                   fill
                   className="object-contain p-1"

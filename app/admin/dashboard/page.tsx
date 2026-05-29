@@ -1,5 +1,6 @@
 import { auth } from "@/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
+import { adminMenu } from "@/constants/admin-menu";
 import {
   Users,
   BadgeCheck,
@@ -10,29 +11,6 @@ import {
   Filter,
   MapPinned,
 } from "lucide-react";
-
-const adminMenu = [
-  {
-    label: "Dashboard",
-    href: "/admin/dashboard",
-  },
-  {
-    label: "Data Warga",
-    href: "/admin/keluarga",
-  },
-  {
-    label: "Kriteria & Bobot",
-    href: "/admin/kriteria",
-  },
-  {
-    label: "Penilaian SAW",
-    href: "/admin/saw",
-  },
-  {
-    label: "Bantuan",
-    href: "/admin/bantuan",
-  },
-];
 
 export default async function AdminDashboardPage() {
   const session = await auth();
