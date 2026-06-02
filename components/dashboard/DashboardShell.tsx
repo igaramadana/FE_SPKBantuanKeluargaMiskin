@@ -81,7 +81,7 @@ export function DashboardShell({
       <div className="grid min-h-screen lg:grid-cols-[270px_1fr]">
 
         {/* SIDEBAR */}
-        <aside className="flex flex-col border-r border-[#DCE8DA] bg-[#F2F8F2]">
+        <aside className="flex flex-col border-r border-[#DCE8DA] bg-[#c2f2d8]">
 
           {/* LOGO */}
           <div className="border-b border-[#DCE8DA] px-7 py-6">
@@ -164,13 +164,21 @@ export function DashboardShell({
               </div>
             </div>
 
-            {/* BUTTON */}
-            <div className="mt-5 space-y-2">
-              {/* PENGATURAN */}
-              <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-[#166534]">
-                <Settings className="h-5 w-5" />
-                Pengaturan
-              </button>
+              {/* BUTTON */}
+                <div className="mt-5 space-y-2">
+                  {/* BANTUAN */}
+                  <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-[#166534]">
+                    <svg 
+                      className="h-5 w-5 flex-shrink-0" 
+                      fill="none" 
+                      viewBox="0 0 24 24" 
+                      stroke="currentColor" 
+                      strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Bantuan
+                  </button>
 
               {/* LOGOUT */}
               <button
