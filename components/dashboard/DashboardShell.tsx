@@ -1,9 +1,10 @@
-"use client"; // <-- Ditambahkan agar tombol Logout & interaksi klik berfungsi
+"use client";
 
+import type { ReactNode } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { signOut } from "next-auth/react"; // <-- Import fungsi signOut dari NextAuth
-import { useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   LayoutDashboard,
@@ -11,18 +12,24 @@ import {
   SlidersHorizontal,
   BarChart3,
   HandHelping,
-  Settings,
-  Bell,
-  Search,
   Menu,
-  ChevronDown,
+  X,
   LogOut,
   UploadCloud,
   Trophy,
+  ChevronRight,
+  ShieldCheck,
+  UserRound,
+  Search,
+  Bell,
+  Home,
+  FileQuestion,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react";
 
 type DashboardShellProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   title: string;
   description: string;
   userName?: string | null;
@@ -34,41 +41,55 @@ type DashboardShellProps = {
   activeHref?: string;
 };
 
-const menuIcons: Record<string, React.ReactNode> = {
+const menuIcons: Record<string, ReactNode> = {
   Dashboard: <LayoutDashboard className="h-5 w-5" />,
   "Data Warga": <Users className="h-5 w-5" />,
   "Import Dataset": <UploadCloud className="h-5 w-5" />,
   "Kriteria & Bobot": <SlidersHorizontal className="h-5 w-5" />,
   "Penilaian SAW": <BarChart3 className="h-5 w-5" />,
   "Hasil Ranking": <Trophy className="h-5 w-5" />,
+  "Cek Status Bantuan": <FileQuestion className="h-5 w-5" />,
+  Profil: <UserRound className="h-5 w-5" />,
   Bantuan: <HandHelping className="h-5 w-5" />,
 };
 
+function getInitial(name?: string | null) {
+  if (!name) return "A";
+  return name.trim().charAt(0).toUpperCase();
+}
+
+function getDashboardHref(role: "admin" | "user") {
+  return role === "admin" ? "/admin/dashboard" : "/user/dashboard";
+}
+
 export function DashboardShell({
   children,
+  title,
+  description,
   userName,
+  role,
   menu,
   activeHref,
 }: DashboardShellProps) {
   const router = useRouter();
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const pathname = usePathname();
 
-  // Fungsi untuk menangani proses keluar sistem
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
+
   async function handleLogout() {
     if (isLoggingOut) return;
+
     setIsLoggingOut(true);
 
     try {
-      // 1. Hapus session token dari cookie browser
       await signOut({
         redirect: false,
         callbackUrl: "/login",
       });
 
-      // 2. Bersihkan cache router Next.js
       router.refresh();
-
-      // 3. Paksa navigasi ke halaman login dengan hard reload agar state bersih total
       window.location.href = "/login";
     } catch (error) {
       console.error("Gagal logout:", error);
@@ -76,188 +97,332 @@ export function DashboardShell({
     }
   }
 
-  return (
-    <main className="min-h-screen bg-[#F5F7F4]">
-      <div className="grid min-h-screen lg:grid-cols-[270px_1fr]">
+  const activePath = activeHref || pathname;
+  const dashboardHref = getDashboardHref(role);
 
-        {/* SIDEBAR */}
-        <aside className="flex flex-col border-r border-[#DCE8DA] bg-[#c2f2d8]">
+  const activeMenu = menu.find((item) => {
+    return (
+      activePath === item.href ||
+      (item.href !== "/admin/dashboard" &&
+        item.href !== "/user/dashboard" &&
+        pathname.startsWith(item.href))
+    );
+  });
 
-          {/* LOGO */}
-          <div className="border-b border-[#DCE8DA] px-7 py-6">
-            <div className="flex items-center gap-4">
-              {/* LOGO IMAGE */}
-              <div className="relative h-16 w-16 overflow-hidden rounded-2xl bg-white p-2 shadow-sm">
+  const breadcrumbTitle = activeMenu?.label || title;
+
+  function SidebarContent({
+    collapsed = false,
+    mobile = false,
+  }: {
+    collapsed?: boolean;
+    mobile?: boolean;
+  }) {
+    return (
+      <aside
+        className={`flex h-full flex-col border-r border-emerald-100 bg-white transition-all duration-300 ease-in-out ${
+          collapsed ? "w-[92px]" : "w-[292px]"
+        }`}
+      >
+        <div className={`px-5 py-6 ${collapsed ? "px-4" : ""}`}>
+          <div
+            className={`flex items-center ${
+              collapsed ? "justify-center" : "justify-between gap-3"
+            }`}
+          >
+            <Link
+              href={dashboardHref}
+              className={`flex items-center gap-3 ${
+                collapsed ? "justify-center" : ""
+              }`}
+              onClick={() => setIsMobileSidebarOpen(false)}
+            >
+              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50 p-1.5 shadow-sm">
                 <Image
                   src="/logo-spkbansos.jpeg"
                   alt="SIMBANTU"
                   fill
                   className="object-contain p-1"
+                  priority
                 />
               </div>
 
-              <div>
-                <h1 className="text-3xl font-black leading-none tracking-tight text-[#14532D]">
-                  SIMBANTU
-                </h1>
-                <p className="mt-1 text-xs leading-5 text-slate-500">
-                  Sistem Informasi
-                  <br />
-                  Manajemen Bantuan
+              {!collapsed ? (
+                <div>
+                  <h1 className="text-xl font-black tracking-tight text-slate-950">
+                    SIMBANTU
+                  </h1>
+
+                  <p className="text-xs font-medium text-slate-500">
+                    Manajemen Bantuan
+                  </p>
+                </div>
+              ) : null}
+            </Link>
+
+            {mobile ? (
+              <button
+                type="button"
+                onClick={() => setIsMobileSidebarOpen(false)}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-100 bg-white text-slate-600 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 lg:hidden"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            ) : null}
+          </div>
+        </div>
+
+        {!collapsed ? (
+          <div className="mx-6 rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
+                <ShieldCheck className="h-5 w-5" />
+              </div>
+
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
+                  {role}
+                </p>
+
+                <p className="truncate text-sm font-bold text-slate-900">
+                  {userName || "Administrator"}
                 </p>
               </div>
             </div>
           </div>
+        ) : null}
 
-          {/* MENU */}
-          <div className="flex-1 px-5 py-8">
-            <p className="mb-4 px-4 text-xs font-bold uppercase tracking-wider text-slate-400">
-              Menu Utama
+        <nav className={`mt-6 flex-1 space-y-1 ${collapsed ? "px-3" : "px-4"}`}>
+          {!collapsed ? (
+            <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+              Menu
             </p>
+          ) : null}
 
-            <nav className="space-y-2">
-              {menu.map((item, index) => {
-                const isActive = activeHref
-                  ? activeHref === item.href
-                  : index === 0;
+          {menu.map((item) => {
+            const isActive =
+              activePath === item.href ||
+              (item.href !== "/admin/dashboard" &&
+                item.href !== "/user/dashboard" &&
+                pathname.startsWith(item.href));
 
-                return (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className={`
-                      flex items-center gap-3 rounded-2xl px-4 py-4 text-sm font-semibold transition-all duration-300
-                      ${
-                        isActive
-                          ? "bg-[#DDEEDF] text-[#166534] shadow-sm"
-                          : "text-slate-600 hover:bg-white hover:text-[#166534]"
-                      }
-                    `}
-                  >
-                    <span>{menuIcons[item.label]}</span>
-                    <span>{item.label}</span>
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-
-          {/* FOOTER */}
-          <div className="border-t border-[#DCE8DA] p-5">
-            {/* CARD */}
-            <div className="rounded-3xl bg-gradient-to-br from-[#166534] to-[#2E7D32] p-5 text-white shadow-lg">
-              <div className="flex items-center gap-3">
-                <div className="relative h-11 w-11 overflow-hidden rounded-2xl bg-white/20">
-                  <Image
-                    src="/logo.png"
-                    alt="SIMBANTU"
-                    fill
-                    className="object-contain p-1"
-                  />
-                </div>
-                <div>
-                  <h3 className="font-bold">SIMBANTU</h3>
-                  <p className="text-xs text-green-100">
-                    Transparansi untuk Negeri
-                  </p>
-                </div>
-              </div>
-            </div>
-
-              {/* BUTTON */}
-                <div className="mt-5 space-y-2">
-                  {/* BANTUAN */}
-                  <button className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-[#166534]">
-                    <svg 
-                      className="h-5 w-5 flex-shrink-0" 
-                      fill="none" 
-                      viewBox="0 0 24 24" 
-                      stroke="currentColor" 
-                      strokeWidth={2}
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Bantuan
-                  </button>
-
-              {/* LOGOUT */}
-              <button
-                onClick={handleLogout}
-                disabled={isLoggingOut}
-                type="button"
-                className="flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-red-600 transition hover:bg-red-50 hover:text-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                title={collapsed ? item.label : undefined}
+                onClick={() => setIsMobileSidebarOpen(false)}
+                className={`group flex items-center rounded-xl text-sm font-semibold transition-all ${
+                  collapsed
+                    ? "h-12 justify-center px-0"
+                    : "justify-between px-4 py-3"
+                } ${
+                  isActive
+                    ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
+                    : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
+                }`}
               >
-                <LogOut className="h-5 w-5" />
-                {isLoggingOut ? "Mengeluarkan..." : "Logout"}
-              </button>
+                <span
+                  className={`flex items-center ${
+                    collapsed ? "justify-center" : "gap-3"
+                  }`}
+                >
+                  <span
+                    className={`transition ${
+                      isActive
+                        ? "text-white"
+                        : "text-slate-400 group-hover:text-emerald-600"
+                    }`}
+                  >
+                    {menuIcons[item.label] || <Home className="h-5 w-5" />}
+                  </span>
+
+                  {!collapsed ? item.label : null}
+                </span>
+
+                {!collapsed && isActive ? (
+                  <ChevronRight className="h-4 w-4 text-white/80" />
+                ) : null}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className={`${collapsed ? "p-3" : "p-4"}`}>
+          {!collapsed ? (
+            <div className="rounded-2xl border border-emerald-100 bg-slate-50 p-4">
+              <p className="text-sm font-bold text-slate-900">Butuh bantuan?</p>
+
+              <p className="mt-1 text-xs leading-5 text-slate-500">
+                Kelola data bantuan dengan rapi dan transparan melalui dashboard.
+              </p>
+
+              <Link
+                href="/pusat-bantuan"
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-bold text-emerald-700 shadow-sm transition hover:bg-emerald-600 hover:text-white"
+              >
+                <HandHelping className="h-4 w-4" />
+                Pusat Bantuan
+              </Link>
             </div>
-          </div>
+          ) : null}
 
-        </aside>
+          <button
+            onClick={handleLogout}
+            disabled={isLoggingOut}
+            type="button"
+            title="Logout"
+            className={`mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-red-100 bg-red-50 text-sm font-bold text-red-600 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 ${
+              collapsed ? "h-12 px-0" : "px-4 py-3"
+            }`}
+          >
+            <LogOut className="h-4 w-4" />
 
-        {/* CONTENT */}
-        <div className="flex flex-col">
+            {!collapsed ? (isLoggingOut ? "Mengeluarkan..." : "Logout") : null}
+          </button>
+        </div>
+      </aside>
+    );
+  }
 
-          {/* TOPBAR */}
-          <header className="sticky top-0 z-20 border-b border-[#DCE8DA] bg-white/90 backdrop-blur">
-            <div className="flex items-center justify-between px-8 py-5">
-              
-              {/* LEFT */}
-              <div className="flex items-center gap-5">
-                <button className="rounded-xl p-2 transition hover:bg-slate-100">
-                  <Menu className="h-6 w-6 text-slate-700" />
+  return (
+    <main className="min-h-screen bg-[#F6FAF7]">
+      <div
+        className={`fixed inset-0 z-50 transition lg:hidden ${
+          isMobileSidebarOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <button
+          type="button"
+          aria-label="Tutup sidebar"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          className={`absolute inset-0 bg-slate-950/40 transition-opacity duration-300 ${
+            isMobileSidebarOpen ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        <div
+          className={`relative h-full w-[292px] max-w-[85vw] transform transition-transform duration-300 ease-in-out ${
+            isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <SidebarContent mobile />
+        </div>
+      </div>
+
+      <div
+        className={`grid min-h-screen transition-[grid-template-columns] duration-300 ease-in-out ${
+          isDesktopSidebarOpen
+            ? "lg:grid-cols-[292px_1fr]"
+            : "lg:grid-cols-[92px_1fr]"
+        }`}
+      >
+        <div className="sticky top-0 hidden h-screen lg:block">
+          <SidebarContent collapsed={!isDesktopSidebarOpen} />
+        </div>
+
+        <div className="min-w-0">
+          <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/85 backdrop-blur-xl">
+            <div className="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+              <div className="flex min-w-0 items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setIsMobileSidebarOpen(true)}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-100 bg-white text-slate-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 lg:hidden"
+                >
+                  <Menu className="h-5 w-5" />
                 </button>
 
-                {/* SEARCH */}
-                <div className="relative w-full min-w-[420px]">
-                  <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+                <button
+                  type="button"
+                  onClick={() => setIsDesktopSidebarOpen((prev) => !prev)}
+                  className="hidden h-11 w-11 items-center justify-center rounded-xl border border-emerald-100 bg-white text-slate-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 lg:inline-flex"
+                >
+                  {isDesktopSidebarOpen ? (
+                    <PanelLeftClose className="h-5 w-5" />
+                  ) : (
+                    <PanelLeftOpen className="h-5 w-5" />
+                  )}
+                </button>
+
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="rounded-md bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-700">
+                      {role === "admin" ? "Admin Panel" : "User Panel"}
+                    </span>
+                  </div>
+
+                  <h2 className="mt-1 truncate text-xl font-black tracking-tight text-slate-950 sm:text-2xl">
+                    {title}
+                  </h2>
+                </div>
+              </div>
+
+              <div className="hidden min-w-[260px] max-w-md flex-1 xl:block">
+                <div className="relative">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+
                   <input
                     type="text"
                     placeholder="Cari data warga..."
-                    className="w-full rounded-2xl border border-slate-200 bg-[#F8FAF7] py-4 pl-12 pr-4 text-sm outline-none transition focus:border-[#2E7D32] focus:bg-white"
+                    className="h-12 w-full rounded-xl border border-slate-200 bg-slate-50 pl-11 pr-4 text-sm font-medium text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-emerald-300 focus:bg-white focus:ring-4 focus:ring-emerald-100"
                   />
                 </div>
               </div>
 
-              {/* RIGHT */}
-              <div className="ml-6 flex items-center gap-5">
-                {/* NOTIFICATION */}
-                <button className="relative rounded-2xl border border-slate-200 bg-white p-3 text-slate-600 transition hover:bg-[#F5F7F4]">
+              <div className="flex items-center gap-3">
+                <button
+                  type="button"
+                  className="relative hidden h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 sm:inline-flex"
+                >
                   <Bell className="h-5 w-5" />
-                  <span className="absolute right-2 top-2 flex h-5 w-5 items-center justify-center rounded-full bg-[#16A34A] text-[10px] font-bold text-white">
-                    2
-                  </span>
+                  <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500" />
                 </button>
 
-                {/* PROFILE */}
-                <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-2 shadow-sm">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#DDEEDF] font-bold text-[#166534]">
-                    {userName ? userName.charAt(0).toUpperCase() : "A"}
+                <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-sm font-black text-white">
+                    {getInitial(userName)}
                   </div>
 
                   <div className="hidden text-left md:block">
-                    <p className="text-sm font-bold text-slate-900">
+                    <p className="max-w-[150px] truncate text-sm font-bold text-slate-900">
                       {userName || "Admin"}
                     </p>
-                    <p className="text-xs text-slate-500">
-                      Administrator
+
+                    <p className="text-xs font-medium capitalize text-slate-500">
+                      {role}
                     </p>
                   </div>
-
-                  <ChevronDown className="h-4 w-4 text-slate-400" />
                 </div>
               </div>
-
             </div>
           </header>
 
-          {/* BODY */}
-          <section className="flex-1 p-8">
+          <section className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+            <div className="mb-6 border-b border-emerald-100 pb-5">
+              <nav className="flex flex-wrap items-center gap-2 text-sm">
+                <Link
+                  href={dashboardHref}
+                  className="font-semibold text-emerald-700 transition hover:text-emerald-900"
+                >
+                  {role === "admin" ? "Admin" : "User"}
+                </Link>
+
+                <ChevronRight className="h-4 w-4 text-slate-300" />
+
+                <span className="font-semibold text-slate-700">
+                  {breadcrumbTitle}
+                </span>
+              </nav>
+
+              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
+                {description}
+              </p>
+            </div>
+
             {children}
           </section>
-
         </div>
-
       </div>
     </main>
   );
