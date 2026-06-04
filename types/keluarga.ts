@@ -1,9 +1,13 @@
-// types/keluarga.ts
 export type StatusVerifikasi =
   | "pending"
   | "terverifikasi"
   | "ditolak"
   | "perlu_perbaikan";
+
+export type PenilaianManualItem = {
+  kode_kriteria: string;
+  nilai_awal: number;
+};
 
 export type Keluarga = {
   id: string;
@@ -16,8 +20,9 @@ export type Keluarga = {
   jumlah_anggota?: number | null;
   status_verifikasi: StatusVerifikasi;
   catatan_admin?: string | null;
-  created_at?: string;
-  updated_at?: string;
+  created_by?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 };
 
 export type KeluargaCreatePayload = {
@@ -27,16 +32,38 @@ export type KeluargaCreatePayload = {
   kelurahan?: string;
   dusun?: string;
   jumlah_anggota?: number;
+  penilaian?: PenilaianManualItem[];
 };
 
-export type KeluargaUpdatePayload = Partial<KeluargaCreatePayload> & {
-  status_verifikasi?: StatusVerifikasi;
-  catatan_admin?: string;
-};
-
-export type KeluargaFilter = {
-  search?: string;
+export type KeluargaUpdatePayload = {
+  nama_kepala_keluarga?: string;
+  nik?: string;
+  alamat?: string;
   kelurahan?: string;
   dusun?: string;
-  status_verifikasi?: StatusVerifikasi | "";
+  jumlah_anggota?: number;
+  status_verifikasi?: StatusVerifikasi;
+  catatan_admin?: string;
+  penilaian?: PenilaianManualItem[];
+};
+
+export type KeluargaMutationResponse = {
+  message: string;
+  data: Keluarga;
+  penilaian?: {
+    id: string;
+    keluarga_id: string;
+    kriteria_id: string;
+    sub_kriteria_id?: string | null;
+    nilai_awal: string | number;
+    nilai_normalisasi?: string | number | null;
+    nilai_terbobot?: string | number | null;
+    created_at?: string | null;
+    updated_at?: string | null;
+  }[];
+};
+
+export type VerifikasiKeluargaPayload = {
+  status_verifikasi: StatusVerifikasi;
+  catatan_admin?: string;
 };

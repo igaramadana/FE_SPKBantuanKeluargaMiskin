@@ -1,9 +1,11 @@
 "use client";
 
+import type { ImportBatch } from "@/types/import-data";
 import type { Keluarga } from "@/types/keluarga";
 import type { Kriteria } from "@/types/kriteria";
 import type { RiwayatSaw, SawResult } from "@/types/saw";
 import {
+  autoGeneratePenilaianDariImport,
   hitungSawDariDatabase,
   simpanPenilaianSaw,
 } from "@/services/saw.service";
@@ -13,11 +15,9 @@ import { FormEvent, useMemo, useState } from "react";
 import {
   AlertCircle,
   ArrowRight,
-  BadgeCheck,
   BarChart3,
   Calculator,
   CheckCircle2,
-  Clock3,
   Database,
   FileSpreadsheet,
   History,
@@ -40,6 +40,7 @@ type SawCalculateClientProps = {
   kriteria: Kriteria[];
   hasilSaw: SawResult[];
   riwayatSaw: RiwayatSaw[];
+  importBatches: ImportBatch[];
   errorMessage?: string;
   userName?: string;
 };
@@ -52,25 +53,19 @@ function formatAngka(value: number) {
 
 function formatSkor(value: string | number | null | undefined) {
   const parsed = Number(value ?? 0);
-
   if (!Number.isFinite(parsed)) return "0.0000";
-
   return parsed.toFixed(4);
 }
 
 function formatBobot(value: string | number | null | undefined) {
   const parsed = Number(value ?? 0);
-
   if (!Number.isFinite(parsed)) return "-";
-
   return parsed.toFixed(4);
 }
 
 function formatPersen(value: string | number | null | undefined) {
   const parsed = Number(value ?? 0);
-
   if (!Number.isFinite(parsed)) return "-";
-
   return `${(parsed * 100).toFixed(2).replace(".", ",")}%`;
 }
 
@@ -78,7 +73,6 @@ function formatTanggal(value?: string | null) {
   if (!value) return "-";
 
   const date = new Date(value);
-
   if (Number.isNaN(date.getTime())) return "-";
 
   return new Intl.DateTimeFormat("id-ID", {
@@ -196,6 +190,7 @@ export function SawCalculateClient({
   kriteria,
   hasilSaw,
   riwayatSaw,
+  importBatches,
   errorMessage,
   userName,
 }: SawCalculateClientProps) {
@@ -208,10 +203,14 @@ export function SawCalculateClient({
     useState("Perhitungan AHP-SAW");
   const [mode, setMode] = useState<ModeHitung>("kuota");
   const [threshold, setThreshold] = useState("0.60");
-  const [quota, setQuota] = useState("50");
-  const [reserveQuota, setReserveQuota] = useState("10");
+  const [quota, setQuota] = useState("5");
+  const [reserveQuota, setReserveQuota] = useState("2");
+  const [selectedImportBatchId, setSelectedImportBatchId] = useState(
+    importBatches[0]?.id || ""
+  );
   const [isSaving, setIsSaving] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
+  const [isAutoGenerating, setIsAutoGenerating] = useState(false);
   const [messageType, setMessageType] =
     useState<"success" | "error" | "info">("info");
   const [message, setMessage] = useState("");
@@ -313,6 +312,60 @@ export function SawCalculateClient({
     setMessageType("info");
   }
 
+  async function handleAutoGeneratePenilaian() {
+    if (!selectedImportBatchId) {
+      setInfo("error", "Pilih batch import terlebih dahulu.");
+      return;
+    }
+
+    if (kriteria.length === 0) {
+      setInfo("error", "Belum ada kriteria aktif C1-C6.");
+      return;
+    }
+
+    if (keluarga.length === 0) {
+      setInfo("error", "Belum ada keluarga terverifikasi.");
+      return;
+    }
+
+    setIsAutoGenerating(true);
+    setMessage("");
+
+    try {
+      const result = await autoGeneratePenilaianDariImport({
+        import_batch_id: selectedImportBatchId,
+      });
+
+      let extraMessage = "";
+
+      if (result.errors && result.errors.length > 0) {
+        extraMessage = ` Contoh error: ${result.errors
+          .slice(0, 3)
+          .join(" | ")}`;
+      }
+
+      setInfo(
+        result.total_gagal > 0 ? "info" : "success",
+        `${result.message} Diproses: ${formatAngka(
+          result.total_diproses
+        )}, berhasil: ${formatAngka(
+          result.total_berhasil
+        )}, gagal: ${formatAngka(result.total_gagal)}.${extraMessage}`
+      );
+
+      router.refresh();
+    } catch (error) {
+      setInfo(
+        "error",
+        error instanceof Error
+          ? error.message
+          : "Gagal auto generate penilaian dari batch import."
+      );
+    } finally {
+      setIsAutoGenerating(false);
+    }
+  }
+
   async function handleSavePenilaian() {
     if (kriteria.length === 0) {
       setInfo("error", "Belum ada kriteria aktif.");
@@ -341,7 +394,10 @@ export function SawCalculateClient({
     );
 
     if (invalidItem) {
-      setInfo("error", "Nilai penilaian harus berupa angka dan tidak boleh negatif.");
+      setInfo(
+        "error",
+        "Nilai penilaian harus berupa angka dan tidak boleh negatif."
+      );
       return;
     }
 
@@ -427,7 +483,6 @@ export function SawCalculateClient({
         threshold: mode === "threshold" ? Number(threshold) : undefined,
         quota: mode === "kuota" ? Number(quota) : undefined,
         reserve_quota: mode === "kuota" ? Number(reserveQuota || 0) : 0,
-        dihitung_oleh: userName || "Admin",
       });
 
       setInfo(
@@ -465,34 +520,38 @@ export function SawCalculateClient({
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
-              Isi nilai setiap kriteria untuk keluarga terverifikasi, simpan ke
-              database, lalu jalankan perhitungan SAW untuk mendapatkan ranking
-              kelayakan penerima bantuan.
+              Isi nilai setiap kriteria untuk keluarga terverifikasi, atau
+              auto-generate nilai dari dataset testing yang sudah punya skor C1
+              sampai C6.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
               <button
                 type="button"
+                onClick={handleAutoGeneratePenilaian}
+                disabled={isAutoGenerating || !selectedImportBatchId}
+                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isAutoGenerating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Database className="h-4 w-4" />
+                )}
+                Auto Generate Nilai
+              </button>
+
+              <button
+                type="button"
                 onClick={handleSavePenilaian}
                 disabled={isSaving || filledCount === 0}
-                className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-3 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-5 py-3 text-sm font-bold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isSaving ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
                   <Save className="h-4 w-4" />
                 )}
-                Simpan Penilaian
-              </button>
-
-              <button
-                type="button"
-                onClick={fillDefaultVisible}
-                disabled={filteredKeluarga.length === 0 || kriteria.length === 0}
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 bg-white px-5 py-3 text-sm font-bold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <FileSpreadsheet className="h-4 w-4" />
-                Isi Default
+                Simpan Manual
               </button>
 
               <Link
@@ -505,7 +564,7 @@ export function SawCalculateClient({
             </div>
           </div>
 
-          <div className="border-t border-emerald-100 bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white lg:border-l lg:border-t-0 sm:p-8">
+          <div className="border-t border-emerald-100 bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white sm:p-8 lg:border-l lg:border-t-0">
             <p className="text-sm font-semibold text-emerald-100">
               Perhitungan Terakhir
             </p>
@@ -569,10 +628,10 @@ export function SawCalculateClient({
         />
 
         <MetricCard
-          title="Nilai Diisi"
-          value={formatAngka(filledCount)}
-          description="Jumlah input nilai yang belum disimpan."
-          icon={<Database className="h-6 w-6" />}
+          title="Batch Import"
+          value={formatAngka(importBatches.length)}
+          description="Batch dataset yang bisa dipakai auto-generate."
+          icon={<FileSpreadsheet className="h-6 w-6" />}
         />
       </section>
 
@@ -597,7 +656,7 @@ export function SawCalculateClient({
           </div>
 
           <div className="mt-6 space-y-4">
-            <label className="space-y-2 block">
+            <label className="block space-y-2">
               <span className="text-sm font-bold text-slate-700">
                 Nama Perhitungan
               </span>
@@ -608,7 +667,7 @@ export function SawCalculateClient({
               />
             </label>
 
-            <label className="space-y-2 block">
+            <label className="block space-y-2">
               <span className="text-sm font-bold text-slate-700">
                 Mode Penentuan Status
               </span>
@@ -623,7 +682,7 @@ export function SawCalculateClient({
             </label>
 
             {mode === "threshold" ? (
-              <label className="space-y-2 block">
+              <label className="block space-y-2">
                 <span className="text-sm font-bold text-slate-700">
                   Nilai Threshold
                 </span>
@@ -636,13 +695,10 @@ export function SawCalculateClient({
                   onChange={(event) => setThreshold(event.target.value)}
                   className="h-12 w-full rounded-xl border border-slate-200 px-4 text-sm font-medium outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
                 />
-                <p className="text-xs leading-5 text-slate-400">
-                  Contoh: 0.60 berarti keluarga dengan skor minimal 0.60 dianggap layak.
-                </p>
               </label>
             ) : (
               <div className="grid gap-4 md:grid-cols-2">
-                <label className="space-y-2 block">
+                <label className="block space-y-2">
                   <span className="text-sm font-bold text-slate-700">
                     Kuota Layak
                   </span>
@@ -655,7 +711,7 @@ export function SawCalculateClient({
                   />
                 </label>
 
-                <label className="space-y-2 block">
+                <label className="block space-y-2">
                   <span className="text-sm font-bold text-slate-700">
                     Kuota Cadangan
                   </span>
@@ -685,43 +741,109 @@ export function SawCalculateClient({
           </div>
         </form>
 
-        <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
-          <div className="flex items-start gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700">
-              <Info className="h-6 w-6" />
+        <div className="space-y-6">
+          <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700">
+                <FileSpreadsheet className="h-6 w-6" />
+              </div>
+
+              <div>
+                <h2 className="[font-family:var(--font-oswald)] text-3xl font-semibold tracking-tight text-slate-950">
+                  Auto Generate Penilaian
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  Ambil nilai skor C1-C6 dari raw import dataset testing.
+                </p>
+              </div>
             </div>
 
-            <div>
-              <h2 className="[font-family:var(--font-oswald)] text-3xl font-semibold tracking-tight text-slate-950">
-                Catatan Penting
-              </h2>
-              <p className="mt-1 text-sm leading-6 text-slate-500">
-                Hal yang wajib dipenuhi sebelum menjalankan SAW.
+            <div className="mt-6 space-y-4">
+              <label className="block space-y-2">
+                <span className="text-sm font-bold text-slate-700">
+                  Batch Import
+                </span>
+
+                <select
+                  value={selectedImportBatchId}
+                  onChange={(event) =>
+                    setSelectedImportBatchId(event.target.value)
+                  }
+                  className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
+                >
+                  <option value="">Pilih batch import</option>
+                  {importBatches.map((batch) => (
+                    <option key={batch.id} value={batch.id}>
+                      {batch.nama_file} - {formatTanggal(batch.created_at)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+
+              <button
+                type="button"
+                onClick={handleAutoGeneratePenilaian}
+                disabled={isAutoGenerating || !selectedImportBatchId}
+                className="inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isAutoGenerating ? (
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                ) : (
+                  <Database className="h-4 w-4" />
+                )}
+                {isAutoGenerating ? "Generate..." : "Auto Generate Nilai"}
+              </button>
+
+              <p className="text-xs leading-5 text-slate-400">
+                Pastikan data warga sudah terverifikasi dan kriteria aktif
+                memakai kode C1 sampai C6.
               </p>
             </div>
           </div>
 
-          <div className="mt-6 space-y-3 text-sm leading-6 text-slate-600">
-            <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
-              <p className="font-bold text-emerald-800">1. Keluarga harus terverifikasi</p>
-              <p className="mt-1 text-emerald-700">
-                Hanya data dengan status terverifikasi yang masuk perhitungan.
-              </p>
+          <div className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
+            <div className="flex items-start gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700">
+                <Info className="h-6 w-6" />
+              </div>
+
+              <div>
+                <h2 className="[font-family:var(--font-oswald)] text-3xl font-semibold tracking-tight text-slate-950">
+                  Catatan Penting
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-slate-500">
+                  Hal yang wajib dipenuhi sebelum menjalankan SAW.
+                </p>
+              </div>
             </div>
 
-            <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
-              <p className="font-bold text-amber-800">2. Semua nilai harus lengkap</p>
-              <p className="mt-1 text-amber-700">
-                Setiap keluarga wajib punya nilai untuk semua kriteria aktif.
-              </p>
-            </div>
+            <div className="mt-6 space-y-3 text-sm leading-6 text-slate-600">
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4">
+                <p className="font-bold text-emerald-800">
+                  1. Keluarga harus terverifikasi
+                </p>
+                <p className="mt-1 text-emerald-700">
+                  Hanya data dengan status terverifikasi yang masuk perhitungan.
+                </p>
+              </div>
 
-            <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
-              <p className="font-bold text-slate-900">3. Total bobot ideal 1.0000</p>
-              <p className="mt-1 text-slate-500">
-                Kalau total bobot aktif belum 1.0000, hasil ranking tetap bisa jalan,
-                tapi interpretasinya kurang ideal.
-              </p>
+              <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
+                <p className="font-bold text-amber-800">
+                  2. Kriteria harus pakai kode C1-C6
+                </p>
+                <p className="mt-1 text-amber-700">
+                  Auto generate membaca skor_C1 sampai skor_C6 dari raw import.
+                </p>
+              </div>
+
+              <div className="rounded-xl border border-slate-100 bg-slate-50 p-4">
+                <p className="font-bold text-slate-900">
+                  3. Total bobot ideal 1.0000
+                </p>
+                <p className="mt-1 text-slate-500">
+                  Kalau bobot aktif belum 1.0000, hasil ranking kurang ideal.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -731,14 +853,24 @@ export function SawCalculateClient({
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <h2 className="[font-family:var(--font-oswald)] text-3xl font-semibold tracking-tight text-slate-950">
-              Input Nilai Penilaian
+              Input Nilai Manual
             </h2>
             <p className="mt-1 text-sm leading-6 text-slate-500">
-              Isi nilai awal setiap kriteria. Untuk skor kemiskinan, gunakan skala 1–5.
+              Opsional. Dipakai kalau ingin input nilai manual tanpa batch import.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
+            <button
+              type="button"
+              onClick={fillDefaultVisible}
+              disabled={filteredKeluarga.length === 0 || kriteria.length === 0}
+              className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 px-4 py-2.5 text-sm font-bold text-emerald-700 transition hover:bg-emerald-50 disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Isi Default
+            </button>
+
             <button
               type="button"
               onClick={resetPenilaian}
@@ -746,7 +878,7 @@ export function SawCalculateClient({
               className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-2.5 text-sm font-bold text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <RefreshCcw className="h-4 w-4" />
-              Reset Input
+              Reset
             </button>
 
             <button
@@ -801,7 +933,7 @@ export function SawCalculateClient({
             </h3>
 
             <p className="mx-auto mt-2 max-w-md text-sm leading-6 text-slate-500">
-              Aktifkan kriteria dan isi bobot terlebih dahulu sebelum input nilai SAW.
+              Aktifkan kriteria dan isi bobot terlebih dahulu.
             </p>
 
             <Link
@@ -983,7 +1115,9 @@ export function SawCalculateClient({
                       </td>
 
                       <td className="px-3 py-4">
-                        <StatusBadge status={item.status_final || item.status_sistem} />
+                        <StatusBadge
+                          status={item.status_final || item.status_sistem}
+                        />
                       </td>
                     </tr>
                   ))}

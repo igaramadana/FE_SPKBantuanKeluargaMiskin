@@ -1,20 +1,35 @@
-import {
-  apiDelete,
-  apiGet,
-  apiPatch,
-  apiPost,
-  apiPut,
-} from "@/lib/api";
+import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api";
 import type {
   Keluarga,
   KeluargaCreatePayload,
-  KeluargaFilter,
+  KeluargaMutationResponse,
   KeluargaUpdatePayload,
-  StatusVerifikasi,
+  VerifikasiKeluargaPayload,
 } from "@/types/keluarga";
 
-export function ambilSemuaKeluarga(filter?: KeluargaFilter) {
-  return apiGet<Keluarga[]>("/keluarga", filter);
+type AmbilKeluargaParams = {
+  search?: string;
+  status_verifikasi?: string;
+  kelurahan?: string;
+  dusun?: string;
+};
+
+function toQueryString(params?: AmbilKeluargaParams) {
+  if (!params) return "";
+
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value) searchParams.set(key, value);
+  });
+
+  const query = searchParams.toString();
+
+  return query ? `?${query}` : "";
+}
+
+export function ambilSemuaKeluarga(params?: AmbilKeluargaParams) {
+  return apiGet<Keluarga[]>(`/keluarga${toQueryString(params)}`);
 }
 
 export function ambilDetailKeluarga(id: string) {
@@ -22,23 +37,29 @@ export function ambilDetailKeluarga(id: string) {
 }
 
 export function tambahKeluarga(payload: KeluargaCreatePayload) {
-  return apiPost<Keluarga, KeluargaCreatePayload>("/keluarga", payload);
+  return apiPost<KeluargaMutationResponse, KeluargaCreatePayload>(
+    "/keluarga",
+    payload
+  );
 }
 
 export function updateKeluarga(id: string, payload: KeluargaUpdatePayload) {
-  return apiPut<Keluarga, KeluargaUpdatePayload>(`/keluarga/${id}`, payload);
+  return apiPatch<KeluargaMutationResponse, KeluargaUpdatePayload>(
+    `/keluarga/${id}`,
+    payload
+  );
 }
 
 export function hapusKeluarga(id: string) {
-  return apiDelete<{ message: string; data: Keluarga }>(`/keluarga/${id}`);
+  return apiDelete<KeluargaMutationResponse>(`/keluarga/${id}`);
 }
 
 export function verifikasiKeluarga(
   id: string,
-  payload: {
-    status_verifikasi: StatusVerifikasi;
-    catatan_admin?: string;
-  }
+  payload: VerifikasiKeluargaPayload
 ) {
-  return apiPatch<Keluarga, typeof payload>(`/keluarga/${id}/verifikasi`, payload);
+  return apiPatch<KeluargaMutationResponse, VerifikasiKeluargaPayload>(
+    `/keluarga/${id}/verifikasi`,
+    payload
+  );
 }

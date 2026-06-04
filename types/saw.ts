@@ -75,3 +75,15 @@ export type RiwayatSaw = {
   tanggal_hitung: string;
   dihitung_oleh?: string | null;
 };
+
+export type AutoGeneratePenilaianPayload = {
+  import_batch_id: string;
+};
+
+export type AutoGeneratePenilaianResponse = {
+  message: string;
+  total_diproses: number;
+  total_berhasil: number;
+  total_gagal: number;
+  errors?: string[];
+};
