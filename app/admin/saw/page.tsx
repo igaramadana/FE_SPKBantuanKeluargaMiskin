@@ -1,41 +1,94 @@
-// app/admin/saw/page.tsx
 import { auth } from "@/auth";
 import { DashboardShell } from "@/components/dashboard/DashboardShell";
 import { adminMenu } from "@/constants/admin-menu";
 import { SawCalculateClient } from "@/components/admin/saw/SawCalculateClient";
-import { Calculator } from "lucide-react";
+import { ambilSemuaKeluarga } from "@/services/keluarga.service";
+import { ambilSemuaKriteria } from "@/services/kriteria.service";
+import {
+  ambilHasilSawTerbaru,
+  ambilRiwayatSaw,
+} from "@/services/saw.service";
+import type { Keluarga } from "@/types/keluarga";
+import type { Kriteria } from "@/types/kriteria";
+import type { RiwayatSaw, SawResult } from "@/types/saw";
 
 export default async function AdminSawPage() {
   const session = await auth();
 
+  let keluarga: Keluarga[] = [];
+  let kriteria: Kriteria[] = [];
+  let hasilSaw: SawResult[] = [];
+  let riwayatSaw: RiwayatSaw[] = [];
+  let errorMessage = "";
+
+  const [keluargaResult, kriteriaResult, hasilResult, riwayatResult] =
+    await Promise.allSettled([
+      ambilSemuaKeluarga({
+        status_verifikasi: "terverifikasi",
+      }),
+      ambilSemuaKriteria(),
+      ambilHasilSawTerbaru(),
+      ambilRiwayatSaw(),
+    ]);
+
+  if (keluargaResult.status === "fulfilled") {
+    keluarga = keluargaResult.value;
+  }
+
+  if (kriteriaResult.status === "fulfilled") {
+    kriteria = kriteriaResult.value;
+  }
+
+  if (hasilResult.status === "fulfilled") {
+    hasilSaw = hasilResult.value;
+  }
+
+  if (riwayatResult.status === "fulfilled") {
+    riwayatSaw = riwayatResult.value;
+  }
+
+  const rejected = [
+    keluargaResult,
+    kriteriaResult,
+    hasilResult,
+    riwayatResult,
+  ].find((item) => item.status === "rejected");
+
+  if (rejected?.status === "rejected") {
+    errorMessage =
+      rejected.reason instanceof Error
+        ? rejected.reason.message
+        : "Sebagian data SAW gagal dimuat.";
+  }
+
+  const kriteriaAktif = kriteria
+    .filter((item) => item.aktif)
+    .sort((a, b) => {
+      const urutanA = a.urutan ?? 9999;
+      const urutanB = b.urutan ?? 9999;
+
+      if (urutanA !== urutanB) return urutanA - urutanB;
+
+      return a.kode.localeCompare(b.kode);
+    });
+
   return (
     <DashboardShell
-      title="SIMBANTU"
-      description="Sistem Informasi Manajemen Bantuan"
+      title="Penilaian SAW"
+      description="Input nilai kriteria, simpan penilaian, lalu jalankan perhitungan ranking bantuan."
       userName={session?.user?.name || "Admin"}
       role="admin"
       menu={adminMenu}
       activeHref="/admin/saw"
     >
-      <div className="space-y-8">
-        <div>
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#E8F5E9] px-4 py-2 text-xs font-semibold uppercase tracking-wide text-[#1B5E20]">
-            <Calculator className="h-4 w-4" />
-            Penilaian SAW
-          </div>
-
-          <h1 className="mt-3 text-3xl font-black tracking-tight text-slate-900">
-            Hitung Ranking Bantuan
-          </h1>
-
-          <p className="mt-2 max-w-2xl text-sm text-slate-500">
-            Jalankan perhitungan SAW dari data keluarga yang sudah terverifikasi
-            dan sudah memiliki nilai pada semua kriteria aktif.
-          </p>
-        </div>
-
-        <SawCalculateClient />
-      </div>
+      <SawCalculateClient
+        keluarga={keluarga}
+        kriteria={kriteriaAktif}
+        hasilSaw={hasilSaw}
+        riwayatSaw={riwayatSaw}
+        errorMessage={errorMessage}
+        userName={session?.user?.name || "Admin"}
+      />
     </DashboardShell>
   );
 }

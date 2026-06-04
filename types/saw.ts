@@ -1,4 +1,3 @@
-// types/saw.ts
 export type StatusKelayakan = "layak" | "tidak_layak" | "cadangan";
 
 export type SawResult = {
@@ -38,4 +37,41 @@ export type SawCalculateFromDbResponse = {
   };
   data: unknown[];
   saved: unknown[];
+};
+
+export type PenilaianSawItemPayload = {
+  keluarga_id: string;
+  kriteria_id: string;
+  sub_kriteria_id?: string | null;
+  nilai_awal: number;
+};
+
+export type SimpanPenilaianSawPayload = {
+  data: PenilaianSawItemPayload[];
+};
+
+export type SimpanPenilaianSawResponse = {
+  message: string;
+  data: {
+    id: string;
+    keluarga_id: string;
+    kriteria_id: string;
+    sub_kriteria_id?: string | null;
+    nilai_awal: string | number;
+    nilai_normalisasi?: string | number | null;
+    nilai_terbobot?: string | number | null;
+  }[];
+};
+
+export type RiwayatSaw = {
+  id: string;
+  nama_perhitungan: string;
+  metode: string;
+  jumlah_data: number;
+  consistency_ratio?: string | null;
+  mode_status: string;
+  threshold?: string | number | null;
+  kuota?: number | null;
+  tanggal_hitung: string;
+  dihitung_oleh?: string | null;
 };

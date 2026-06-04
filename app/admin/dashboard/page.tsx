@@ -4,7 +4,7 @@ import { adminMenu } from "@/constants/admin-menu";
 import { ambilSemuaKeluarga } from "@/services/keluarga.service";
 import { ambilHasilSawTerbaru, ambilRiwayatSaw } from "@/services/saw.service";
 import type { Keluarga } from "@/types/keluarga";
-import type { SawResult, StatusKelayakan } from "@/types/saw";
+import type { RiwayatSaw, SawResult, StatusKelayakan } from "@/types/saw";
 import Link from "next/link";
 import {
   AlertCircle,
@@ -35,18 +35,6 @@ type PageProps = {
   }>;
 };
 
-type RiwayatSaw = {
-  id: string;
-  nama_perhitungan: string;
-  metode: string;
-  jumlah_data: number;
-  consistency_ratio?: string | null;
-  mode_status: string;
-  threshold?: string | null;
-  kuota?: number | null;
-  tanggal_hitung: string;
-};
-
 function formatAngka(value: number) {
   return new Intl.NumberFormat("id-ID").format(value);
 }
@@ -66,7 +54,9 @@ function formatPersen(value: number) {
 
 function formatSkor(value: string | number | null | undefined) {
   const numberValue = Number(value ?? 0);
+
   if (!Number.isFinite(numberValue)) return "0.0000";
+
   return numberValue.toFixed(4);
 }
 
@@ -450,7 +440,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps) {
               </div>
             </div>
 
-            <div className="border-t border-emerald-100 bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white lg:border-l lg:border-t-0 sm:p-8">
+            <div className="border-t border-emerald-100 bg-gradient-to-br from-emerald-600 to-emerald-800 p-6 text-white sm:p-8 lg:border-l lg:border-t-0">
               <p className="text-sm font-semibold text-emerald-100">
                 Perhitungan Terakhir
               </p>

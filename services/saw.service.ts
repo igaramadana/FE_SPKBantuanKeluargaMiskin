@@ -1,10 +1,19 @@
-// services/saw.service.ts
 import { apiGet, apiPost } from "@/lib/api";
 import type {
+  RiwayatSaw,
   SawCalculateFromDbPayload,
   SawCalculateFromDbResponse,
   SawResult,
+  SimpanPenilaianSawPayload,
+  SimpanPenilaianSawResponse,
 } from "@/types/saw";
+
+export function simpanPenilaianSaw(payload: SimpanPenilaianSawPayload) {
+  return apiPost<SimpanPenilaianSawResponse, SimpanPenilaianSawPayload>(
+    "/saw/penilaian",
+    payload
+  );
+}
 
 export function hitungSawDariDatabase(payload: SawCalculateFromDbPayload) {
   return apiPost<SawCalculateFromDbResponse, SawCalculateFromDbPayload>(
@@ -18,17 +27,5 @@ export function ambilHasilSawTerbaru() {
 }
 
 export function ambilRiwayatSaw() {
-  return apiGet<
-    {
-      id: string;
-      nama_perhitungan: string;
-      metode: string;
-      jumlah_data: number;
-      consistency_ratio?: string | null;
-      mode_status: string;
-      threshold?: string | null;
-      kuota?: number | null;
-      tanggal_hitung: string;
-    }[]
-  >("/saw/riwayat");
+  return apiGet<RiwayatSaw[]>("/saw/riwayat");
 }
