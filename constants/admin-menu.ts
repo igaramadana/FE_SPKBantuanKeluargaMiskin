@@ -24,4 +24,9 @@ export const adminMenu = [
     label: "Hasil Ranking",
     href: "/admin/hasil-spk",
   },
+  {
+    label: "AHP Bobot",
+    href: "/admin/ahp",
+    icon: "Scale",
+  },
 ];

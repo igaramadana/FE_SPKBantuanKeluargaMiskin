@@ -14,7 +14,7 @@ export type Kriteria = {
     kode: string;
     nama: string;
     jenis: JenisKriteria;
-    bobot_ahp?: string | null;
+    bobot_ahp?: number | string;
     aktif: boolean;
     urutan?: number | null;
     sub_kriteria?: SubKriteria[];

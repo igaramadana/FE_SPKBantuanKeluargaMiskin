@@ -1,19 +1,17 @@
 "use client";
 
 import {
-  mappingImportKeKeluarga,
   previewImportDataset,
   simpanRawImportDataset,
 } from "@/services/import-data.service";
 import type {
   ImportBatch,
   ImportPreview,
-  MappingImportPayload,
   SaveRawImportResponse,
 } from "@/types/import-data";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   AlertCircle,
   ArrowRight,
@@ -26,7 +24,6 @@ import {
   History,
   Info,
   Loader2,
-  MapPinned,
   RefreshCcw,
   Rows3,
   Save,
@@ -40,30 +37,22 @@ type ImportDatasetClientProps = {
   initialErrorMessage?: string;
 };
 
-type StepKey = "upload" | "preview" | "save" | "mapping" | "done";
-
-type MappingState = {
-  kolom_nama_kepala_keluarga: string;
-  kolom_nik: string;
-  kolom_alamat: string;
-  kolom_kelurahan: string;
-  kolom_dusun: string;
-  kolom_jumlah_anggota: string;
-};
-
-const defaultMapping: MappingState = {
-  kolom_nama_kepala_keluarga: "",
-  kolom_nik: "",
-  kolom_alamat: "",
-  kolom_kelurahan: "",
-  kolom_dusun: "",
-  kolom_jumlah_anggota: "",
-};
+type StepKey = "upload" | "preview" | "save" | "done";
 
 const requiredColumns = ["kelurahan", "dusun", "jml_anggota_keluarga"];
 
-function formatAngka(value: number) {
-  return new Intl.NumberFormat("id-ID").format(value);
+function toSafeNumber(value: number | string | null | undefined) {
+  const parsed = Number(value ?? 0);
+
+  if (!Number.isFinite(parsed)) {
+    return 0;
+  }
+
+  return parsed;
+}
+
+function formatAngka(value: number | string | null | undefined) {
+  return new Intl.NumberFormat("id-ID").format(toSafeNumber(value));
 }
 
 function formatTanggal(value?: string | null) {
@@ -86,24 +75,6 @@ function formatFileSize(size: number) {
   if (size < 1024) return `${size} B`;
   if (size < 1024 * 1024) return `${(size / 1024).toFixed(1)} KB`;
   return `${(size / 1024 / 1024).toFixed(1)} MB`;
-}
-
-function normalizeColumnName(value: string) {
-  return value.toLowerCase().replace(/\s+/g, "_").trim();
-}
-
-function findColumn(columns: string[], candidates: string[]) {
-  const normalizedMap = new Map(
-    columns.map((column) => [normalizeColumnName(column), column])
-  );
-
-  for (const candidate of candidates) {
-    const found = normalizedMap.get(normalizeColumnName(candidate));
-
-    if (found) return found;
-  }
-
-  return "";
 }
 
 function StepItem({
@@ -162,7 +133,7 @@ function MetricCard({
   title: string;
   value: string;
   description: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
 }) {
   return (
     <div className="rounded-2xl border border-emerald-100 bg-white p-5 shadow-sm">
@@ -221,7 +192,6 @@ export function ImportDatasetClient({
   const [savedImport, setSavedImport] =
     useState<SaveRawImportResponse | null>(null);
   const [batches, setBatches] = useState<ImportBatch[]>(initialBatches);
-  const [mapping, setMapping] = useState<MappingState>(defaultMapping);
   const [isLoading, setIsLoading] = useState(false);
   const [messageType, setMessageType] =
     useState<"success" | "error" | "info">("info");
@@ -230,39 +200,26 @@ export function ImportDatasetClient({
   const columns = preview?.columns ?? [];
 
   const currentStep: StepKey = useMemo(() => {
-    if (
-      savedImport &&
-      messageType === "success" &&
-      message.includes("Mapping selesai")
-    ) {
-      return "done";
-    }
-
-    if (savedImport) return "mapping";
+    if (savedImport) return "done";
     if (preview) return "save";
     if (file) return "preview";
     return "upload";
-  }, [file, preview, savedImport, message, messageType]);
+  }, [file, preview, savedImport]);
 
   const totalImportedRows = batches.reduce(
-    (total, item) => total + Number(item.jumlah_baris || 0),
+    (total, item) => total + toSafeNumber(item.jumlah_baris),
     0
   );
 
   const totalValidRows = batches.reduce(
-    (total, item) => total + Number(item.jumlah_valid || 0),
+    (total, item) => total + toSafeNumber(item.jumlah_valid),
     0
   );
 
   const totalErrorRows = batches.reduce(
-    (total, item) => total + Number(item.jumlah_error || 0),
+    (total, item) => total + toSafeNumber(item.jumlah_error),
     0
   );
-
-  const hasRequiredMapping =
-    Boolean(mapping.kolom_kelurahan) &&
-    Boolean(mapping.kolom_dusun) &&
-    Boolean(mapping.kolom_jumlah_anggota);
 
   function setInfo(type: "success" | "error" | "info", text: string) {
     setMessageType(type);
@@ -273,32 +230,8 @@ export function ImportDatasetClient({
     setFile(null);
     setPreview(null);
     setSavedImport(null);
-    setMapping(defaultMapping);
     setMessage("");
     setMessageType("info");
-  }
-
-  function autoMapColumns(nextPreview: ImportPreview) {
-    const detectedColumns = nextPreview.columns;
-
-    setMapping({
-      kolom_nama_kepala_keluarga: findColumn(detectedColumns, [
-        "nama_kepala_keluarga",
-        "nama",
-        "kepala_keluarga",
-        "nama_kk",
-      ]),
-      kolom_nik: findColumn(detectedColumns, ["nik", "no_nik", "nomor_nik"]),
-      kolom_alamat: findColumn(detectedColumns, ["alamat", "address"]),
-      kolom_kelurahan: findColumn(detectedColumns, ["kelurahan"]),
-      kolom_dusun: findColumn(detectedColumns, ["dusun"]),
-      kolom_jumlah_anggota: findColumn(detectedColumns, [
-        "jml_anggota_keluarga",
-        "jumlah_anggota",
-        "jumlah_anggota_keluarga",
-        "anggota_keluarga",
-      ]),
-    });
   }
 
   function handleFileChange(selectedFile: File | null) {
@@ -316,7 +249,6 @@ export function ImportDatasetClient({
     setFile(selectedFile);
     setPreview(null);
     setSavedImport(null);
-    setMapping(defaultMapping);
     setInfo(
       "info",
       "File berhasil dipilih. Klik Preview Dataset untuk mengecek isi file."
@@ -337,14 +269,13 @@ export function ImportDatasetClient({
 
       setPreview(result);
       setSavedImport(null);
-      autoMapColumns(result);
 
       if (result.missing_required_columns.length > 0) {
         setInfo(
           "error",
           `Preview berhasil, tapi kolom wajib kurang: ${result.missing_required_columns.join(
             ", "
-          )}. Kamu masih bisa mapping manual jika ada nama kolom yang berbeda.`
+          )}. Pastikan dataset punya kolom kelurahan, dusun, dan jml_anggota_keluarga.`
         );
       } else {
         setInfo(
@@ -386,64 +317,13 @@ export function ImportDatasetClient({
       setBatches((current) => [result.batch, ...current]);
       setInfo(
         "success",
-        "Raw dataset berhasil disimpan. Lanjutkan mapping ke data keluarga."
+        "Raw dataset berhasil disimpan. Lanjutkan ke menu Auto Penilaian untuk generate Data Warga + Penilaian C1-C10."
       );
       router.refresh();
     } catch (error) {
       setInfo(
         "error",
         error instanceof Error ? error.message : "Gagal menyimpan raw import."
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
-  async function handleMapping() {
-    if (!savedImport) {
-      setInfo("error", "Simpan raw import terlebih dahulu.");
-      return;
-    }
-
-    if (!hasRequiredMapping) {
-      setInfo(
-        "error",
-        "Kolom kelurahan, dusun, dan jumlah anggota wajib dipilih untuk mapping."
-      );
-      return;
-    }
-
-    setIsLoading(true);
-    setMessage("");
-
-    try {
-      const payload: MappingImportPayload = {
-        import_batch_id: savedImport.batch.id,
-        kolom_kelurahan: mapping.kolom_kelurahan,
-        kolom_dusun: mapping.kolom_dusun,
-        kolom_jumlah_anggota: mapping.kolom_jumlah_anggota,
-        kolom_nama_kepala_keluarga:
-          mapping.kolom_nama_kepala_keluarga || undefined,
-        kolom_nik: mapping.kolom_nik || undefined,
-        kolom_alamat: mapping.kolom_alamat || undefined,
-      };
-
-      const result = await mappingImportKeKeluarga(payload);
-
-      setInfo(
-        "success",
-        `Mapping selesai. Diproses: ${formatAngka(
-          result.total_diproses
-        )}, berhasil: ${formatAngka(result.total_berhasil)}, gagal: ${formatAngka(
-          result.total_gagal
-        )}.`
-      );
-
-      router.refresh();
-    } catch (error) {
-      setInfo(
-        "error",
-        error instanceof Error ? error.message : "Gagal mapping ke data keluarga."
       );
     } finally {
       setIsLoading(false);
@@ -465,8 +345,9 @@ export function ImportDatasetClient({
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
-              Upload file CSV atau Excel, cek preview data, simpan sebagai raw
-              import, lalu mapping kolom dataset ke tabel keluarga.
+              Upload file CSV atau Excel, cek preview data, lalu simpan sebagai
+              raw import. Proses generate Data Warga + Penilaian dilakukan di
+              menu Auto Penilaian.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -494,10 +375,10 @@ export function ImportDatasetClient({
               </button>
 
               <Link
-                href="/admin/keluarga"
+                href="/admin/penilaian"
                 className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-700 transition hover:bg-slate-50"
               >
-                Lihat Data Warga
+                Auto Penilaian
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
@@ -578,8 +459,8 @@ export function ImportDatasetClient({
           </h2>
 
           <p className="mt-1 text-sm leading-6 text-slate-500">
-            Ikuti langkah berikut agar dataset masuk ke data keluarga dengan
-            benar.
+            Import hanya menyimpan data mentah. Generate penilaian dilakukan
+            setelah batch import tersimpan.
           </p>
 
           <div className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
@@ -609,9 +490,9 @@ export function ImportDatasetClient({
 
             <StepItem
               number={4}
-              title="Mapping Kolom"
-              description="Hubungkan kolom dataset ke tabel keluarga."
-              active={currentStep === "mapping"}
+              title="Auto Penilaian"
+              description="Generate Data Warga + nilai C1-C10 di menu Auto Penilaian."
+              active={currentStep === "done"}
               done={currentStep === "done"}
             />
           </div>
@@ -694,15 +575,17 @@ export function ImportDatasetClient({
               Simpan Raw
             </button>
 
-            <button
-              type="button"
-              onClick={handleMapping}
-              disabled={isLoading || !savedImport || !hasRequiredMapping}
-              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
+            <Link
+              href="/admin/penilaian"
+              className={`inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-5 text-sm font-bold transition ${
+                savedImport
+                  ? "bg-slate-950 text-white hover:bg-emerald-700"
+                  : "pointer-events-none bg-slate-200 text-slate-400"
+              }`}
             >
-              <Database className="h-4 w-4" />
-              Mapping Data
-            </button>
+              Auto Penilaian
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
 
           {savedImport ? (
@@ -794,8 +677,7 @@ export function ImportDatasetClient({
             {preview.missing_required_columns.length > 0 ? (
               <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm font-semibold text-amber-700">
                 Kolom wajib belum cocok otomatis:{" "}
-                {preview.missing_required_columns.join(", ")}. Pilih kolom
-                secara manual di bagian mapping.
+                {preview.missing_required_columns.join(", ")}.
               </div>
             ) : (
               <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-semibold text-emerald-700">
@@ -852,110 +734,6 @@ export function ImportDatasetClient({
                   ))}
                 </tbody>
               </table>
-            </div>
-          </div>
-        )}
-      </section>
-
-      <section className="rounded-2xl border border-emerald-100 bg-white p-6 shadow-sm">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h2 className="[font-family:var(--font-oswald)] text-3xl font-semibold tracking-tight text-slate-950">
-              Mapping Kolom
-            </h2>
-
-            <p className="mt-1 text-sm leading-6 text-slate-500">
-              Pilih kolom dari dataset yang sesuai dengan field data keluarga.
-            </p>
-          </div>
-
-          <MapPinned className="h-6 w-6 text-emerald-700" />
-        </div>
-
-        {!preview ? (
-          <div className="mt-6 rounded-xl border border-dashed border-slate-200 bg-slate-50 p-6 text-center text-sm text-slate-500">
-            Preview dataset terlebih dahulu untuk membuka pilihan mapping.
-          </div>
-        ) : (
-          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-            {[
-              {
-                key: "kolom_nama_kepala_keluarga",
-                label: "Nama Kepala Keluarga",
-                required: false,
-              },
-              {
-                key: "kolom_nik",
-                label: "NIK",
-                required: false,
-              },
-              {
-                key: "kolom_alamat",
-                label: "Alamat",
-                required: false,
-              },
-              {
-                key: "kolom_kelurahan",
-                label: "Kelurahan",
-                required: true,
-              },
-              {
-                key: "kolom_dusun",
-                label: "Dusun",
-                required: true,
-              },
-              {
-                key: "kolom_jumlah_anggota",
-                label: "Jumlah Anggota",
-                required: true,
-              },
-            ].map((item) => (
-              <label key={item.key} className="space-y-2">
-                <span className="text-sm font-bold text-slate-700">
-                  {item.label}
-                  {item.required ? (
-                    <span className="ml-1 text-red-500">*</span>
-                  ) : null}
-                </span>
-
-                <select
-                  value={mapping[item.key as keyof MappingState]}
-                  onChange={(event) =>
-                    setMapping((current) => ({
-                      ...current,
-                      [item.key]: event.target.value,
-                    }))
-                  }
-                  className="h-12 w-full rounded-xl border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 outline-none transition focus:border-emerald-400 focus:ring-4 focus:ring-emerald-100"
-                >
-                  <option value="">Tidak dipakai</option>
-                  {columns.map((column) => (
-                    <option key={column} value={column}>
-                      {column}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
-
-            <div className="md:col-span-2 xl:col-span-3">
-              <button
-                type="button"
-                onClick={handleMapping}
-                disabled={isLoading || !savedImport || !hasRequiredMapping}
-                className="inline-flex w-full min-h-12 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 text-sm font-bold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:opacity-60"
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : null}
-                Mapping ke Data Keluarga
-              </button>
-
-              {!savedImport ? (
-                <p className="mt-2 text-xs font-medium text-slate-400">
-                  Simpan raw import terlebih dahulu sebelum mapping.
-                </p>
-              ) : null}
             </div>
           </div>
         )}
