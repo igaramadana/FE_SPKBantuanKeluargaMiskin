@@ -8,10 +8,11 @@ export function HeroSection() {
   return (
     <section
       id="beranda"
-      className="relative min-h-[760px] overflow-hidden bg-[#0F2E13]"
+      className="relative min-h-[760px] overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: "url('/bg-lp.png')" }}
     >
       <div className="absolute inset-0">
-        <div className="h-full w-full bg-[linear-gradient(90deg,rgba(27,94,32,0.94)_0%,rgba(27,94,32,0.72)_32%,rgba(27,94,32,0.22)_72%,rgba(27,94,32,0.08)_100%)]" />
+        <div className="h-full w-full bg-[linear-gradient(90deg,rgba(27,94,32,0.94)_0%,rgba(27,94,32,0.72)_32%,rgba(27,94,32,0.22)_72%,rgba(27,94,32,0.08)_100%)] opacity-70" />
       </div>
 
       <div className="absolute inset-0 opacity-25">

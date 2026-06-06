@@ -137,12 +137,12 @@ export function DashboardShell({
               }`}
               onClick={() => setIsMobileSidebarOpen(false)}
             >
-              <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50 p-1.5 shadow-sm">
+              <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50 p-0.5 shadow-sm">
                 <Image
-                  src="/logo-spkbansos.jpeg"
+                  src="/logospkbansos.png"
                   alt="SIMBANTU"
                   fill
-                  className="object-contain p-1"
+                  className="object-contain"
                   priority
                 />
               </div>

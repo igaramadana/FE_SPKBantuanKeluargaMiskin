@@ -22,7 +22,7 @@ export function LandingNavbar() {
         <Link href="/" className="flex items-center gap-3">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl overflow-hidden bg-transparent">
             <Image
-              src="/logo-spkbansos.jpeg" 
+              src="/logospkbansos.png" 
               alt="Logo SPK Bansos"
               width={56} 
               height={56}

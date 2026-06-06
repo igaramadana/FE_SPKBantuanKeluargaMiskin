@@ -1,5 +1,5 @@
+import Image from "next/image";
 import { authBenefits, authBrand } from "@/constants/auth";
-import { HandHeart } from "lucide-react";
 
 export function AuthBrandPanel() {
   return (
@@ -61,8 +61,14 @@ export function AuthBrandPanel() {
 
       <div className="relative z-10 flex min-h-screen w-full flex-col justify-center px-16 py-16 xl:px-24">
         {/* Icon */}
-        <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-white/15 text-white shadow-xl backdrop-blur-sm border border-white/20">
-          <HandHeart className="h-12 w-12" strokeWidth={1.5} />
+        <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-3xl border border-white/20 bg-white/15 p-3 shadow-xl backdrop-blur-sm">
+          <Image
+            src="/logospkbansos.png"
+            alt="SIMBANTU"
+            fill
+            className="object-contain"
+            priority
+          />
         </div>
 
         {/* Title */}
