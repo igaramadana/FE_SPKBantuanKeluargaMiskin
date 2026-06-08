@@ -355,9 +355,9 @@ export type hasil_spkCreateInput = {
   alasan_override?: string | null
   override_at?: Date | string | null
   tanggal_hitung?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutHasil_spkInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutHasilSpksInput
   riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedOneWithoutHasil_spkInput
-  admin_override?: Prisma.usersCreateNestedOneWithoutOverride_hasilInput
+  admin_override?: Prisma.usersCreateNestedOneWithoutHasil_overrideInput
 }
 
 export type hasil_spkUncheckedCreateInput = {
@@ -383,9 +383,9 @@ export type hasil_spkUpdateInput = {
   alasan_override?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   override_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tanggal_hitung?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutHasil_spkNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutHasilSpksNestedInput
   riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateOneWithoutHasil_spkNestedInput
-  admin_override?: Prisma.usersUpdateOneWithoutOverride_hasilNestedInput
+  admin_override?: Prisma.usersUpdateOneWithoutHasil_overrideNestedInput
 }
 
 export type hasil_spkUncheckedUpdateInput = {
@@ -637,10 +637,6 @@ export type NullableEnumstatus_kelayakanFieldUpdateOperationsInput = {
   set?: $Enums.status_kelayakan | null
 }
 
-export type NullableDateTimeFieldUpdateOperationsInput = {
-  set?: Date | string | null
-}
-
 export type hasil_spkCreateWithoutAdmin_overrideInput = {
   id?: string
   total_nilai: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -650,7 +646,7 @@ export type hasil_spkCreateWithoutAdmin_overrideInput = {
   alasan_override?: string | null
   override_at?: Date | string | null
   tanggal_hitung?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutHasil_spkInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutHasilSpksInput
   riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedOneWithoutHasil_spkInput
 }
 
@@ -720,7 +716,7 @@ export type hasil_spkCreateWithoutKeluargaInput = {
   override_at?: Date | string | null
   tanggal_hitung?: Date | string
   riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedOneWithoutHasil_spkInput
-  admin_override?: Prisma.usersCreateNestedOneWithoutOverride_hasilInput
+  admin_override?: Prisma.usersCreateNestedOneWithoutHasil_overrideInput
 }
 
 export type hasil_spkUncheckedCreateWithoutKeluargaInput = {
@@ -771,8 +767,8 @@ export type hasil_spkCreateWithoutRiwayat_perhitunganInput = {
   alasan_override?: string | null
   override_at?: Date | string | null
   tanggal_hitung?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutHasil_spkInput
-  admin_override?: Prisma.usersCreateNestedOneWithoutOverride_hasilInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutHasilSpksInput
+  admin_override?: Prisma.usersCreateNestedOneWithoutHasil_overrideInput
 }
 
 export type hasil_spkUncheckedCreateWithoutRiwayat_perhitunganInput = {
@@ -836,7 +832,7 @@ export type hasil_spkUpdateWithoutAdmin_overrideInput = {
   alasan_override?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   override_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tanggal_hitung?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutHasil_spkNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutHasilSpksNestedInput
   riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateOneWithoutHasil_spkNestedInput
 }
 
@@ -889,7 +885,7 @@ export type hasil_spkUpdateWithoutKeluargaInput = {
   override_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tanggal_hitung?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateOneWithoutHasil_spkNestedInput
-  admin_override?: Prisma.usersUpdateOneWithoutOverride_hasilNestedInput
+  admin_override?: Prisma.usersUpdateOneWithoutHasil_overrideNestedInput
 }
 
 export type hasil_spkUncheckedUpdateWithoutKeluargaInput = {
@@ -940,8 +936,8 @@ export type hasil_spkUpdateWithoutRiwayat_perhitunganInput = {
   alasan_override?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   override_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   tanggal_hitung?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutHasil_spkNestedInput
-  admin_override?: Prisma.usersUpdateOneWithoutOverride_hasilNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutHasilSpksNestedInput
+  admin_override?: Prisma.usersUpdateOneWithoutHasil_overrideNestedInput
 }
 
 export type hasil_spkUncheckedUpdateWithoutRiwayat_perhitunganInput = {

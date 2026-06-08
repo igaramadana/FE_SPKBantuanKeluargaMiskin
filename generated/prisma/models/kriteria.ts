@@ -488,10 +488,6 @@ export type NullableDecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
-}
-
 export type kriteriaCreateNestedOneWithoutSub_kriteriaInput = {
   create?: Prisma.XOR<Prisma.kriteriaCreateWithoutSub_kriteriaInput, Prisma.kriteriaUncheckedCreateWithoutSub_kriteriaInput>
   connectOrCreate?: Prisma.kriteriaCreateOrConnectWithoutSub_kriteriaInput

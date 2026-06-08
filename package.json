@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "user:generate": "tsx prisma/scripts/generate-user-accounts.ts"
   },
   "dependencies": {
     "@prisma/client": "^7.8.0",
