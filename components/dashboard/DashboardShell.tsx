@@ -110,6 +110,7 @@ export function DashboardShell({
   });
 
   const breadcrumbTitle = activeMenu?.label || title;
+  const isRootTitle = breadcrumbTitle === title;
 
   function SidebarContent({
     collapsed = false,
@@ -140,7 +141,7 @@ export function DashboardShell({
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50 p-0.5 shadow-sm">
                 <Image
                   src="/logospkbansos.png"
-                  alt="SIMBANTU"
+                  alt="SIMBANTUAAAAAA"
                   fill
                   className="object-contain"
                   priority
@@ -171,26 +172,6 @@ export function DashboardShell({
             ) : null}
           </div>
         </div>
-
-        {!collapsed ? (
-          <div className="mx-6 rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 to-white p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-
-              <div className="min-w-0">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald-700">
-                  {role}
-                </p>
-
-                <p className="truncate text-sm font-bold text-slate-900">
-                  {userName || "Administrator"}
-                </p>
-              </div>
-            </div>
-          </div>
-        ) : null}
 
         <nav className={`mt-6 flex-1 space-y-1 ${collapsed ? "px-3" : "px-4"}`}>
           {!collapsed ? (
@@ -346,12 +327,6 @@ export function DashboardShell({
                 </button>
 
                 <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="rounded-md bg-emerald-50 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-700">
-                      {role === "admin" ? "Admin Panel" : "User Panel"}
-                    </span>
-                  </div>
-
                   <h2 className="mt-1 truncate text-xl font-black tracking-tight text-slate-950 sm:text-2xl">
                     {title}
                   </h2>
@@ -399,25 +374,55 @@ export function DashboardShell({
           </header>
 
           <section className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-            <div className="mb-6 border-b border-emerald-100 pb-5">
-              <nav className="flex flex-wrap items-center gap-2 text-sm">
-                <Link
-                  href={dashboardHref}
-                  className="font-semibold text-emerald-700 transition hover:text-emerald-900"
+            <div className="mb-6 overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
+              <div className="bg  -white px-5 py-5 sm:px-6">
+                <nav
+                  aria-label="Breadcrumb"
+                  className="flex flex-wrap items-center gap-2 text-sm"
                 >
-                  {role === "admin" ? "Admin" : "User"}
-                </Link>
+                  <Link
+                    href={dashboardHref}
+                    className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 font-semibold text-emerald-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50"
+                  >
+                    <Home className="h-3.5 w-3.5" />
+                    Beranda
+                  </Link>
 
-                <ChevronRight className="h-4 w-4 text-slate-300" />
+                  <ChevronRight className="h-4 w-4 text-slate-300" />
 
-                <span className="font-semibold text-slate-700">
-                  {breadcrumbTitle}
-                </span>
-              </nav>
+                  <span className="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 font-semibold text-slate-700">
+                    {breadcrumbTitle}
+                  </span>
+                </nav>
 
-              <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
-                {description}
-              </p>
+                {/* <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                  <div className="min-w-0">
+                    <h3 className="truncate [font-family:var(--font-oswald)] text-3xl font-bold leading-none tracking-tight text-slate-950 sm:text-4xl">
+                      {title}
+                    </h3>
+
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-500">
+                      {description}
+                    </p>
+                  </div>
+
+                  <div className="inline-flex items-center gap-2 self-start rounded-2xl border border-emerald-100 bg-white px-4 py-2 shadow-sm sm:self-auto">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-600 text-white">
+                      <ShieldCheck className="h-4 w-4" />
+                    </div>
+
+                    <div className="min-w-0">
+                      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-emerald-700">
+                        {role === "admin" ? "Administrator" : "Pengguna"}
+                      </p>
+
+                      <p className="truncate text-sm font-bold text-slate-900">
+                        {userName || "User"}
+                      </p>
+                    </div>
+                  </div>
+                </div> */}
+              </div>
             </div>
 
             {children}
