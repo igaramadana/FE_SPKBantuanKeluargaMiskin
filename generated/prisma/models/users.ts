@@ -29,8 +29,10 @@ export type UsersMinAggregateOutputType = {
   nama: string | null
   email: string | null
   password_hash: string | null
-  role: $Enums.role_user | null
   image: string | null
+  role: $Enums.role_user | null
+  must_change_password: boolean | null
+  password_changed_at: Date | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -40,8 +42,10 @@ export type UsersMaxAggregateOutputType = {
   nama: string | null
   email: string | null
   password_hash: string | null
-  role: $Enums.role_user | null
   image: string | null
+  role: $Enums.role_user | null
+  must_change_password: boolean | null
+  password_changed_at: Date | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -51,8 +55,10 @@ export type UsersCountAggregateOutputType = {
   nama: number
   email: number
   password_hash: number
-  role: number
   image: number
+  role: number
+  must_change_password: number
+  password_changed_at: number
   created_at: number
   updated_at: number
   _all: number
@@ -64,8 +70,10 @@ export type UsersMinAggregateInputType = {
   nama?: true
   email?: true
   password_hash?: true
-  role?: true
   image?: true
+  role?: true
+  must_change_password?: true
+  password_changed_at?: true
   created_at?: true
   updated_at?: true
 }
@@ -75,8 +83,10 @@ export type UsersMaxAggregateInputType = {
   nama?: true
   email?: true
   password_hash?: true
-  role?: true
   image?: true
+  role?: true
+  must_change_password?: true
+  password_changed_at?: true
   created_at?: true
   updated_at?: true
 }
@@ -86,8 +96,10 @@ export type UsersCountAggregateInputType = {
   nama?: true
   email?: true
   password_hash?: true
-  role?: true
   image?: true
+  role?: true
+  must_change_password?: true
+  password_changed_at?: true
   created_at?: true
   updated_at?: true
   _all?: true
@@ -170,8 +182,10 @@ export type UsersGroupByOutputType = {
   nama: string
   email: string
   password_hash: string | null
-  role: $Enums.role_user
   image: string | null
+  role: $Enums.role_user
+  must_change_password: boolean
+  password_changed_at: Date | null
   created_at: Date
   updated_at: Date
   _count: UsersCountAggregateOutputType | null
@@ -202,16 +216,18 @@ export type usersWhereInput = {
   nama?: Prisma.StringFilter<"users"> | string
   email?: Prisma.StringFilter<"users"> | string
   password_hash?: Prisma.StringNullableFilter<"users"> | string | null
-  role?: Prisma.Enumrole_userFilter<"users"> | $Enums.role_user
   image?: Prisma.StringNullableFilter<"users"> | string | null
+  role?: Prisma.Enumrole_userFilter<"users"> | $Enums.role_user
+  must_change_password?: Prisma.BoolFilter<"users"> | boolean
+  password_changed_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"users"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"users"> | Date | string
-  keluarga_dibuat?: Prisma.KeluargaListRelationFilter
   keluarga_akun?: Prisma.KeluargaListRelationFilter
-  riwayat?: Prisma.Riwayat_perhitunganListRelationFilter
+  keluarga_dibuat?: Prisma.KeluargaListRelationFilter
+  riwayat_perhitungan?: Prisma.Riwayat_perhitunganListRelationFilter
+  hasil_override?: Prisma.Hasil_spkListRelationFilter
+  dokumen_direview?: Prisma.Dokumen_keluargaListRelationFilter
   audit_logs?: Prisma.Audit_logListRelationFilter
-  dokumen_review?: Prisma.Dokumen_keluargaListRelationFilter
-  override_hasil?: Prisma.Hasil_spkListRelationFilter
 }
 
 export type usersOrderByWithRelationInput = {
@@ -219,16 +235,18 @@ export type usersOrderByWithRelationInput = {
   nama?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password_hash?: Prisma.SortOrderInput | Prisma.SortOrder
-  role?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  must_change_password?: Prisma.SortOrder
+  password_changed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
-  keluarga_dibuat?: Prisma.keluargaOrderByRelationAggregateInput
   keluarga_akun?: Prisma.keluargaOrderByRelationAggregateInput
-  riwayat?: Prisma.riwayat_perhitunganOrderByRelationAggregateInput
+  keluarga_dibuat?: Prisma.keluargaOrderByRelationAggregateInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganOrderByRelationAggregateInput
+  hasil_override?: Prisma.hasil_spkOrderByRelationAggregateInput
+  dokumen_direview?: Prisma.dokumen_keluargaOrderByRelationAggregateInput
   audit_logs?: Prisma.audit_logOrderByRelationAggregateInput
-  dokumen_review?: Prisma.dokumen_keluargaOrderByRelationAggregateInput
-  override_hasil?: Prisma.hasil_spkOrderByRelationAggregateInput
 }
 
 export type usersWhereUniqueInput = Prisma.AtLeast<{
@@ -239,16 +257,18 @@ export type usersWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.usersWhereInput | Prisma.usersWhereInput[]
   nama?: Prisma.StringFilter<"users"> | string
   password_hash?: Prisma.StringNullableFilter<"users"> | string | null
-  role?: Prisma.Enumrole_userFilter<"users"> | $Enums.role_user
   image?: Prisma.StringNullableFilter<"users"> | string | null
+  role?: Prisma.Enumrole_userFilter<"users"> | $Enums.role_user
+  must_change_password?: Prisma.BoolFilter<"users"> | boolean
+  password_changed_at?: Prisma.DateTimeNullableFilter<"users"> | Date | string | null
   created_at?: Prisma.DateTimeFilter<"users"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"users"> | Date | string
-  keluarga_dibuat?: Prisma.KeluargaListRelationFilter
   keluarga_akun?: Prisma.KeluargaListRelationFilter
-  riwayat?: Prisma.Riwayat_perhitunganListRelationFilter
+  keluarga_dibuat?: Prisma.KeluargaListRelationFilter
+  riwayat_perhitungan?: Prisma.Riwayat_perhitunganListRelationFilter
+  hasil_override?: Prisma.Hasil_spkListRelationFilter
+  dokumen_direview?: Prisma.Dokumen_keluargaListRelationFilter
   audit_logs?: Prisma.Audit_logListRelationFilter
-  dokumen_review?: Prisma.Dokumen_keluargaListRelationFilter
-  override_hasil?: Prisma.Hasil_spkListRelationFilter
 }, "id" | "email">
 
 export type usersOrderByWithAggregationInput = {
@@ -256,8 +276,10 @@ export type usersOrderByWithAggregationInput = {
   nama?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password_hash?: Prisma.SortOrderInput | Prisma.SortOrder
-  role?: Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
+  must_change_password?: Prisma.SortOrder
+  password_changed_at?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   _count?: Prisma.usersCountOrderByAggregateInput
@@ -273,8 +295,10 @@ export type usersScalarWhereWithAggregatesInput = {
   nama?: Prisma.StringWithAggregatesFilter<"users"> | string
   email?: Prisma.StringWithAggregatesFilter<"users"> | string
   password_hash?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null
-  role?: Prisma.Enumrole_userWithAggregatesFilter<"users"> | $Enums.role_user
   image?: Prisma.StringNullableWithAggregatesFilter<"users"> | string | null
+  role?: Prisma.Enumrole_userWithAggregatesFilter<"users"> | $Enums.role_user
+  must_change_password?: Prisma.BoolWithAggregatesFilter<"users"> | boolean
+  password_changed_at?: Prisma.DateTimeNullableWithAggregatesFilter<"users"> | Date | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"users"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"users"> | Date | string
 }
@@ -284,16 +308,18 @@ export type usersCreateInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
 }
 
 export type usersUncheckedCreateInput = {
@@ -301,16 +327,18 @@ export type usersUncheckedCreateInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
 }
 
 export type usersUpdateInput = {
@@ -318,16 +346,18 @@ export type usersUpdateInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
 }
 
 export type usersUncheckedUpdateInput = {
@@ -335,16 +365,18 @@ export type usersUncheckedUpdateInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
 }
 
 export type usersCreateManyInput = {
@@ -352,8 +384,10 @@ export type usersCreateManyInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -363,8 +397,10 @@ export type usersUpdateManyMutationInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -374,8 +410,10 @@ export type usersUncheckedUpdateManyInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -385,8 +423,10 @@ export type usersCountOrderByAggregateInput = {
   nama?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password_hash?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  must_change_password?: Prisma.SortOrder
+  password_changed_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -396,8 +436,10 @@ export type usersMaxOrderByAggregateInput = {
   nama?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password_hash?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  must_change_password?: Prisma.SortOrder
+  password_changed_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -407,8 +449,10 @@ export type usersMinOrderByAggregateInput = {
   nama?: Prisma.SortOrder
   email?: Prisma.SortOrder
   password_hash?: Prisma.SortOrder
-  role?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  role?: Prisma.SortOrder
+  must_change_password?: Prisma.SortOrder
+  password_changed_at?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -428,6 +472,14 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type Enumrole_userFieldUpdateOperationsInput = {
   set?: $Enums.role_user
+}
+
+export type BoolFieldUpdateOperationsInput = {
+  set?: boolean
+}
+
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
 }
 
 export type DateTimeFieldUpdateOperationsInput = {
@@ -466,52 +518,52 @@ export type usersUpdateOneWithoutKeluarga_dibuatNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutKeluarga_dibuatInput, Prisma.usersUpdateWithoutKeluarga_dibuatInput>, Prisma.usersUncheckedUpdateWithoutKeluarga_dibuatInput>
 }
 
-export type usersCreateNestedOneWithoutRiwayatInput = {
-  create?: Prisma.XOR<Prisma.usersCreateWithoutRiwayatInput, Prisma.usersUncheckedCreateWithoutRiwayatInput>
-  connectOrCreate?: Prisma.usersCreateOrConnectWithoutRiwayatInput
+export type usersCreateNestedOneWithoutRiwayat_perhitunganInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutRiwayat_perhitunganInput, Prisma.usersUncheckedCreateWithoutRiwayat_perhitunganInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutRiwayat_perhitunganInput
   connect?: Prisma.usersWhereUniqueInput
 }
 
-export type usersUpdateOneWithoutRiwayatNestedInput = {
-  create?: Prisma.XOR<Prisma.usersCreateWithoutRiwayatInput, Prisma.usersUncheckedCreateWithoutRiwayatInput>
-  connectOrCreate?: Prisma.usersCreateOrConnectWithoutRiwayatInput
-  upsert?: Prisma.usersUpsertWithoutRiwayatInput
+export type usersUpdateOneWithoutRiwayat_perhitunganNestedInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutRiwayat_perhitunganInput, Prisma.usersUncheckedCreateWithoutRiwayat_perhitunganInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutRiwayat_perhitunganInput
+  upsert?: Prisma.usersUpsertWithoutRiwayat_perhitunganInput
   disconnect?: Prisma.usersWhereInput | boolean
   delete?: Prisma.usersWhereInput | boolean
   connect?: Prisma.usersWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutRiwayatInput, Prisma.usersUpdateWithoutRiwayatInput>, Prisma.usersUncheckedUpdateWithoutRiwayatInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutRiwayat_perhitunganInput, Prisma.usersUpdateWithoutRiwayat_perhitunganInput>, Prisma.usersUncheckedUpdateWithoutRiwayat_perhitunganInput>
 }
 
-export type usersCreateNestedOneWithoutOverride_hasilInput = {
-  create?: Prisma.XOR<Prisma.usersCreateWithoutOverride_hasilInput, Prisma.usersUncheckedCreateWithoutOverride_hasilInput>
-  connectOrCreate?: Prisma.usersCreateOrConnectWithoutOverride_hasilInput
+export type usersCreateNestedOneWithoutHasil_overrideInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutHasil_overrideInput, Prisma.usersUncheckedCreateWithoutHasil_overrideInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutHasil_overrideInput
   connect?: Prisma.usersWhereUniqueInput
 }
 
-export type usersUpdateOneWithoutOverride_hasilNestedInput = {
-  create?: Prisma.XOR<Prisma.usersCreateWithoutOverride_hasilInput, Prisma.usersUncheckedCreateWithoutOverride_hasilInput>
-  connectOrCreate?: Prisma.usersCreateOrConnectWithoutOverride_hasilInput
-  upsert?: Prisma.usersUpsertWithoutOverride_hasilInput
+export type usersUpdateOneWithoutHasil_overrideNestedInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutHasil_overrideInput, Prisma.usersUncheckedCreateWithoutHasil_overrideInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutHasil_overrideInput
+  upsert?: Prisma.usersUpsertWithoutHasil_overrideInput
   disconnect?: Prisma.usersWhereInput | boolean
   delete?: Prisma.usersWhereInput | boolean
   connect?: Prisma.usersWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutOverride_hasilInput, Prisma.usersUpdateWithoutOverride_hasilInput>, Prisma.usersUncheckedUpdateWithoutOverride_hasilInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutHasil_overrideInput, Prisma.usersUpdateWithoutHasil_overrideInput>, Prisma.usersUncheckedUpdateWithoutHasil_overrideInput>
 }
 
-export type usersCreateNestedOneWithoutDokumen_reviewInput = {
-  create?: Prisma.XOR<Prisma.usersCreateWithoutDokumen_reviewInput, Prisma.usersUncheckedCreateWithoutDokumen_reviewInput>
-  connectOrCreate?: Prisma.usersCreateOrConnectWithoutDokumen_reviewInput
+export type usersCreateNestedOneWithoutDokumen_direviewInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutDokumen_direviewInput, Prisma.usersUncheckedCreateWithoutDokumen_direviewInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutDokumen_direviewInput
   connect?: Prisma.usersWhereUniqueInput
 }
 
-export type usersUpdateOneWithoutDokumen_reviewNestedInput = {
-  create?: Prisma.XOR<Prisma.usersCreateWithoutDokumen_reviewInput, Prisma.usersUncheckedCreateWithoutDokumen_reviewInput>
-  connectOrCreate?: Prisma.usersCreateOrConnectWithoutDokumen_reviewInput
-  upsert?: Prisma.usersUpsertWithoutDokumen_reviewInput
+export type usersUpdateOneWithoutDokumen_direviewNestedInput = {
+  create?: Prisma.XOR<Prisma.usersCreateWithoutDokumen_direviewInput, Prisma.usersUncheckedCreateWithoutDokumen_direviewInput>
+  connectOrCreate?: Prisma.usersCreateOrConnectWithoutDokumen_direviewInput
+  upsert?: Prisma.usersUpsertWithoutDokumen_direviewInput
   disconnect?: Prisma.usersWhereInput | boolean
   delete?: Prisma.usersWhereInput | boolean
   connect?: Prisma.usersWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutDokumen_reviewInput, Prisma.usersUpdateWithoutDokumen_reviewInput>, Prisma.usersUncheckedUpdateWithoutDokumen_reviewInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.usersUpdateToOneWithWhereWithoutDokumen_direviewInput, Prisma.usersUpdateWithoutDokumen_direviewInput>, Prisma.usersUncheckedUpdateWithoutDokumen_direviewInput>
 }
 
 export type usersCreateNestedOneWithoutAudit_logsInput = {
@@ -535,15 +587,17 @@ export type usersCreateWithoutKeluarga_akunInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
-  riwayat?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
 }
 
 export type usersUncheckedCreateWithoutKeluarga_akunInput = {
@@ -551,15 +605,17 @@ export type usersUncheckedCreateWithoutKeluarga_akunInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
 }
 
 export type usersCreateOrConnectWithoutKeluarga_akunInput = {
@@ -572,15 +628,17 @@ export type usersCreateWithoutKeluarga_dibuatInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
 }
 
 export type usersUncheckedCreateWithoutKeluarga_dibuatInput = {
@@ -588,15 +646,17 @@ export type usersUncheckedCreateWithoutKeluarga_dibuatInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
   keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
 }
 
 export type usersCreateOrConnectWithoutKeluarga_dibuatInput = {
@@ -620,15 +680,17 @@ export type usersUpdateWithoutKeluarga_akunInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
 }
 
 export type usersUncheckedUpdateWithoutKeluarga_akunInput = {
@@ -636,15 +698,17 @@ export type usersUncheckedUpdateWithoutKeluarga_akunInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
 }
 
 export type usersUpsertWithoutKeluarga_dibuatInput = {
@@ -663,15 +727,17 @@ export type usersUpdateWithoutKeluarga_dibuatInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
 }
 
 export type usersUncheckedUpdateWithoutKeluarga_dibuatInput = {
@@ -679,255 +745,281 @@ export type usersUncheckedUpdateWithoutKeluarga_dibuatInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
 }
 
-export type usersCreateWithoutRiwayatInput = {
+export type usersCreateWithoutRiwayat_perhitunganInput = {
   id?: string
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
-  audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
-}
-
-export type usersUncheckedCreateWithoutRiwayatInput = {
-  id?: string
-  nama: string
-  email: string
-  password_hash?: string | null
-  role?: $Enums.role_user
-  image?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
-  keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
-  audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
-}
-
-export type usersCreateOrConnectWithoutRiwayatInput = {
-  where: Prisma.usersWhereUniqueInput
-  create: Prisma.XOR<Prisma.usersCreateWithoutRiwayatInput, Prisma.usersUncheckedCreateWithoutRiwayatInput>
-}
-
-export type usersUpsertWithoutRiwayatInput = {
-  update: Prisma.XOR<Prisma.usersUpdateWithoutRiwayatInput, Prisma.usersUncheckedUpdateWithoutRiwayatInput>
-  create: Prisma.XOR<Prisma.usersCreateWithoutRiwayatInput, Prisma.usersUncheckedCreateWithoutRiwayatInput>
-  where?: Prisma.usersWhereInput
-}
-
-export type usersUpdateToOneWithWhereWithoutRiwayatInput = {
-  where?: Prisma.usersWhereInput
-  data: Prisma.XOR<Prisma.usersUpdateWithoutRiwayatInput, Prisma.usersUncheckedUpdateWithoutRiwayatInput>
-}
-
-export type usersUpdateWithoutRiwayatInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  nama?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
-  keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
-  audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
-}
-
-export type usersUncheckedUpdateWithoutRiwayatInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  nama?: Prisma.StringFieldUpdateOperationsInput | string
-  email?: Prisma.StringFieldUpdateOperationsInput | string
-  password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
-  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
-  keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
-  audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
-}
-
-export type usersCreateWithoutOverride_hasilInput = {
-  id?: string
-  nama: string
-  email: string
-  password_hash?: string | null
-  role?: $Enums.role_user
-  image?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
   keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
-  keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
 }
 
-export type usersUncheckedCreateWithoutOverride_hasilInput = {
+export type usersUncheckedCreateWithoutRiwayat_perhitunganInput = {
   id?: string
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
+  hasil_override?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
 }
 
-export type usersCreateOrConnectWithoutOverride_hasilInput = {
+export type usersCreateOrConnectWithoutRiwayat_perhitunganInput = {
   where: Prisma.usersWhereUniqueInput
-  create: Prisma.XOR<Prisma.usersCreateWithoutOverride_hasilInput, Prisma.usersUncheckedCreateWithoutOverride_hasilInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutRiwayat_perhitunganInput, Prisma.usersUncheckedCreateWithoutRiwayat_perhitunganInput>
 }
 
-export type usersUpsertWithoutOverride_hasilInput = {
-  update: Prisma.XOR<Prisma.usersUpdateWithoutOverride_hasilInput, Prisma.usersUncheckedUpdateWithoutOverride_hasilInput>
-  create: Prisma.XOR<Prisma.usersCreateWithoutOverride_hasilInput, Prisma.usersUncheckedCreateWithoutOverride_hasilInput>
+export type usersUpsertWithoutRiwayat_perhitunganInput = {
+  update: Prisma.XOR<Prisma.usersUpdateWithoutRiwayat_perhitunganInput, Prisma.usersUncheckedUpdateWithoutRiwayat_perhitunganInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutRiwayat_perhitunganInput, Prisma.usersUncheckedCreateWithoutRiwayat_perhitunganInput>
   where?: Prisma.usersWhereInput
 }
 
-export type usersUpdateToOneWithWhereWithoutOverride_hasilInput = {
+export type usersUpdateToOneWithWhereWithoutRiwayat_perhitunganInput = {
   where?: Prisma.usersWhereInput
-  data: Prisma.XOR<Prisma.usersUpdateWithoutOverride_hasilInput, Prisma.usersUncheckedUpdateWithoutOverride_hasilInput>
+  data: Prisma.XOR<Prisma.usersUpdateWithoutRiwayat_perhitunganInput, Prisma.usersUncheckedUpdateWithoutRiwayat_perhitunganInput>
 }
 
-export type usersUpdateWithoutOverride_hasilInput = {
+export type usersUpdateWithoutRiwayat_perhitunganInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
+  hasil_override?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
 }
 
-export type usersUncheckedUpdateWithoutOverride_hasilInput = {
+export type usersUncheckedUpdateWithoutRiwayat_perhitunganInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
+  hasil_override?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
-export type usersCreateWithoutDokumen_reviewInput = {
+export type usersCreateWithoutHasil_overrideInput = {
   id?: string
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
+  keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
   keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
-  keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  dokumen_direview?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
-  override_hasil?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
 }
 
-export type usersUncheckedCreateWithoutDokumen_reviewInput = {
+export type usersUncheckedCreateWithoutHasil_overrideInput = {
   id?: string
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
   audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
-  override_hasil?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
 }
 
-export type usersCreateOrConnectWithoutDokumen_reviewInput = {
+export type usersCreateOrConnectWithoutHasil_overrideInput = {
   where: Prisma.usersWhereUniqueInput
-  create: Prisma.XOR<Prisma.usersCreateWithoutDokumen_reviewInput, Prisma.usersUncheckedCreateWithoutDokumen_reviewInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutHasil_overrideInput, Prisma.usersUncheckedCreateWithoutHasil_overrideInput>
 }
 
-export type usersUpsertWithoutDokumen_reviewInput = {
-  update: Prisma.XOR<Prisma.usersUpdateWithoutDokumen_reviewInput, Prisma.usersUncheckedUpdateWithoutDokumen_reviewInput>
-  create: Prisma.XOR<Prisma.usersCreateWithoutDokumen_reviewInput, Prisma.usersUncheckedCreateWithoutDokumen_reviewInput>
+export type usersUpsertWithoutHasil_overrideInput = {
+  update: Prisma.XOR<Prisma.usersUpdateWithoutHasil_overrideInput, Prisma.usersUncheckedUpdateWithoutHasil_overrideInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutHasil_overrideInput, Prisma.usersUncheckedCreateWithoutHasil_overrideInput>
   where?: Prisma.usersWhereInput
 }
 
-export type usersUpdateToOneWithWhereWithoutDokumen_reviewInput = {
+export type usersUpdateToOneWithWhereWithoutHasil_overrideInput = {
   where?: Prisma.usersWhereInput
-  data: Prisma.XOR<Prisma.usersUpdateWithoutDokumen_reviewInput, Prisma.usersUncheckedUpdateWithoutDokumen_reviewInput>
+  data: Prisma.XOR<Prisma.usersUpdateWithoutHasil_overrideInput, Prisma.usersUncheckedUpdateWithoutHasil_overrideInput>
 }
 
-export type usersUpdateWithoutDokumen_reviewInput = {
+export type usersUpdateWithoutHasil_overrideInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
-  override_hasil?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
 }
 
-export type usersUncheckedUpdateWithoutDokumen_reviewInput = {
+export type usersUncheckedUpdateWithoutHasil_overrideInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
   audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
-  override_hasil?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+}
+
+export type usersCreateWithoutDokumen_direviewInput = {
+  id?: string
+  nama: string
+  email: string
+  password_hash?: string | null
+  image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
+  keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  audit_logs?: Prisma.audit_logCreateNestedManyWithoutUserInput
+}
+
+export type usersUncheckedCreateWithoutDokumen_direviewInput = {
+  id?: string
+  nama: string
+  email: string
+  password_hash?: string | null
+  image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  audit_logs?: Prisma.audit_logUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type usersCreateOrConnectWithoutDokumen_direviewInput = {
+  where: Prisma.usersWhereUniqueInput
+  create: Prisma.XOR<Prisma.usersCreateWithoutDokumen_direviewInput, Prisma.usersUncheckedCreateWithoutDokumen_direviewInput>
+}
+
+export type usersUpsertWithoutDokumen_direviewInput = {
+  update: Prisma.XOR<Prisma.usersUpdateWithoutDokumen_direviewInput, Prisma.usersUncheckedUpdateWithoutDokumen_direviewInput>
+  create: Prisma.XOR<Prisma.usersCreateWithoutDokumen_direviewInput, Prisma.usersUncheckedCreateWithoutDokumen_direviewInput>
+  where?: Prisma.usersWhereInput
+}
+
+export type usersUpdateToOneWithWhereWithoutDokumen_direviewInput = {
+  where?: Prisma.usersWhereInput
+  data: Prisma.XOR<Prisma.usersUpdateWithoutDokumen_direviewInput, Prisma.usersUncheckedUpdateWithoutDokumen_direviewInput>
+}
+
+export type usersUpdateWithoutDokumen_direviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  audit_logs?: Prisma.audit_logUpdateManyWithoutUserNestedInput
+}
+
+export type usersUncheckedUpdateWithoutDokumen_direviewInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  audit_logs?: Prisma.audit_logUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type usersCreateWithoutAudit_logsInput = {
@@ -935,15 +1027,17 @@ export type usersCreateWithoutAudit_logsInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  keluarga_dibuat?: Prisma.keluargaCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaCreateNestedManyWithoutReviewerInput
 }
 
 export type usersUncheckedCreateWithoutAudit_logsInput = {
@@ -951,15 +1045,17 @@ export type usersUncheckedCreateWithoutAudit_logsInput = {
   nama: string
   email: string
   password_hash?: string | null
-  role?: $Enums.role_user
   image?: string | null
+  role?: $Enums.role_user
+  must_change_password?: boolean
+  password_changed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
   keluarga_akun?: Prisma.keluargaUncheckedCreateNestedManyWithoutUserInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
-  override_hasil?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedCreateNestedManyWithoutCreatorInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedCreateNestedManyWithoutUserInput
+  hasil_override?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutAdmin_overrideInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type usersCreateOrConnectWithoutAudit_logsInput = {
@@ -983,15 +1079,17 @@ export type usersUpdateWithoutAudit_logsInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  keluarga_dibuat?: Prisma.keluargaUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUpdateManyWithoutReviewerNestedInput
 }
 
 export type usersUncheckedUpdateWithoutAudit_logsInput = {
@@ -999,15 +1097,17 @@ export type usersUncheckedUpdateWithoutAudit_logsInput = {
   nama?: Prisma.StringFieldUpdateOperationsInput | string
   email?: Prisma.StringFieldUpdateOperationsInput | string
   password_hash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.Enumrole_userFieldUpdateOperationsInput | $Enums.role_user
+  must_change_password?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  password_changed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
   keluarga_akun?: Prisma.keluargaUncheckedUpdateManyWithoutUserNestedInput
-  riwayat?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
-  dokumen_review?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
-  override_hasil?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  keluarga_dibuat?: Prisma.keluargaUncheckedUpdateManyWithoutCreatorNestedInput
+  riwayat_perhitungan?: Prisma.riwayat_perhitunganUncheckedUpdateManyWithoutUserNestedInput
+  hasil_override?: Prisma.hasil_spkUncheckedUpdateManyWithoutAdmin_overrideNestedInput
+  dokumen_direview?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 
@@ -1016,21 +1116,21 @@ export type usersUncheckedUpdateWithoutAudit_logsInput = {
  */
 
 export type UsersCountOutputType = {
-  keluarga_dibuat: number
   keluarga_akun: number
-  riwayat: number
+  keluarga_dibuat: number
+  riwayat_perhitungan: number
+  hasil_override: number
+  dokumen_direview: number
   audit_logs: number
-  dokumen_review: number
-  override_hasil: number
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  keluarga_dibuat?: boolean | UsersCountOutputTypeCountKeluarga_dibuatArgs
   keluarga_akun?: boolean | UsersCountOutputTypeCountKeluarga_akunArgs
-  riwayat?: boolean | UsersCountOutputTypeCountRiwayatArgs
+  keluarga_dibuat?: boolean | UsersCountOutputTypeCountKeluarga_dibuatArgs
+  riwayat_perhitungan?: boolean | UsersCountOutputTypeCountRiwayat_perhitunganArgs
+  hasil_override?: boolean | UsersCountOutputTypeCountHasil_overrideArgs
+  dokumen_direview?: boolean | UsersCountOutputTypeCountDokumen_direviewArgs
   audit_logs?: boolean | UsersCountOutputTypeCountAudit_logsArgs
-  dokumen_review?: boolean | UsersCountOutputTypeCountDokumen_reviewArgs
-  override_hasil?: boolean | UsersCountOutputTypeCountOverride_hasilArgs
 }
 
 /**
@@ -1046,13 +1146,6 @@ export type UsersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
 /**
  * UsersCountOutputType without action
  */
-export type UsersCountOutputTypeCountKeluarga_dibuatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.keluargaWhereInput
-}
-
-/**
- * UsersCountOutputType without action
- */
 export type UsersCountOutputTypeCountKeluarga_akunArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.keluargaWhereInput
 }
@@ -1060,8 +1153,29 @@ export type UsersCountOutputTypeCountKeluarga_akunArgs<ExtArgs extends runtime.T
 /**
  * UsersCountOutputType without action
  */
-export type UsersCountOutputTypeCountRiwayatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type UsersCountOutputTypeCountKeluarga_dibuatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.keluargaWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountRiwayat_perhitunganArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.riwayat_perhitunganWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountHasil_overrideArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.hasil_spkWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountDokumen_direviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.dokumen_keluargaWhereInput
 }
 
 /**
@@ -1071,36 +1185,24 @@ export type UsersCountOutputTypeCountAudit_logsArgs<ExtArgs extends runtime.Type
   where?: Prisma.audit_logWhereInput
 }
 
-/**
- * UsersCountOutputType without action
- */
-export type UsersCountOutputTypeCountDokumen_reviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.dokumen_keluargaWhereInput
-}
-
-/**
- * UsersCountOutputType without action
- */
-export type UsersCountOutputTypeCountOverride_hasilArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  where?: Prisma.hasil_spkWhereInput
-}
-
 
 export type usersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   nama?: boolean
   email?: boolean
   password_hash?: boolean
-  role?: boolean
   image?: boolean
+  role?: boolean
+  must_change_password?: boolean
+  password_changed_at?: boolean
   created_at?: boolean
   updated_at?: boolean
-  keluarga_dibuat?: boolean | Prisma.users$keluarga_dibuatArgs<ExtArgs>
   keluarga_akun?: boolean | Prisma.users$keluarga_akunArgs<ExtArgs>
-  riwayat?: boolean | Prisma.users$riwayatArgs<ExtArgs>
+  keluarga_dibuat?: boolean | Prisma.users$keluarga_dibuatArgs<ExtArgs>
+  riwayat_perhitungan?: boolean | Prisma.users$riwayat_perhitunganArgs<ExtArgs>
+  hasil_override?: boolean | Prisma.users$hasil_overrideArgs<ExtArgs>
+  dokumen_direview?: boolean | Prisma.users$dokumen_direviewArgs<ExtArgs>
   audit_logs?: boolean | Prisma.users$audit_logsArgs<ExtArgs>
-  dokumen_review?: boolean | Prisma.users$dokumen_reviewArgs<ExtArgs>
-  override_hasil?: boolean | Prisma.users$override_hasilArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -1109,8 +1211,10 @@ export type usersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   nama?: boolean
   email?: boolean
   password_hash?: boolean
-  role?: boolean
   image?: boolean
+  role?: boolean
+  must_change_password?: boolean
+  password_changed_at?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["users"]>
@@ -1120,8 +1224,10 @@ export type usersSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   nama?: boolean
   email?: boolean
   password_hash?: boolean
-  role?: boolean
   image?: boolean
+  role?: boolean
+  must_change_password?: boolean
+  password_changed_at?: boolean
   created_at?: boolean
   updated_at?: boolean
 }, ExtArgs["result"]["users"]>
@@ -1131,20 +1237,22 @@ export type usersSelectScalar = {
   nama?: boolean
   email?: boolean
   password_hash?: boolean
-  role?: boolean
   image?: boolean
+  role?: boolean
+  must_change_password?: boolean
+  password_changed_at?: boolean
   created_at?: boolean
   updated_at?: boolean
 }
 
-export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "email" | "password_hash" | "role" | "image" | "created_at" | "updated_at", ExtArgs["result"]["users"]>
+export type usersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "nama" | "email" | "password_hash" | "image" | "role" | "must_change_password" | "password_changed_at" | "created_at" | "updated_at", ExtArgs["result"]["users"]>
 export type usersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  keluarga_dibuat?: boolean | Prisma.users$keluarga_dibuatArgs<ExtArgs>
   keluarga_akun?: boolean | Prisma.users$keluarga_akunArgs<ExtArgs>
-  riwayat?: boolean | Prisma.users$riwayatArgs<ExtArgs>
+  keluarga_dibuat?: boolean | Prisma.users$keluarga_dibuatArgs<ExtArgs>
+  riwayat_perhitungan?: boolean | Prisma.users$riwayat_perhitunganArgs<ExtArgs>
+  hasil_override?: boolean | Prisma.users$hasil_overrideArgs<ExtArgs>
+  dokumen_direview?: boolean | Prisma.users$dokumen_direviewArgs<ExtArgs>
   audit_logs?: boolean | Prisma.users$audit_logsArgs<ExtArgs>
-  dokumen_review?: boolean | Prisma.users$dokumen_reviewArgs<ExtArgs>
-  override_hasil?: boolean | Prisma.users$override_hasilArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type usersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1153,20 +1261,22 @@ export type usersIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $usersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "users"
   objects: {
-    keluarga_dibuat: Prisma.$keluargaPayload<ExtArgs>[]
     keluarga_akun: Prisma.$keluargaPayload<ExtArgs>[]
-    riwayat: Prisma.$riwayat_perhitunganPayload<ExtArgs>[]
+    keluarga_dibuat: Prisma.$keluargaPayload<ExtArgs>[]
+    riwayat_perhitungan: Prisma.$riwayat_perhitunganPayload<ExtArgs>[]
+    hasil_override: Prisma.$hasil_spkPayload<ExtArgs>[]
+    dokumen_direview: Prisma.$dokumen_keluargaPayload<ExtArgs>[]
     audit_logs: Prisma.$audit_logPayload<ExtArgs>[]
-    dokumen_review: Prisma.$dokumen_keluargaPayload<ExtArgs>[]
-    override_hasil: Prisma.$hasil_spkPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     nama: string
     email: string
     password_hash: string | null
-    role: $Enums.role_user
     image: string | null
+    role: $Enums.role_user
+    must_change_password: boolean
+    password_changed_at: Date | null
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["users"]>
@@ -1563,12 +1673,12 @@ readonly fields: usersFieldRefs;
  */
 export interface Prisma__usersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  keluarga_dibuat<T extends Prisma.users$keluarga_dibuatArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$keluarga_dibuatArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   keluarga_akun<T extends Prisma.users$keluarga_akunArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$keluarga_akunArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  riwayat<T extends Prisma.users$riwayatArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$riwayatArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$riwayat_perhitunganPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  keluarga_dibuat<T extends Prisma.users$keluarga_dibuatArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$keluarga_dibuatArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  riwayat_perhitungan<T extends Prisma.users$riwayat_perhitunganArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$riwayat_perhitunganArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$riwayat_perhitunganPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  hasil_override<T extends Prisma.users$hasil_overrideArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$hasil_overrideArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$hasil_spkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dokumen_direview<T extends Prisma.users$dokumen_direviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$dokumen_direviewArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$dokumen_keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   audit_logs<T extends Prisma.users$audit_logsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$audit_logsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$audit_logPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  dokumen_review<T extends Prisma.users$dokumen_reviewArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$dokumen_reviewArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$dokumen_keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  override_hasil<T extends Prisma.users$override_hasilArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.users$override_hasilArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$hasil_spkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1602,8 +1712,10 @@ export interface usersFieldRefs {
   readonly nama: Prisma.FieldRef<"users", 'String'>
   readonly email: Prisma.FieldRef<"users", 'String'>
   readonly password_hash: Prisma.FieldRef<"users", 'String'>
-  readonly role: Prisma.FieldRef<"users", 'role_user'>
   readonly image: Prisma.FieldRef<"users", 'String'>
+  readonly role: Prisma.FieldRef<"users", 'role_user'>
+  readonly must_change_password: Prisma.FieldRef<"users", 'Boolean'>
+  readonly password_changed_at: Prisma.FieldRef<"users", 'DateTime'>
   readonly created_at: Prisma.FieldRef<"users", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"users", 'DateTime'>
 }
@@ -1999,30 +2111,6 @@ export type usersDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
 }
 
 /**
- * users.keluarga_dibuat
- */
-export type users$keluarga_dibuatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the keluarga
-   */
-  select?: Prisma.keluargaSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the keluarga
-   */
-  omit?: Prisma.keluargaOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.keluargaInclude<ExtArgs> | null
-  where?: Prisma.keluargaWhereInput
-  orderBy?: Prisma.keluargaOrderByWithRelationInput | Prisma.keluargaOrderByWithRelationInput[]
-  cursor?: Prisma.keluargaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.KeluargaScalarFieldEnum | Prisma.KeluargaScalarFieldEnum[]
-}
-
-/**
  * users.keluarga_akun
  */
 export type users$keluarga_akunArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2047,9 +2135,33 @@ export type users$keluarga_akunArgs<ExtArgs extends runtime.Types.Extensions.Int
 }
 
 /**
- * users.riwayat
+ * users.keluarga_dibuat
  */
-export type users$riwayatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type users$keluarga_dibuatArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the keluarga
+   */
+  select?: Prisma.keluargaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the keluarga
+   */
+  omit?: Prisma.keluargaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.keluargaInclude<ExtArgs> | null
+  where?: Prisma.keluargaWhereInput
+  orderBy?: Prisma.keluargaOrderByWithRelationInput | Prisma.keluargaOrderByWithRelationInput[]
+  cursor?: Prisma.keluargaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.KeluargaScalarFieldEnum | Prisma.KeluargaScalarFieldEnum[]
+}
+
+/**
+ * users.riwayat_perhitungan
+ */
+export type users$riwayat_perhitunganArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the riwayat_perhitungan
    */
@@ -2068,6 +2180,54 @@ export type users$riwayatArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.Riwayat_perhitunganScalarFieldEnum | Prisma.Riwayat_perhitunganScalarFieldEnum[]
+}
+
+/**
+ * users.hasil_override
+ */
+export type users$hasil_overrideArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the hasil_spk
+   */
+  select?: Prisma.hasil_spkSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the hasil_spk
+   */
+  omit?: Prisma.hasil_spkOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.hasil_spkInclude<ExtArgs> | null
+  where?: Prisma.hasil_spkWhereInput
+  orderBy?: Prisma.hasil_spkOrderByWithRelationInput | Prisma.hasil_spkOrderByWithRelationInput[]
+  cursor?: Prisma.hasil_spkWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Hasil_spkScalarFieldEnum | Prisma.Hasil_spkScalarFieldEnum[]
+}
+
+/**
+ * users.dokumen_direview
+ */
+export type users$dokumen_direviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the dokumen_keluarga
+   */
+  select?: Prisma.dokumen_keluargaSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the dokumen_keluarga
+   */
+  omit?: Prisma.dokumen_keluargaOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.dokumen_keluargaInclude<ExtArgs> | null
+  where?: Prisma.dokumen_keluargaWhereInput
+  orderBy?: Prisma.dokumen_keluargaOrderByWithRelationInput | Prisma.dokumen_keluargaOrderByWithRelationInput[]
+  cursor?: Prisma.dokumen_keluargaWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.Dokumen_keluargaScalarFieldEnum | Prisma.Dokumen_keluargaScalarFieldEnum[]
 }
 
 /**
@@ -2092,54 +2252,6 @@ export type users$audit_logsArgs<ExtArgs extends runtime.Types.Extensions.Intern
   take?: number
   skip?: number
   distinct?: Prisma.Audit_logScalarFieldEnum | Prisma.Audit_logScalarFieldEnum[]
-}
-
-/**
- * users.dokumen_review
- */
-export type users$dokumen_reviewArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the dokumen_keluarga
-   */
-  select?: Prisma.dokumen_keluargaSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the dokumen_keluarga
-   */
-  omit?: Prisma.dokumen_keluargaOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.dokumen_keluargaInclude<ExtArgs> | null
-  where?: Prisma.dokumen_keluargaWhereInput
-  orderBy?: Prisma.dokumen_keluargaOrderByWithRelationInput | Prisma.dokumen_keluargaOrderByWithRelationInput[]
-  cursor?: Prisma.dokumen_keluargaWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Dokumen_keluargaScalarFieldEnum | Prisma.Dokumen_keluargaScalarFieldEnum[]
-}
-
-/**
- * users.override_hasil
- */
-export type users$override_hasilArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the hasil_spk
-   */
-  select?: Prisma.hasil_spkSelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the hasil_spk
-   */
-  omit?: Prisma.hasil_spkOmit<ExtArgs> | null
-  /**
-   * Choose, which related nodes to fetch as well
-   */
-  include?: Prisma.hasil_spkInclude<ExtArgs> | null
-  where?: Prisma.hasil_spkWhereInput
-  orderBy?: Prisma.hasil_spkOrderByWithRelationInput | Prisma.hasil_spkOrderByWithRelationInput[]
-  cursor?: Prisma.hasil_spkWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Prisma.Hasil_spkScalarFieldEnum | Prisma.Hasil_spkScalarFieldEnum[]
 }
 
 /**

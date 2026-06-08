@@ -1,24 +1,27 @@
-import "next-auth";
+import type { DefaultSession } from "next-auth";
+
+type AppRole = "admin" | "user";
 
 declare module "next-auth" {
+  interface User {
+    id: string;
+    role: AppRole;
+    mustChangePassword?: boolean;
+  }
+
   interface Session {
     user: {
       id: string;
-      name?: string | null;
-      email?: string | null;
-      image?: string | null;
-      role: "admin" | "user";
-    };
-  }
-
-  interface User {
-    role: "admin" | "user";
+      role: AppRole;
+      mustChangePassword?: boolean;
+    } & DefaultSession["user"];
   }
 }
 
 declare module "next-auth/jwt" {
   interface JWT {
-    id: string;
-    role: "admin" | "user";
+    id?: string;
+    role?: AppRole;
+    mustChangePassword?: boolean;
   }
 }

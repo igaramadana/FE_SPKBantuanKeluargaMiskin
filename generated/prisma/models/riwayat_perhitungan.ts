@@ -349,7 +349,7 @@ export type riwayat_perhitunganCreateInput = {
   threshold?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kuota?: number | null
   tanggal_hitung?: Date | string
-  user?: Prisma.usersCreateNestedOneWithoutRiwayatInput
+  user?: Prisma.usersCreateNestedOneWithoutRiwayat_perhitunganInput
   hasil_spk?: Prisma.hasil_spkCreateNestedManyWithoutRiwayat_perhitunganInput
 }
 
@@ -377,7 +377,7 @@ export type riwayat_perhitunganUpdateInput = {
   threshold?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kuota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tanggal_hitung?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.usersUpdateOneWithoutRiwayatNestedInput
+  user?: Prisma.usersUpdateOneWithoutRiwayat_perhitunganNestedInput
   hasil_spk?: Prisma.hasil_spkUpdateManyWithoutRiwayat_perhitunganNestedInput
 }
 
@@ -649,7 +649,7 @@ export type riwayat_perhitunganCreateWithoutHasil_spkInput = {
   threshold?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kuota?: number | null
   tanggal_hitung?: Date | string
-  user?: Prisma.usersCreateNestedOneWithoutRiwayatInput
+  user?: Prisma.usersCreateNestedOneWithoutRiwayat_perhitunganInput
 }
 
 export type riwayat_perhitunganUncheckedCreateWithoutHasil_spkInput = {
@@ -691,7 +691,7 @@ export type riwayat_perhitunganUpdateWithoutHasil_spkInput = {
   threshold?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   kuota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   tanggal_hitung?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.usersUpdateOneWithoutRiwayatNestedInput
+  user?: Prisma.usersUpdateOneWithoutRiwayat_perhitunganNestedInput
 }
 
 export type riwayat_perhitunganUncheckedUpdateWithoutHasil_spkInput = {

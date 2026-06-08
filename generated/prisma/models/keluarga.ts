@@ -46,6 +46,9 @@ export type KeluargaMinAggregateOutputType = {
   status_verifikasi: $Enums.status_verifikasi | null
   catatan_admin: string | null
   created_by: string | null
+  kode_keluarga_import: string | null
+  sumber_data: string | null
+  import_batch_id: string | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -62,6 +65,9 @@ export type KeluargaMaxAggregateOutputType = {
   status_verifikasi: $Enums.status_verifikasi | null
   catatan_admin: string | null
   created_by: string | null
+  kode_keluarga_import: string | null
+  sumber_data: string | null
+  import_batch_id: string | null
   created_at: Date | null
   updated_at: Date | null
 }
@@ -78,6 +84,9 @@ export type KeluargaCountAggregateOutputType = {
   status_verifikasi: number
   catatan_admin: number
   created_by: number
+  kode_keluarga_import: number
+  sumber_data: number
+  import_batch_id: number
   created_at: number
   updated_at: number
   _all: number
@@ -104,6 +113,9 @@ export type KeluargaMinAggregateInputType = {
   status_verifikasi?: true
   catatan_admin?: true
   created_by?: true
+  kode_keluarga_import?: true
+  sumber_data?: true
+  import_batch_id?: true
   created_at?: true
   updated_at?: true
 }
@@ -120,6 +132,9 @@ export type KeluargaMaxAggregateInputType = {
   status_verifikasi?: true
   catatan_admin?: true
   created_by?: true
+  kode_keluarga_import?: true
+  sumber_data?: true
+  import_batch_id?: true
   created_at?: true
   updated_at?: true
 }
@@ -136,6 +151,9 @@ export type KeluargaCountAggregateInputType = {
   status_verifikasi?: true
   catatan_admin?: true
   created_by?: true
+  kode_keluarga_import?: true
+  sumber_data?: true
+  import_batch_id?: true
   created_at?: true
   updated_at?: true
   _all?: true
@@ -239,6 +257,9 @@ export type KeluargaGroupByOutputType = {
   status_verifikasi: $Enums.status_verifikasi
   catatan_admin: string | null
   created_by: string | null
+  kode_keluarga_import: string | null
+  sumber_data: string
+  import_batch_id: string | null
   created_at: Date
   updated_at: Date
   _count: KeluargaCountAggregateOutputType | null
@@ -278,13 +299,16 @@ export type keluargaWhereInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFilter<"keluarga"> | $Enums.status_verifikasi
   catatan_admin?: Prisma.StringNullableFilter<"keluarga"> | string | null
   created_by?: Prisma.UuidNullableFilter<"keluarga"> | string | null
+  kode_keluarga_import?: Prisma.StringNullableFilter<"keluarga"> | string | null
+  sumber_data?: Prisma.StringFilter<"keluarga"> | string
+  import_batch_id?: Prisma.UuidNullableFilter<"keluarga"> | string | null
   created_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
   user?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
   creator?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
-  penilaian?: Prisma.PenilaianListRelationFilter
-  hasil_spk?: Prisma.Hasil_spkListRelationFilter
-  dokumen?: Prisma.Dokumen_keluargaListRelationFilter
+  penilaians?: Prisma.PenilaianListRelationFilter
+  hasilSpks?: Prisma.Hasil_spkListRelationFilter
+  dokumenKeluargas?: Prisma.Dokumen_keluargaListRelationFilter
 }
 
 export type keluargaOrderByWithRelationInput = {
@@ -299,18 +323,22 @@ export type keluargaOrderByWithRelationInput = {
   status_verifikasi?: Prisma.SortOrder
   catatan_admin?: Prisma.SortOrderInput | Prisma.SortOrder
   created_by?: Prisma.SortOrderInput | Prisma.SortOrder
+  kode_keluarga_import?: Prisma.SortOrderInput | Prisma.SortOrder
+  sumber_data?: Prisma.SortOrder
+  import_batch_id?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   user?: Prisma.usersOrderByWithRelationInput
   creator?: Prisma.usersOrderByWithRelationInput
-  penilaian?: Prisma.penilaianOrderByRelationAggregateInput
-  hasil_spk?: Prisma.hasil_spkOrderByRelationAggregateInput
-  dokumen?: Prisma.dokumen_keluargaOrderByRelationAggregateInput
+  penilaians?: Prisma.penilaianOrderByRelationAggregateInput
+  hasilSpks?: Prisma.hasil_spkOrderByRelationAggregateInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaOrderByRelationAggregateInput
 }
 
 export type keluargaWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   nik?: string
+  kode_keluarga_import?: string
   AND?: Prisma.keluargaWhereInput | Prisma.keluargaWhereInput[]
   OR?: Prisma.keluargaWhereInput[]
   NOT?: Prisma.keluargaWhereInput | Prisma.keluargaWhereInput[]
@@ -323,14 +351,16 @@ export type keluargaWhereUniqueInput = Prisma.AtLeast<{
   status_verifikasi?: Prisma.Enumstatus_verifikasiFilter<"keluarga"> | $Enums.status_verifikasi
   catatan_admin?: Prisma.StringNullableFilter<"keluarga"> | string | null
   created_by?: Prisma.UuidNullableFilter<"keluarga"> | string | null
+  sumber_data?: Prisma.StringFilter<"keluarga"> | string
+  import_batch_id?: Prisma.UuidNullableFilter<"keluarga"> | string | null
   created_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
   updated_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
   user?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
   creator?: Prisma.XOR<Prisma.UsersNullableScalarRelationFilter, Prisma.usersWhereInput> | null
-  penilaian?: Prisma.PenilaianListRelationFilter
-  hasil_spk?: Prisma.Hasil_spkListRelationFilter
-  dokumen?: Prisma.Dokumen_keluargaListRelationFilter
-}, "id" | "nik">
+  penilaians?: Prisma.PenilaianListRelationFilter
+  hasilSpks?: Prisma.Hasil_spkListRelationFilter
+  dokumenKeluargas?: Prisma.Dokumen_keluargaListRelationFilter
+}, "id" | "nik" | "kode_keluarga_import">
 
 export type keluargaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -344,6 +374,9 @@ export type keluargaOrderByWithAggregationInput = {
   status_verifikasi?: Prisma.SortOrder
   catatan_admin?: Prisma.SortOrderInput | Prisma.SortOrder
   created_by?: Prisma.SortOrderInput | Prisma.SortOrder
+  kode_keluarga_import?: Prisma.SortOrderInput | Prisma.SortOrder
+  sumber_data?: Prisma.SortOrder
+  import_batch_id?: Prisma.SortOrderInput | Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
   _count?: Prisma.keluargaCountOrderByAggregateInput
@@ -368,6 +401,9 @@ export type keluargaScalarWhereWithAggregatesInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiWithAggregatesFilter<"keluarga"> | $Enums.status_verifikasi
   catatan_admin?: Prisma.StringNullableWithAggregatesFilter<"keluarga"> | string | null
   created_by?: Prisma.UuidNullableWithAggregatesFilter<"keluarga"> | string | null
+  kode_keluarga_import?: Prisma.StringNullableWithAggregatesFilter<"keluarga"> | string | null
+  sumber_data?: Prisma.StringWithAggregatesFilter<"keluarga"> | string
+  import_batch_id?: Prisma.UuidNullableWithAggregatesFilter<"keluarga"> | string | null
   created_at?: Prisma.DateTimeWithAggregatesFilter<"keluarga"> | Date | string
   updated_at?: Prisma.DateTimeWithAggregatesFilter<"keluarga"> | Date | string
 }
@@ -382,13 +418,16 @@ export type keluargaCreateInput = {
   jumlah_anggota?: number | null
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   user?: Prisma.usersCreateNestedOneWithoutKeluarga_akunInput
   creator?: Prisma.usersCreateNestedOneWithoutKeluarga_dibuatInput
-  penilaian?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
 }
 
 export type keluargaUncheckedCreateInput = {
@@ -403,11 +442,14 @@ export type keluargaUncheckedCreateInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
-  penilaian?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
 }
 
 export type keluargaUpdateInput = {
@@ -420,13 +462,16 @@ export type keluargaUpdateInput = {
   jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.usersUpdateOneWithoutKeluarga_akunNestedInput
   creator?: Prisma.usersUpdateOneWithoutKeluarga_dibuatNestedInput
-  penilaian?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
 }
 
 export type keluargaUncheckedUpdateInput = {
@@ -441,11 +486,14 @@ export type keluargaUncheckedUpdateInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  penilaian?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
 }
 
 export type keluargaCreateManyInput = {
@@ -460,6 +508,9 @@ export type keluargaCreateManyInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
 }
@@ -474,6 +525,9 @@ export type keluargaUpdateManyMutationInput = {
   jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -490,6 +544,9 @@ export type keluargaUncheckedUpdateManyInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -516,6 +573,9 @@ export type keluargaCountOrderByAggregateInput = {
   status_verifikasi?: Prisma.SortOrder
   catatan_admin?: Prisma.SortOrder
   created_by?: Prisma.SortOrder
+  kode_keluarga_import?: Prisma.SortOrder
+  sumber_data?: Prisma.SortOrder
+  import_batch_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -536,6 +596,9 @@ export type keluargaMaxOrderByAggregateInput = {
   status_verifikasi?: Prisma.SortOrder
   catatan_admin?: Prisma.SortOrder
   created_by?: Prisma.SortOrder
+  kode_keluarga_import?: Prisma.SortOrder
+  sumber_data?: Prisma.SortOrder
+  import_batch_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -552,6 +615,9 @@ export type keluargaMinOrderByAggregateInput = {
   status_verifikasi?: Prisma.SortOrder
   catatan_admin?: Prisma.SortOrder
   created_by?: Prisma.SortOrder
+  kode_keluarga_import?: Prisma.SortOrder
+  sumber_data?: Prisma.SortOrder
+  import_batch_id?: Prisma.SortOrder
   created_at?: Prisma.SortOrder
   updated_at?: Prisma.SortOrder
 }
@@ -565,13 +631,6 @@ export type KeluargaScalarRelationFilter = {
   isNot?: Prisma.keluargaWhereInput
 }
 
-export type keluargaCreateNestedManyWithoutCreatorInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput> | Prisma.keluargaCreateWithoutCreatorInput[] | Prisma.keluargaUncheckedCreateWithoutCreatorInput[]
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutCreatorInput | Prisma.keluargaCreateOrConnectWithoutCreatorInput[]
-  createMany?: Prisma.keluargaCreateManyCreatorInputEnvelope
-  connect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
-}
-
 export type keluargaCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.keluargaCreateWithoutUserInput, Prisma.keluargaUncheckedCreateWithoutUserInput> | Prisma.keluargaCreateWithoutUserInput[] | Prisma.keluargaUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutUserInput | Prisma.keluargaCreateOrConnectWithoutUserInput[]
@@ -579,7 +638,7 @@ export type keluargaCreateNestedManyWithoutUserInput = {
   connect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
 }
 
-export type keluargaUncheckedCreateNestedManyWithoutCreatorInput = {
+export type keluargaCreateNestedManyWithoutCreatorInput = {
   create?: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput> | Prisma.keluargaCreateWithoutCreatorInput[] | Prisma.keluargaUncheckedCreateWithoutCreatorInput[]
   connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutCreatorInput | Prisma.keluargaCreateOrConnectWithoutCreatorInput[]
   createMany?: Prisma.keluargaCreateManyCreatorInputEnvelope
@@ -593,18 +652,11 @@ export type keluargaUncheckedCreateNestedManyWithoutUserInput = {
   connect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
 }
 
-export type keluargaUpdateManyWithoutCreatorNestedInput = {
+export type keluargaUncheckedCreateNestedManyWithoutCreatorInput = {
   create?: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput> | Prisma.keluargaCreateWithoutCreatorInput[] | Prisma.keluargaUncheckedCreateWithoutCreatorInput[]
   connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutCreatorInput | Prisma.keluargaCreateOrConnectWithoutCreatorInput[]
-  upsert?: Prisma.keluargaUpsertWithWhereUniqueWithoutCreatorInput | Prisma.keluargaUpsertWithWhereUniqueWithoutCreatorInput[]
   createMany?: Prisma.keluargaCreateManyCreatorInputEnvelope
-  set?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
-  disconnect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
-  delete?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
   connect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
-  update?: Prisma.keluargaUpdateWithWhereUniqueWithoutCreatorInput | Prisma.keluargaUpdateWithWhereUniqueWithoutCreatorInput[]
-  updateMany?: Prisma.keluargaUpdateManyWithWhereWithoutCreatorInput | Prisma.keluargaUpdateManyWithWhereWithoutCreatorInput[]
-  deleteMany?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
 }
 
 export type keluargaUpdateManyWithoutUserNestedInput = {
@@ -621,7 +673,7 @@ export type keluargaUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
 }
 
-export type keluargaUncheckedUpdateManyWithoutCreatorNestedInput = {
+export type keluargaUpdateManyWithoutCreatorNestedInput = {
   create?: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput> | Prisma.keluargaCreateWithoutCreatorInput[] | Prisma.keluargaUncheckedCreateWithoutCreatorInput[]
   connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutCreatorInput | Prisma.keluargaCreateOrConnectWithoutCreatorInput[]
   upsert?: Prisma.keluargaUpsertWithWhereUniqueWithoutCreatorInput | Prisma.keluargaUpsertWithWhereUniqueWithoutCreatorInput[]
@@ -649,6 +701,20 @@ export type keluargaUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
 }
 
+export type keluargaUncheckedUpdateManyWithoutCreatorNestedInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput> | Prisma.keluargaCreateWithoutCreatorInput[] | Prisma.keluargaUncheckedCreateWithoutCreatorInput[]
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutCreatorInput | Prisma.keluargaCreateOrConnectWithoutCreatorInput[]
+  upsert?: Prisma.keluargaUpsertWithWhereUniqueWithoutCreatorInput | Prisma.keluargaUpsertWithWhereUniqueWithoutCreatorInput[]
+  createMany?: Prisma.keluargaCreateManyCreatorInputEnvelope
+  set?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
+  disconnect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
+  delete?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
+  connect?: Prisma.keluargaWhereUniqueInput | Prisma.keluargaWhereUniqueInput[]
+  update?: Prisma.keluargaUpdateWithWhereUniqueWithoutCreatorInput | Prisma.keluargaUpdateWithWhereUniqueWithoutCreatorInput[]
+  updateMany?: Prisma.keluargaUpdateManyWithWhereWithoutCreatorInput | Prisma.keluargaUpdateManyWithWhereWithoutCreatorInput[]
+  deleteMany?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
+}
+
 export type NullableIntFieldUpdateOperationsInput = {
   set?: number | null
   increment?: number
@@ -661,92 +727,46 @@ export type Enumstatus_verifikasiFieldUpdateOperationsInput = {
   set?: $Enums.status_verifikasi
 }
 
-export type keluargaCreateNestedOneWithoutPenilaianInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaianInput, Prisma.keluargaUncheckedCreateWithoutPenilaianInput>
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutPenilaianInput
+export type keluargaCreateNestedOneWithoutPenilaiansInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaiansInput, Prisma.keluargaUncheckedCreateWithoutPenilaiansInput>
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutPenilaiansInput
   connect?: Prisma.keluargaWhereUniqueInput
 }
 
-export type keluargaUpdateOneRequiredWithoutPenilaianNestedInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaianInput, Prisma.keluargaUncheckedCreateWithoutPenilaianInput>
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutPenilaianInput
-  upsert?: Prisma.keluargaUpsertWithoutPenilaianInput
+export type keluargaUpdateOneRequiredWithoutPenilaiansNestedInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaiansInput, Prisma.keluargaUncheckedCreateWithoutPenilaiansInput>
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutPenilaiansInput
+  upsert?: Prisma.keluargaUpsertWithoutPenilaiansInput
   connect?: Prisma.keluargaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.keluargaUpdateToOneWithWhereWithoutPenilaianInput, Prisma.keluargaUpdateWithoutPenilaianInput>, Prisma.keluargaUncheckedUpdateWithoutPenilaianInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.keluargaUpdateToOneWithWhereWithoutPenilaiansInput, Prisma.keluargaUpdateWithoutPenilaiansInput>, Prisma.keluargaUncheckedUpdateWithoutPenilaiansInput>
 }
 
-export type keluargaCreateNestedOneWithoutHasil_spkInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutHasil_spkInput, Prisma.keluargaUncheckedCreateWithoutHasil_spkInput>
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutHasil_spkInput
-  connect?: Prisma.keluargaWhereUniqueInput
-}
-
-export type keluargaUpdateOneRequiredWithoutHasil_spkNestedInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutHasil_spkInput, Prisma.keluargaUncheckedCreateWithoutHasil_spkInput>
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutHasil_spkInput
-  upsert?: Prisma.keluargaUpsertWithoutHasil_spkInput
-  connect?: Prisma.keluargaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.keluargaUpdateToOneWithWhereWithoutHasil_spkInput, Prisma.keluargaUpdateWithoutHasil_spkInput>, Prisma.keluargaUncheckedUpdateWithoutHasil_spkInput>
-}
-
-export type keluargaCreateNestedOneWithoutDokumenInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenInput, Prisma.keluargaUncheckedCreateWithoutDokumenInput>
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutDokumenInput
+export type keluargaCreateNestedOneWithoutHasilSpksInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutHasilSpksInput, Prisma.keluargaUncheckedCreateWithoutHasilSpksInput>
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutHasilSpksInput
   connect?: Prisma.keluargaWhereUniqueInput
 }
 
-export type keluargaUpdateOneRequiredWithoutDokumenNestedInput = {
-  create?: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenInput, Prisma.keluargaUncheckedCreateWithoutDokumenInput>
-  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutDokumenInput
-  upsert?: Prisma.keluargaUpsertWithoutDokumenInput
+export type keluargaUpdateOneRequiredWithoutHasilSpksNestedInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutHasilSpksInput, Prisma.keluargaUncheckedCreateWithoutHasilSpksInput>
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutHasilSpksInput
+  upsert?: Prisma.keluargaUpsertWithoutHasilSpksInput
   connect?: Prisma.keluargaWhereUniqueInput
-  update?: Prisma.XOR<Prisma.XOR<Prisma.keluargaUpdateToOneWithWhereWithoutDokumenInput, Prisma.keluargaUpdateWithoutDokumenInput>, Prisma.keluargaUncheckedUpdateWithoutDokumenInput>
+  update?: Prisma.XOR<Prisma.XOR<Prisma.keluargaUpdateToOneWithWhereWithoutHasilSpksInput, Prisma.keluargaUpdateWithoutHasilSpksInput>, Prisma.keluargaUncheckedUpdateWithoutHasilSpksInput>
 }
 
-export type keluargaCreateWithoutCreatorInput = {
-  id?: string
-  nama_kepala_keluarga: string
-  nik: string
-  alamat?: string | null
-  kelurahan?: string | null
-  dusun?: string | null
-  jumlah_anggota?: number | null
-  status_verifikasi?: $Enums.status_verifikasi
-  catatan_admin?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
-  user?: Prisma.usersCreateNestedOneWithoutKeluarga_akunInput
-  penilaian?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
+export type keluargaCreateNestedOneWithoutDokumenKeluargasInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenKeluargasInput, Prisma.keluargaUncheckedCreateWithoutDokumenKeluargasInput>
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutDokumenKeluargasInput
+  connect?: Prisma.keluargaWhereUniqueInput
 }
 
-export type keluargaUncheckedCreateWithoutCreatorInput = {
-  id?: string
-  user_id?: string | null
-  nama_kepala_keluarga: string
-  nik: string
-  alamat?: string | null
-  kelurahan?: string | null
-  dusun?: string | null
-  jumlah_anggota?: number | null
-  status_verifikasi?: $Enums.status_verifikasi
-  catatan_admin?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
-  penilaian?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
-}
-
-export type keluargaCreateOrConnectWithoutCreatorInput = {
-  where: Prisma.keluargaWhereUniqueInput
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput>
-}
-
-export type keluargaCreateManyCreatorInputEnvelope = {
-  data: Prisma.keluargaCreateManyCreatorInput | Prisma.keluargaCreateManyCreatorInput[]
-  skipDuplicates?: boolean
+export type keluargaUpdateOneRequiredWithoutDokumenKeluargasNestedInput = {
+  create?: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenKeluargasInput, Prisma.keluargaUncheckedCreateWithoutDokumenKeluargasInput>
+  connectOrCreate?: Prisma.keluargaCreateOrConnectWithoutDokumenKeluargasInput
+  upsert?: Prisma.keluargaUpsertWithoutDokumenKeluargasInput
+  connect?: Prisma.keluargaWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.keluargaUpdateToOneWithWhereWithoutDokumenKeluargasInput, Prisma.keluargaUpdateWithoutDokumenKeluargasInput>, Prisma.keluargaUncheckedUpdateWithoutDokumenKeluargasInput>
 }
 
 export type keluargaCreateWithoutUserInput = {
@@ -759,12 +779,15 @@ export type keluargaCreateWithoutUserInput = {
   jumlah_anggota?: number | null
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   creator?: Prisma.usersCreateNestedOneWithoutKeluarga_dibuatInput
-  penilaian?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
 }
 
 export type keluargaUncheckedCreateWithoutUserInput = {
@@ -778,11 +801,14 @@ export type keluargaUncheckedCreateWithoutUserInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
-  penilaian?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
 }
 
 export type keluargaCreateOrConnectWithoutUserInput = {
@@ -795,39 +821,56 @@ export type keluargaCreateManyUserInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type keluargaUpsertWithWhereUniqueWithoutCreatorInput = {
+export type keluargaCreateWithoutCreatorInput = {
+  id?: string
+  nama_kepala_keluarga: string
+  nik: string
+  alamat?: string | null
+  kelurahan?: string | null
+  dusun?: string | null
+  jumlah_anggota?: number | null
+  status_verifikasi?: $Enums.status_verifikasi
+  catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  user?: Prisma.usersCreateNestedOneWithoutKeluarga_akunInput
+  penilaians?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
+}
+
+export type keluargaUncheckedCreateWithoutCreatorInput = {
+  id?: string
+  user_id?: string | null
+  nama_kepala_keluarga: string
+  nik: string
+  alamat?: string | null
+  kelurahan?: string | null
+  dusun?: string | null
+  jumlah_anggota?: number | null
+  status_verifikasi?: $Enums.status_verifikasi
+  catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
+  penilaians?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
+}
+
+export type keluargaCreateOrConnectWithoutCreatorInput = {
   where: Prisma.keluargaWhereUniqueInput
-  update: Prisma.XOR<Prisma.keluargaUpdateWithoutCreatorInput, Prisma.keluargaUncheckedUpdateWithoutCreatorInput>
   create: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput>
 }
 
-export type keluargaUpdateWithWhereUniqueWithoutCreatorInput = {
-  where: Prisma.keluargaWhereUniqueInput
-  data: Prisma.XOR<Prisma.keluargaUpdateWithoutCreatorInput, Prisma.keluargaUncheckedUpdateWithoutCreatorInput>
-}
-
-export type keluargaUpdateManyWithWhereWithoutCreatorInput = {
-  where: Prisma.keluargaScalarWhereInput
-  data: Prisma.XOR<Prisma.keluargaUpdateManyMutationInput, Prisma.keluargaUncheckedUpdateManyWithoutCreatorInput>
-}
-
-export type keluargaScalarWhereInput = {
-  AND?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
-  OR?: Prisma.keluargaScalarWhereInput[]
-  NOT?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
-  id?: Prisma.UuidFilter<"keluarga"> | string
-  user_id?: Prisma.UuidNullableFilter<"keluarga"> | string | null
-  nama_kepala_keluarga?: Prisma.StringFilter<"keluarga"> | string
-  nik?: Prisma.StringFilter<"keluarga"> | string
-  alamat?: Prisma.StringNullableFilter<"keluarga"> | string | null
-  kelurahan?: Prisma.StringNullableFilter<"keluarga"> | string | null
-  dusun?: Prisma.StringNullableFilter<"keluarga"> | string | null
-  jumlah_anggota?: Prisma.IntNullableFilter<"keluarga"> | number | null
-  status_verifikasi?: Prisma.Enumstatus_verifikasiFilter<"keluarga"> | $Enums.status_verifikasi
-  catatan_admin?: Prisma.StringNullableFilter<"keluarga"> | string | null
-  created_by?: Prisma.UuidNullableFilter<"keluarga"> | string | null
-  created_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
-  updated_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
+export type keluargaCreateManyCreatorInputEnvelope = {
+  data: Prisma.keluargaCreateManyCreatorInput | Prisma.keluargaCreateManyCreatorInput[]
+  skipDuplicates?: boolean
 }
 
 export type keluargaUpsertWithWhereUniqueWithoutUserInput = {
@@ -846,7 +889,45 @@ export type keluargaUpdateManyWithWhereWithoutUserInput = {
   data: Prisma.XOR<Prisma.keluargaUpdateManyMutationInput, Prisma.keluargaUncheckedUpdateManyWithoutUserInput>
 }
 
-export type keluargaCreateWithoutPenilaianInput = {
+export type keluargaScalarWhereInput = {
+  AND?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
+  OR?: Prisma.keluargaScalarWhereInput[]
+  NOT?: Prisma.keluargaScalarWhereInput | Prisma.keluargaScalarWhereInput[]
+  id?: Prisma.UuidFilter<"keluarga"> | string
+  user_id?: Prisma.UuidNullableFilter<"keluarga"> | string | null
+  nama_kepala_keluarga?: Prisma.StringFilter<"keluarga"> | string
+  nik?: Prisma.StringFilter<"keluarga"> | string
+  alamat?: Prisma.StringNullableFilter<"keluarga"> | string | null
+  kelurahan?: Prisma.StringNullableFilter<"keluarga"> | string | null
+  dusun?: Prisma.StringNullableFilter<"keluarga"> | string | null
+  jumlah_anggota?: Prisma.IntNullableFilter<"keluarga"> | number | null
+  status_verifikasi?: Prisma.Enumstatus_verifikasiFilter<"keluarga"> | $Enums.status_verifikasi
+  catatan_admin?: Prisma.StringNullableFilter<"keluarga"> | string | null
+  created_by?: Prisma.UuidNullableFilter<"keluarga"> | string | null
+  kode_keluarga_import?: Prisma.StringNullableFilter<"keluarga"> | string | null
+  sumber_data?: Prisma.StringFilter<"keluarga"> | string
+  import_batch_id?: Prisma.UuidNullableFilter<"keluarga"> | string | null
+  created_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
+  updated_at?: Prisma.DateTimeFilter<"keluarga"> | Date | string
+}
+
+export type keluargaUpsertWithWhereUniqueWithoutCreatorInput = {
+  where: Prisma.keluargaWhereUniqueInput
+  update: Prisma.XOR<Prisma.keluargaUpdateWithoutCreatorInput, Prisma.keluargaUncheckedUpdateWithoutCreatorInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutCreatorInput, Prisma.keluargaUncheckedCreateWithoutCreatorInput>
+}
+
+export type keluargaUpdateWithWhereUniqueWithoutCreatorInput = {
+  where: Prisma.keluargaWhereUniqueInput
+  data: Prisma.XOR<Prisma.keluargaUpdateWithoutCreatorInput, Prisma.keluargaUncheckedUpdateWithoutCreatorInput>
+}
+
+export type keluargaUpdateManyWithWhereWithoutCreatorInput = {
+  where: Prisma.keluargaScalarWhereInput
+  data: Prisma.XOR<Prisma.keluargaUpdateManyMutationInput, Prisma.keluargaUncheckedUpdateManyWithoutCreatorInput>
+}
+
+export type keluargaCreateWithoutPenilaiansInput = {
   id?: string
   nama_kepala_keluarga: string
   nik: string
@@ -856,15 +937,18 @@ export type keluargaCreateWithoutPenilaianInput = {
   jumlah_anggota?: number | null
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   user?: Prisma.usersCreateNestedOneWithoutKeluarga_akunInput
   creator?: Prisma.usersCreateNestedOneWithoutKeluarga_dibuatInput
-  hasil_spk?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
 }
 
-export type keluargaUncheckedCreateWithoutPenilaianInput = {
+export type keluargaUncheckedCreateWithoutPenilaiansInput = {
   id?: string
   user_id?: string | null
   nama_kepala_keluarga: string
@@ -876,29 +960,32 @@ export type keluargaUncheckedCreateWithoutPenilaianInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
-  hasil_spk?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
 }
 
-export type keluargaCreateOrConnectWithoutPenilaianInput = {
+export type keluargaCreateOrConnectWithoutPenilaiansInput = {
   where: Prisma.keluargaWhereUniqueInput
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaianInput, Prisma.keluargaUncheckedCreateWithoutPenilaianInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaiansInput, Prisma.keluargaUncheckedCreateWithoutPenilaiansInput>
 }
 
-export type keluargaUpsertWithoutPenilaianInput = {
-  update: Prisma.XOR<Prisma.keluargaUpdateWithoutPenilaianInput, Prisma.keluargaUncheckedUpdateWithoutPenilaianInput>
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaianInput, Prisma.keluargaUncheckedCreateWithoutPenilaianInput>
+export type keluargaUpsertWithoutPenilaiansInput = {
+  update: Prisma.XOR<Prisma.keluargaUpdateWithoutPenilaiansInput, Prisma.keluargaUncheckedUpdateWithoutPenilaiansInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutPenilaiansInput, Prisma.keluargaUncheckedCreateWithoutPenilaiansInput>
   where?: Prisma.keluargaWhereInput
 }
 
-export type keluargaUpdateToOneWithWhereWithoutPenilaianInput = {
+export type keluargaUpdateToOneWithWhereWithoutPenilaiansInput = {
   where?: Prisma.keluargaWhereInput
-  data: Prisma.XOR<Prisma.keluargaUpdateWithoutPenilaianInput, Prisma.keluargaUncheckedUpdateWithoutPenilaianInput>
+  data: Prisma.XOR<Prisma.keluargaUpdateWithoutPenilaiansInput, Prisma.keluargaUncheckedUpdateWithoutPenilaiansInput>
 }
 
-export type keluargaUpdateWithoutPenilaianInput = {
+export type keluargaUpdateWithoutPenilaiansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
   nik?: Prisma.StringFieldUpdateOperationsInput | string
@@ -908,15 +995,18 @@ export type keluargaUpdateWithoutPenilaianInput = {
   jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.usersUpdateOneWithoutKeluarga_akunNestedInput
   creator?: Prisma.usersUpdateOneWithoutKeluarga_dibuatNestedInput
-  hasil_spk?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
 }
 
-export type keluargaUncheckedUpdateWithoutPenilaianInput = {
+export type keluargaUncheckedUpdateWithoutPenilaiansInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
@@ -928,13 +1018,16 @@ export type keluargaUncheckedUpdateWithoutPenilaianInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  hasil_spk?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
 }
 
-export type keluargaCreateWithoutHasil_spkInput = {
+export type keluargaCreateWithoutHasilSpksInput = {
   id?: string
   nama_kepala_keluarga: string
   nik: string
@@ -944,15 +1037,18 @@ export type keluargaCreateWithoutHasil_spkInput = {
   jumlah_anggota?: number | null
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   user?: Prisma.usersCreateNestedOneWithoutKeluarga_akunInput
   creator?: Prisma.usersCreateNestedOneWithoutKeluarga_dibuatInput
-  penilaian?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaCreateNestedManyWithoutKeluargaInput
 }
 
-export type keluargaUncheckedCreateWithoutHasil_spkInput = {
+export type keluargaUncheckedCreateWithoutHasilSpksInput = {
   id?: string
   user_id?: string | null
   nama_kepala_keluarga: string
@@ -964,29 +1060,32 @@ export type keluargaUncheckedCreateWithoutHasil_spkInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
-  penilaian?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedCreateNestedManyWithoutKeluargaInput
 }
 
-export type keluargaCreateOrConnectWithoutHasil_spkInput = {
+export type keluargaCreateOrConnectWithoutHasilSpksInput = {
   where: Prisma.keluargaWhereUniqueInput
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutHasil_spkInput, Prisma.keluargaUncheckedCreateWithoutHasil_spkInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutHasilSpksInput, Prisma.keluargaUncheckedCreateWithoutHasilSpksInput>
 }
 
-export type keluargaUpsertWithoutHasil_spkInput = {
-  update: Prisma.XOR<Prisma.keluargaUpdateWithoutHasil_spkInput, Prisma.keluargaUncheckedUpdateWithoutHasil_spkInput>
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutHasil_spkInput, Prisma.keluargaUncheckedCreateWithoutHasil_spkInput>
+export type keluargaUpsertWithoutHasilSpksInput = {
+  update: Prisma.XOR<Prisma.keluargaUpdateWithoutHasilSpksInput, Prisma.keluargaUncheckedUpdateWithoutHasilSpksInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutHasilSpksInput, Prisma.keluargaUncheckedCreateWithoutHasilSpksInput>
   where?: Prisma.keluargaWhereInput
 }
 
-export type keluargaUpdateToOneWithWhereWithoutHasil_spkInput = {
+export type keluargaUpdateToOneWithWhereWithoutHasilSpksInput = {
   where?: Prisma.keluargaWhereInput
-  data: Prisma.XOR<Prisma.keluargaUpdateWithoutHasil_spkInput, Prisma.keluargaUncheckedUpdateWithoutHasil_spkInput>
+  data: Prisma.XOR<Prisma.keluargaUpdateWithoutHasilSpksInput, Prisma.keluargaUncheckedUpdateWithoutHasilSpksInput>
 }
 
-export type keluargaUpdateWithoutHasil_spkInput = {
+export type keluargaUpdateWithoutHasilSpksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
   nik?: Prisma.StringFieldUpdateOperationsInput | string
@@ -996,15 +1095,18 @@ export type keluargaUpdateWithoutHasil_spkInput = {
   jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.usersUpdateOneWithoutKeluarga_akunNestedInput
   creator?: Prisma.usersUpdateOneWithoutKeluarga_dibuatNestedInput
-  penilaian?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
 }
 
-export type keluargaUncheckedUpdateWithoutHasil_spkInput = {
+export type keluargaUncheckedUpdateWithoutHasilSpksInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1016,13 +1118,16 @@ export type keluargaUncheckedUpdateWithoutHasil_spkInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  penilaian?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
 }
 
-export type keluargaCreateWithoutDokumenInput = {
+export type keluargaCreateWithoutDokumenKeluargasInput = {
   id?: string
   nama_kepala_keluarga: string
   nik: string
@@ -1032,15 +1137,18 @@ export type keluargaCreateWithoutDokumenInput = {
   jumlah_anggota?: number | null
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
   user?: Prisma.usersCreateNestedOneWithoutKeluarga_akunInput
   creator?: Prisma.usersCreateNestedOneWithoutKeluarga_dibuatInput
-  penilaian?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkCreateNestedManyWithoutKeluargaInput
 }
 
-export type keluargaUncheckedCreateWithoutDokumenInput = {
+export type keluargaUncheckedCreateWithoutDokumenKeluargasInput = {
   id?: string
   user_id?: string | null
   nama_kepala_keluarga: string
@@ -1052,29 +1160,32 @@ export type keluargaUncheckedCreateWithoutDokumenInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
-  penilaian?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
-  hasil_spk?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
+  penilaians?: Prisma.penilaianUncheckedCreateNestedManyWithoutKeluargaInput
+  hasilSpks?: Prisma.hasil_spkUncheckedCreateNestedManyWithoutKeluargaInput
 }
 
-export type keluargaCreateOrConnectWithoutDokumenInput = {
+export type keluargaCreateOrConnectWithoutDokumenKeluargasInput = {
   where: Prisma.keluargaWhereUniqueInput
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenInput, Prisma.keluargaUncheckedCreateWithoutDokumenInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenKeluargasInput, Prisma.keluargaUncheckedCreateWithoutDokumenKeluargasInput>
 }
 
-export type keluargaUpsertWithoutDokumenInput = {
-  update: Prisma.XOR<Prisma.keluargaUpdateWithoutDokumenInput, Prisma.keluargaUncheckedUpdateWithoutDokumenInput>
-  create: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenInput, Prisma.keluargaUncheckedCreateWithoutDokumenInput>
+export type keluargaUpsertWithoutDokumenKeluargasInput = {
+  update: Prisma.XOR<Prisma.keluargaUpdateWithoutDokumenKeluargasInput, Prisma.keluargaUncheckedUpdateWithoutDokumenKeluargasInput>
+  create: Prisma.XOR<Prisma.keluargaCreateWithoutDokumenKeluargasInput, Prisma.keluargaUncheckedCreateWithoutDokumenKeluargasInput>
   where?: Prisma.keluargaWhereInput
 }
 
-export type keluargaUpdateToOneWithWhereWithoutDokumenInput = {
+export type keluargaUpdateToOneWithWhereWithoutDokumenKeluargasInput = {
   where?: Prisma.keluargaWhereInput
-  data: Prisma.XOR<Prisma.keluargaUpdateWithoutDokumenInput, Prisma.keluargaUncheckedUpdateWithoutDokumenInput>
+  data: Prisma.XOR<Prisma.keluargaUpdateWithoutDokumenKeluargasInput, Prisma.keluargaUncheckedUpdateWithoutDokumenKeluargasInput>
 }
 
-export type keluargaUpdateWithoutDokumenInput = {
+export type keluargaUpdateWithoutDokumenKeluargasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
   nik?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1084,15 +1195,18 @@ export type keluargaUpdateWithoutDokumenInput = {
   jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.usersUpdateOneWithoutKeluarga_akunNestedInput
   creator?: Prisma.usersUpdateOneWithoutKeluarga_dibuatNestedInput
-  penilaian?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
 }
 
-export type keluargaUncheckedUpdateWithoutDokumenInput = {
+export type keluargaUncheckedUpdateWithoutDokumenKeluargasInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
@@ -1104,25 +1218,13 @@ export type keluargaUncheckedUpdateWithoutDokumenInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  penilaian?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
-}
-
-export type keluargaCreateManyCreatorInput = {
-  id?: string
-  user_id?: string | null
-  nama_kepala_keluarga: string
-  nik: string
-  alamat?: string | null
-  kelurahan?: string | null
-  dusun?: string | null
-  jumlah_anggota?: number | null
-  status_verifikasi?: $Enums.status_verifikasi
-  catatan_admin?: string | null
-  created_at?: Date | string
-  updated_at?: Date | string
+  penilaians?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
 }
 
 export type keluargaCreateManyUserInput = {
@@ -1136,59 +1238,29 @@ export type keluargaCreateManyUserInput = {
   status_verifikasi?: $Enums.status_verifikasi
   catatan_admin?: string | null
   created_by?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
   created_at?: Date | string
   updated_at?: Date | string
 }
 
-export type keluargaUpdateWithoutCreatorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
-  nik?: Prisma.StringFieldUpdateOperationsInput | string
-  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  kelurahan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dusun?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
-  catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  user?: Prisma.usersUpdateOneWithoutKeluarga_akunNestedInput
-  penilaian?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
-}
-
-export type keluargaUncheckedUpdateWithoutCreatorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
-  nik?: Prisma.StringFieldUpdateOperationsInput | string
-  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  kelurahan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dusun?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
-  catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  penilaian?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
-}
-
-export type keluargaUncheckedUpdateManyWithoutCreatorInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
-  nik?: Prisma.StringFieldUpdateOperationsInput | string
-  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  kelurahan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dusun?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
-  catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type keluargaCreateManyCreatorInput = {
+  id?: string
+  user_id?: string | null
+  nama_kepala_keluarga: string
+  nik: string
+  alamat?: string | null
+  kelurahan?: string | null
+  dusun?: string | null
+  jumlah_anggota?: number | null
+  status_verifikasi?: $Enums.status_verifikasi
+  catatan_admin?: string | null
+  kode_keluarga_import?: string | null
+  sumber_data?: string
+  import_batch_id?: string | null
+  created_at?: Date | string
+  updated_at?: Date | string
 }
 
 export type keluargaUpdateWithoutUserInput = {
@@ -1201,12 +1273,15 @@ export type keluargaUpdateWithoutUserInput = {
   jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creator?: Prisma.usersUpdateOneWithoutKeluarga_dibuatNestedInput
-  penilaian?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
 }
 
 export type keluargaUncheckedUpdateWithoutUserInput = {
@@ -1220,11 +1295,14 @@ export type keluargaUncheckedUpdateWithoutUserInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  penilaian?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
-  hasil_spk?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
-  dokumen?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
+  penilaians?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
 }
 
 export type keluargaUncheckedUpdateManyWithoutUserInput = {
@@ -1238,6 +1316,69 @@ export type keluargaUncheckedUpdateManyWithoutUserInput = {
   status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
   catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_by?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type keluargaUpdateWithoutCreatorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
+  nik?: Prisma.StringFieldUpdateOperationsInput | string
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelurahan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dusun?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
+  catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.usersUpdateOneWithoutKeluarga_akunNestedInput
+  penilaians?: Prisma.penilaianUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUpdateManyWithoutKeluargaNestedInput
+}
+
+export type keluargaUncheckedUpdateWithoutCreatorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
+  nik?: Prisma.StringFieldUpdateOperationsInput | string
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelurahan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dusun?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
+  catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  penilaians?: Prisma.penilaianUncheckedUpdateManyWithoutKeluargaNestedInput
+  hasilSpks?: Prisma.hasil_spkUncheckedUpdateManyWithoutKeluargaNestedInput
+  dokumenKeluargas?: Prisma.dokumen_keluargaUncheckedUpdateManyWithoutKeluargaNestedInput
+}
+
+export type keluargaUncheckedUpdateManyWithoutCreatorInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  user_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  nama_kepala_keluarga?: Prisma.StringFieldUpdateOperationsInput | string
+  nik?: Prisma.StringFieldUpdateOperationsInput | string
+  alamat?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kelurahan?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dusun?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  jumlah_anggota?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  status_verifikasi?: Prisma.Enumstatus_verifikasiFieldUpdateOperationsInput | $Enums.status_verifikasi
+  catatan_admin?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  kode_keluarga_import?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  sumber_data?: Prisma.StringFieldUpdateOperationsInput | string
+  import_batch_id?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1248,15 +1389,15 @@ export type keluargaUncheckedUpdateManyWithoutUserInput = {
  */
 
 export type KeluargaCountOutputType = {
-  penilaian: number
-  hasil_spk: number
-  dokumen: number
+  penilaians: number
+  hasilSpks: number
+  dokumenKeluargas: number
 }
 
 export type KeluargaCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  penilaian?: boolean | KeluargaCountOutputTypeCountPenilaianArgs
-  hasil_spk?: boolean | KeluargaCountOutputTypeCountHasil_spkArgs
-  dokumen?: boolean | KeluargaCountOutputTypeCountDokumenArgs
+  penilaians?: boolean | KeluargaCountOutputTypeCountPenilaiansArgs
+  hasilSpks?: boolean | KeluargaCountOutputTypeCountHasilSpksArgs
+  dokumenKeluargas?: boolean | KeluargaCountOutputTypeCountDokumenKeluargasArgs
 }
 
 /**
@@ -1272,21 +1413,21 @@ export type KeluargaCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Ext
 /**
  * KeluargaCountOutputType without action
  */
-export type KeluargaCountOutputTypeCountPenilaianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type KeluargaCountOutputTypeCountPenilaiansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.penilaianWhereInput
 }
 
 /**
  * KeluargaCountOutputType without action
  */
-export type KeluargaCountOutputTypeCountHasil_spkArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type KeluargaCountOutputTypeCountHasilSpksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.hasil_spkWhereInput
 }
 
 /**
  * KeluargaCountOutputType without action
  */
-export type KeluargaCountOutputTypeCountDokumenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type KeluargaCountOutputTypeCountDokumenKeluargasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.dokumen_keluargaWhereInput
 }
 
@@ -1303,13 +1444,16 @@ export type keluargaSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   status_verifikasi?: boolean
   catatan_admin?: boolean
   created_by?: boolean
+  kode_keluarga_import?: boolean
+  sumber_data?: boolean
+  import_batch_id?: boolean
   created_at?: boolean
   updated_at?: boolean
   user?: boolean | Prisma.keluarga$userArgs<ExtArgs>
   creator?: boolean | Prisma.keluarga$creatorArgs<ExtArgs>
-  penilaian?: boolean | Prisma.keluarga$penilaianArgs<ExtArgs>
-  hasil_spk?: boolean | Prisma.keluarga$hasil_spkArgs<ExtArgs>
-  dokumen?: boolean | Prisma.keluarga$dokumenArgs<ExtArgs>
+  penilaians?: boolean | Prisma.keluarga$penilaiansArgs<ExtArgs>
+  hasilSpks?: boolean | Prisma.keluarga$hasilSpksArgs<ExtArgs>
+  dokumenKeluargas?: boolean | Prisma.keluarga$dokumenKeluargasArgs<ExtArgs>
   _count?: boolean | Prisma.KeluargaCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["keluarga"]>
 
@@ -1325,6 +1469,9 @@ export type keluargaSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   status_verifikasi?: boolean
   catatan_admin?: boolean
   created_by?: boolean
+  kode_keluarga_import?: boolean
+  sumber_data?: boolean
+  import_batch_id?: boolean
   created_at?: boolean
   updated_at?: boolean
   user?: boolean | Prisma.keluarga$userArgs<ExtArgs>
@@ -1343,6 +1490,9 @@ export type keluargaSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   status_verifikasi?: boolean
   catatan_admin?: boolean
   created_by?: boolean
+  kode_keluarga_import?: boolean
+  sumber_data?: boolean
+  import_batch_id?: boolean
   created_at?: boolean
   updated_at?: boolean
   user?: boolean | Prisma.keluarga$userArgs<ExtArgs>
@@ -1361,17 +1511,20 @@ export type keluargaSelectScalar = {
   status_verifikasi?: boolean
   catatan_admin?: boolean
   created_by?: boolean
+  kode_keluarga_import?: boolean
+  sumber_data?: boolean
+  import_batch_id?: boolean
   created_at?: boolean
   updated_at?: boolean
 }
 
-export type keluargaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "nama_kepala_keluarga" | "nik" | "alamat" | "kelurahan" | "dusun" | "jumlah_anggota" | "status_verifikasi" | "catatan_admin" | "created_by" | "created_at" | "updated_at", ExtArgs["result"]["keluarga"]>
+export type keluargaOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "user_id" | "nama_kepala_keluarga" | "nik" | "alamat" | "kelurahan" | "dusun" | "jumlah_anggota" | "status_verifikasi" | "catatan_admin" | "created_by" | "kode_keluarga_import" | "sumber_data" | "import_batch_id" | "created_at" | "updated_at", ExtArgs["result"]["keluarga"]>
 export type keluargaInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.keluarga$userArgs<ExtArgs>
   creator?: boolean | Prisma.keluarga$creatorArgs<ExtArgs>
-  penilaian?: boolean | Prisma.keluarga$penilaianArgs<ExtArgs>
-  hasil_spk?: boolean | Prisma.keluarga$hasil_spkArgs<ExtArgs>
-  dokumen?: boolean | Prisma.keluarga$dokumenArgs<ExtArgs>
+  penilaians?: boolean | Prisma.keluarga$penilaiansArgs<ExtArgs>
+  hasilSpks?: boolean | Prisma.keluarga$hasilSpksArgs<ExtArgs>
+  dokumenKeluargas?: boolean | Prisma.keluarga$dokumenKeluargasArgs<ExtArgs>
   _count?: boolean | Prisma.KeluargaCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type keluargaIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1388,9 +1541,9 @@ export type $keluargaPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   objects: {
     user: Prisma.$usersPayload<ExtArgs> | null
     creator: Prisma.$usersPayload<ExtArgs> | null
-    penilaian: Prisma.$penilaianPayload<ExtArgs>[]
-    hasil_spk: Prisma.$hasil_spkPayload<ExtArgs>[]
-    dokumen: Prisma.$dokumen_keluargaPayload<ExtArgs>[]
+    penilaians: Prisma.$penilaianPayload<ExtArgs>[]
+    hasilSpks: Prisma.$hasil_spkPayload<ExtArgs>[]
+    dokumenKeluargas: Prisma.$dokumen_keluargaPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1404,6 +1557,9 @@ export type $keluargaPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     status_verifikasi: $Enums.status_verifikasi
     catatan_admin: string | null
     created_by: string | null
+    kode_keluarga_import: string | null
+    sumber_data: string
+    import_batch_id: string | null
     created_at: Date
     updated_at: Date
   }, ExtArgs["result"]["keluarga"]>
@@ -1802,9 +1958,9 @@ export interface Prisma__keluargaClient<T, Null = never, ExtArgs extends runtime
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.keluarga$userArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$userArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   creator<T extends Prisma.keluarga$creatorArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$creatorArgs<ExtArgs>>): Prisma.Prisma__usersClient<runtime.Types.Result.GetResult<Prisma.$usersPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-  penilaian<T extends Prisma.keluarga$penilaianArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$penilaianArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$penilaianPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  hasil_spk<T extends Prisma.keluarga$hasil_spkArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$hasil_spkArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$hasil_spkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
-  dokumen<T extends Prisma.keluarga$dokumenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$dokumenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$dokumen_keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  penilaians<T extends Prisma.keluarga$penilaiansArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$penilaiansArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$penilaianPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  hasilSpks<T extends Prisma.keluarga$hasilSpksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$hasilSpksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$hasil_spkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dokumenKeluargas<T extends Prisma.keluarga$dokumenKeluargasArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.keluarga$dokumenKeluargasArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$dokumen_keluargaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1845,6 +2001,9 @@ export interface keluargaFieldRefs {
   readonly status_verifikasi: Prisma.FieldRef<"keluarga", 'status_verifikasi'>
   readonly catatan_admin: Prisma.FieldRef<"keluarga", 'String'>
   readonly created_by: Prisma.FieldRef<"keluarga", 'String'>
+  readonly kode_keluarga_import: Prisma.FieldRef<"keluarga", 'String'>
+  readonly sumber_data: Prisma.FieldRef<"keluarga", 'String'>
+  readonly import_batch_id: Prisma.FieldRef<"keluarga", 'String'>
   readonly created_at: Prisma.FieldRef<"keluarga", 'DateTime'>
   readonly updated_at: Prisma.FieldRef<"keluarga", 'DateTime'>
 }
@@ -2286,9 +2445,9 @@ export type keluarga$creatorArgs<ExtArgs extends runtime.Types.Extensions.Intern
 }
 
 /**
- * keluarga.penilaian
+ * keluarga.penilaians
  */
-export type keluarga$penilaianArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type keluarga$penilaiansArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the penilaian
    */
@@ -2310,9 +2469,9 @@ export type keluarga$penilaianArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * keluarga.hasil_spk
+ * keluarga.hasilSpks
  */
-export type keluarga$hasil_spkArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type keluarga$hasilSpksArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the hasil_spk
    */
@@ -2334,9 +2493,9 @@ export type keluarga$hasil_spkArgs<ExtArgs extends runtime.Types.Extensions.Inte
 }
 
 /**
- * keluarga.dokumen
+ * keluarga.dokumenKeluargas
  */
-export type keluarga$dokumenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+export type keluarga$dokumenKeluargasArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   /**
    * Select specific fields to fetch from the dokumen_keluarga
    */

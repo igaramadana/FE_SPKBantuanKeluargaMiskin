@@ -300,8 +300,8 @@ export type dokumen_keluargaCreateInput = {
   reviewed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutDokumenInput
-  reviewer?: Prisma.usersCreateNestedOneWithoutDokumen_reviewInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutDokumenKeluargasInput
+  reviewer?: Prisma.usersCreateNestedOneWithoutDokumen_direviewInput
 }
 
 export type dokumen_keluargaUncheckedCreateInput = {
@@ -326,8 +326,8 @@ export type dokumen_keluargaUpdateInput = {
   reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutDokumenNestedInput
-  reviewer?: Prisma.usersUpdateOneWithoutDokumen_reviewNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutDokumenKeluargasNestedInput
+  reviewer?: Prisma.usersUpdateOneWithoutDokumen_direviewNestedInput
 }
 
 export type dokumen_keluargaUncheckedUpdateInput = {
@@ -526,7 +526,7 @@ export type dokumen_keluargaCreateWithoutReviewerInput = {
   reviewed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutDokumenInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutDokumenKeluargasInput
 }
 
 export type dokumen_keluargaUncheckedCreateWithoutReviewerInput = {
@@ -592,7 +592,7 @@ export type dokumen_keluargaCreateWithoutKeluargaInput = {
   reviewed_at?: Date | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  reviewer?: Prisma.usersCreateNestedOneWithoutDokumen_reviewInput
+  reviewer?: Prisma.usersCreateNestedOneWithoutDokumen_direviewInput
 }
 
 export type dokumen_keluargaUncheckedCreateWithoutKeluargaInput = {
@@ -654,7 +654,7 @@ export type dokumen_keluargaUpdateWithoutReviewerInput = {
   reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutDokumenNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutDokumenKeluargasNestedInput
 }
 
 export type dokumen_keluargaUncheckedUpdateWithoutReviewerInput = {
@@ -702,7 +702,7 @@ export type dokumen_keluargaUpdateWithoutKeluargaInput = {
   reviewed_at?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  reviewer?: Prisma.usersUpdateOneWithoutDokumen_reviewNestedInput
+  reviewer?: Prisma.usersUpdateOneWithoutDokumen_direviewNestedInput
 }
 
 export type dokumen_keluargaUncheckedUpdateWithoutKeluargaInput = {

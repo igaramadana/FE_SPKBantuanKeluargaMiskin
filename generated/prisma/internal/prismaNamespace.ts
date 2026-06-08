@@ -1347,8 +1347,10 @@ export const UsersScalarFieldEnum = {
   nama: 'nama',
   email: 'email',
   password_hash: 'password_hash',
-  role: 'role',
   image: 'image',
+  role: 'role',
+  must_change_password: 'must_change_password',
+  password_changed_at: 'password_changed_at',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -1368,6 +1370,9 @@ export const KeluargaScalarFieldEnum = {
   status_verifikasi: 'status_verifikasi',
   catatan_admin: 'catatan_admin',
   created_by: 'created_by',
+  kode_keluarga_import: 'kode_keluarga_import',
+  sumber_data: 'sumber_data',
+  import_batch_id: 'import_batch_id',
   created_at: 'created_at',
   updated_at: 'updated_at'
 } as const
@@ -1600,6 +1605,13 @@ export type ListEnumrole_userFieldRefInput<$PrismaModel> = FieldRefInputType<$Pr
 
 
 /**
+ * Reference to a field of type 'Boolean'
+ */
+export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
  * Reference to a field of type 'DateTime'
  */
 export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -1666,13 +1678,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'Boolean'
- */
-export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 

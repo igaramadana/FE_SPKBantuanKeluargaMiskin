@@ -334,7 +334,7 @@ export type penilaianCreateInput = {
   nilai_terbobot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutPenilaianInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutPenilaiansInput
   kriteria: Prisma.kriteriaCreateNestedOneWithoutPenilaianInput
   sub_kriteria?: Prisma.sub_kriteriaCreateNestedOneWithoutPenilaianInput
 }
@@ -358,7 +358,7 @@ export type penilaianUpdateInput = {
   nilai_terbobot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutPenilaianNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutPenilaiansNestedInput
   kriteria?: Prisma.kriteriaUpdateOneRequiredWithoutPenilaianNestedInput
   sub_kriteria?: Prisma.sub_kriteriaUpdateOneWithoutPenilaianNestedInput
 }
@@ -667,7 +667,7 @@ export type penilaianCreateWithoutKriteriaInput = {
   nilai_terbobot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutPenilaianInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutPenilaiansInput
   sub_kriteria?: Prisma.sub_kriteriaCreateNestedOneWithoutPenilaianInput
 }
 
@@ -715,7 +715,7 @@ export type penilaianCreateWithoutSub_kriteriaInput = {
   nilai_terbobot?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Date | string
   updated_at?: Date | string
-  keluarga: Prisma.keluargaCreateNestedOneWithoutPenilaianInput
+  keluarga: Prisma.keluargaCreateNestedOneWithoutPenilaiansInput
   kriteria: Prisma.kriteriaCreateNestedOneWithoutPenilaianInput
 }
 
@@ -818,7 +818,7 @@ export type penilaianUpdateWithoutKriteriaInput = {
   nilai_terbobot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutPenilaianNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutPenilaiansNestedInput
   sub_kriteria?: Prisma.sub_kriteriaUpdateOneWithoutPenilaianNestedInput
 }
 
@@ -862,7 +862,7 @@ export type penilaianUpdateWithoutSub_kriteriaInput = {
   nilai_terbobot?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   created_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updated_at?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutPenilaianNestedInput
+  keluarga?: Prisma.keluargaUpdateOneRequiredWithoutPenilaiansNestedInput
   kriteria?: Prisma.kriteriaUpdateOneRequiredWithoutPenilaianNestedInput
 }
 
