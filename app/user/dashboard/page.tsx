@@ -3,7 +3,7 @@ import { Medal, UserRound } from "lucide-react";
 
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { UserShell } from "@/components/user/UserShell";
+import { UserShell } from "../../../components/user/UserShell";
 import { HasilSpkExplanation } from "@/components/spk/HasilSpkExplanation";
 
 export const dynamic = "force-dynamic";

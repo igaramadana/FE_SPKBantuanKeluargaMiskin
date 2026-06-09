@@ -121,21 +121,18 @@ export function DashboardShell({
   }) {
     return (
       <aside
-        className={`flex h-full flex-col border-r border-emerald-100 bg-white transition-all duration-300 ease-in-out ${
-          collapsed ? "w-[92px]" : "w-[292px]"
-        }`}
+        className={`flex h-full flex-col border-r border-emerald-100 bg-white transition-all duration-300 ease-in-out ${collapsed ? "w-[92px]" : "w-[292px]"
+          }`}
       >
         <div className={`px-5 py-6 ${collapsed ? "px-4" : ""}`}>
           <div
-            className={`flex items-center ${
-              collapsed ? "justify-center" : "justify-between gap-3"
-            }`}
+            className={`flex items-center ${collapsed ? "justify-center" : "justify-between gap-3"
+              }`}
           >
             <Link
               href={dashboardHref}
-              className={`flex items-center gap-3 ${
-                collapsed ? "justify-center" : ""
-              }`}
+              className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""
+                }`}
               onClick={() => setIsMobileSidebarOpen(false)}
             >
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50 p-0.5 shadow-sm">
@@ -193,27 +190,23 @@ export function DashboardShell({
                 href={item.href}
                 title={collapsed ? item.label : undefined}
                 onClick={() => setIsMobileSidebarOpen(false)}
-                className={`group flex items-center rounded-xl text-sm font-semibold transition-all ${
-                  collapsed
+                className={`group flex items-center rounded-xl text-sm font-semibold transition-all ${collapsed
                     ? "h-12 justify-center px-0"
                     : "justify-between px-4 py-3"
-                } ${
-                  isActive
+                  } ${isActive
                     ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
                     : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
-                }`}
+                  }`}
               >
                 <span
-                  className={`flex items-center ${
-                    collapsed ? "justify-center" : "gap-3"
-                  }`}
+                  className={`flex items-center ${collapsed ? "justify-center" : "gap-3"
+                    }`}
                 >
                   <span
-                    className={`transition ${
-                      isActive
+                    className={`transition ${isActive
                         ? "text-white"
                         : "text-slate-400 group-hover:text-emerald-600"
-                    }`}
+                      }`}
                   >
                     {menuIcons[item.label] || <Home className="h-5 w-5" />}
                   </span>
@@ -230,7 +223,7 @@ export function DashboardShell({
         </nav>
 
         <div className={`${collapsed ? "p-3" : "p-4"}`}>
-          {!collapsed ? (
+          {/* {!collapsed ? (
             <div className="rounded-2xl border border-emerald-100 bg-slate-50 p-4">
               <p className="text-sm font-bold text-slate-900">Butuh bantuan?</p>
 
@@ -246,16 +239,15 @@ export function DashboardShell({
                 Pusat Bantuan
               </Link>
             </div>
-          ) : null}
+          ) : null} */}
 
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
             type="button"
             title="Logout"
-            className={`mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-red-100 bg-red-50 text-sm font-bold text-red-600 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 ${
-              collapsed ? "h-12 px-0" : "px-4 py-3"
-            }`}
+            className={`mt-3 flex w-full items-center justify-center gap-2 rounded-xl border border-red-100 bg-red-50 text-sm font-bold text-red-600 transition hover:bg-red-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50 ${collapsed ? "h-12 px-0" : "px-4 py-3"
+              }`}
           >
             <LogOut className="h-4 w-4" />
 
@@ -269,34 +261,30 @@ export function DashboardShell({
   return (
     <main className="min-h-screen bg-[#F6FAF7]">
       <div
-        className={`fixed inset-0 z-50 transition lg:hidden ${
-          isMobileSidebarOpen ? "pointer-events-auto" : "pointer-events-none"
-        }`}
+        className={`fixed inset-0 z-50 transition lg:hidden ${isMobileSidebarOpen ? "pointer-events-auto" : "pointer-events-none"
+          }`}
       >
         <button
           type="button"
           aria-label="Tutup sidebar"
           onClick={() => setIsMobileSidebarOpen(false)}
-          className={`absolute inset-0 bg-slate-950/40 transition-opacity duration-300 ${
-            isMobileSidebarOpen ? "opacity-100" : "opacity-0"
-          }`}
+          className={`absolute inset-0 bg-slate-950/40 transition-opacity duration-300 ${isMobileSidebarOpen ? "opacity-100" : "opacity-0"
+            }`}
         />
 
         <div
-          className={`relative h-full w-[292px] max-w-[85vw] transform transition-transform duration-300 ease-in-out ${
-            isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`relative h-full w-[292px] max-w-[85vw] transform transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
         >
           <SidebarContent mobile />
         </div>
       </div>
 
       <div
-        className={`grid min-h-screen transition-[grid-template-columns] duration-300 ease-in-out ${
-          isDesktopSidebarOpen
+        className={`grid min-h-screen transition-[grid-template-columns] duration-300 ease-in-out ${isDesktopSidebarOpen
             ? "lg:grid-cols-[292px_1fr]"
             : "lg:grid-cols-[92px_1fr]"
-        }`}
+          }`}
       >
         <div className="sticky top-0 hidden h-screen lg:block">
           <SidebarContent collapsed={!isDesktopSidebarOpen} />
@@ -346,13 +334,13 @@ export function DashboardShell({
               </div>
 
               <div className="flex items-center gap-3">
-                <button
+                {/* <button
                   type="button"
                   className="relative hidden h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 sm:inline-flex"
                 >
                   <Bell className="h-5 w-5" />
                   <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500" />
-                </button>
+                </button> */}
 
                 <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm">
                   <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-sm font-black text-white">
