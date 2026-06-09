@@ -1,14 +1,23 @@
-// lib/api.ts
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
-
-if (!API_URL) {
-  throw new Error("NEXT_PUBLIC_API_URL belum diset.");
-}
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "/backend-api";
 
 type QueryValue = string | number | boolean | null | undefined;
 
+function gabungUrl(endpoint: string) {
+  const baseUrl = API_URL.replace(/\/$/, "");
+  const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
+
+  return `${baseUrl}${cleanEndpoint}`;
+}
+
 function bikinUrl(endpoint: string, query?: Record<string, QueryValue>) {
-  const url = new URL(`${API_URL}${endpoint}`);
+  const fullPath = gabungUrl(endpoint);
+
+  const isAbsoluteUrl =
+    fullPath.startsWith("http://") || fullPath.startsWith("https://");
+
+  const url = isAbsoluteUrl
+    ? new URL(fullPath)
+    : new URL(fullPath, "https://dummy.local");
 
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
@@ -18,7 +27,11 @@ function bikinUrl(endpoint: string, query?: Record<string, QueryValue>) {
     });
   }
 
-  return url.toString();
+  if (isAbsoluteUrl) {
+    return url.toString();
+  }
+
+  return `${url.pathname}${url.search}`;
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
@@ -31,7 +44,9 @@ async function handleResponse<T>(response: Response): Promise<T> {
     const message =
       typeof data === "object" && data !== null && "detail" in data
         ? String(data.detail)
-        : "Terjadi kesalahan pada server.";
+        : typeof data === "string" && data
+          ? data
+          : "Terjadi kesalahan pada server.";
 
     throw new Error(message);
   }
@@ -55,7 +70,7 @@ export async function apiPost<TResponse, TBody>(
   endpoint: string,
   body: TBody
 ): Promise<TResponse> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(gabungUrl(endpoint), {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -70,7 +85,7 @@ export async function apiPut<TResponse, TBody>(
   endpoint: string,
   body: TBody
 ): Promise<TResponse> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(gabungUrl(endpoint), {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -85,7 +100,7 @@ export async function apiPatch<TResponse, TBody>(
   endpoint: string,
   body: TBody
 ): Promise<TResponse> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+  const response = await fetch(gabungUrl(endpoint), {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
@@ -96,22 +111,22 @@ export async function apiPatch<TResponse, TBody>(
   return handleResponse<TResponse>(response);
 }
 
-export async function apiDelete<TResponse>(endpoint: string): Promise<TResponse> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+export async function apiDelete<T>(endpoint: string): Promise<T> {
+  const response = await fetch(gabungUrl(endpoint), {
     method: "DELETE",
   });
 
-  return handleResponse<TResponse>(response);
+  return handleResponse<T>(response);
 }
 
-export async function apiUpload<TResponse>(
+export async function apiUpload<T>(
   endpoint: string,
   formData: FormData
-): Promise<TResponse> {
-  const response = await fetch(`${API_URL}${endpoint}`, {
+): Promise<T> {
+  const response = await fetch(gabungUrl(endpoint), {
     method: "POST",
     body: formData,
   });
 
-  return handleResponse<TResponse>(response);
+  return handleResponse<T>(response);
 }
