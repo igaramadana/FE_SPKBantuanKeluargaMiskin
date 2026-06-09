@@ -37,6 +37,12 @@ import {
 
 type KeluargaClientProps = {
   data: Keluarga[];
+  search?: string;
+  status?: StatusVerifikasi | "";
+  kelurahan?: string;
+  dusun?: string;
+  kelurahanList?: string[];
+  dusunList?: string[];
   errorMessage?: string;
 };
 
@@ -263,12 +269,24 @@ function InfoAlert({
   );
 }
 
-export function KeluargaClient({ data, errorMessage }: KeluargaClientProps) {
+export function KeluargaClient({
+  data,
+  search: initialSearch = "",
+  status: initialStatus = "",
+  kelurahan: initialKelurahan = "",
+  dusun: initialDusun = "",
+  kelurahanList: initialKelurahanList = [],
+  dusunList: initialDusunList = [],
+  errorMessage,
+}: KeluargaClientProps) {
   const router = useRouter();
 
-  const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [kelurahanFilter, setKelurahanFilter] = useState("");
+  const [search, setSearch] = useState(initialSearch);
+  const [statusFilter, setStatusFilter] = useState<StatusVerifikasi | "">(
+    initialStatus
+  );
+  const [kelurahanFilter, setKelurahanFilter] = useState(initialKelurahan);
+  const [dusunFilter, setDusunFilter] = useState(initialDusun);
   const [modalMode, setModalMode] = useState<ModalMode>(null);
   const [selectedKeluarga, setSelectedKeluarga] = useState<Keluarga | null>(
     null
@@ -298,19 +316,33 @@ export function KeluargaClient({ data, errorMessage }: KeluargaClientProps) {
         ? item.kelurahan === kelurahanFilter
         : true;
 
-      return matchSearch && matchStatus && matchKelurahan;
+      const matchDusun = dusunFilter ? item.dusun === dusunFilter : true;
+
+      return matchSearch && matchStatus && matchKelurahan && matchDusun;
     });
-  }, [data, search, statusFilter, kelurahanFilter]);
+  }, [data, search, statusFilter, kelurahanFilter, dusunFilter]);
 
   const kelurahanList = useMemo(() => {
+    const source =
+      initialKelurahanList.length > 0
+        ? initialKelurahanList
+        : data.map((item) => item.kelurahan);
+
     return Array.from(
-      new Set(
-        data
-          .map((item) => item.kelurahan)
-          .filter((item): item is string => Boolean(item))
-      )
+      new Set(source.filter((item): item is string => Boolean(item)))
     ).sort();
-  }, [data]);
+  }, [data, initialKelurahanList]);
+
+  const dusunList = useMemo(() => {
+    const source =
+      initialDusunList.length > 0
+        ? initialDusunList
+        : data.map((item) => item.dusun);
+
+    return Array.from(
+      new Set(source.filter((item): item is string => Boolean(item)))
+    ).sort();
+  }, [data, initialDusunList]);
 
   const stats = useMemo(() => {
     const total = data.length;
@@ -716,7 +748,7 @@ export function KeluargaClient({ data, errorMessage }: KeluargaClientProps) {
           </button>
         </div>
 
-        <div className="mt-5 grid gap-3 lg:grid-cols-[1fr_220px_240px]">
+        <div className="mt-5 grid gap-3 lg:grid-cols-[1fr_220px_220px_220px]">
           <label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-4 py-3">
             <Search className="h-5 w-5 text-slate-400" />
             <input
@@ -729,7 +761,9 @@ export function KeluargaClient({ data, errorMessage }: KeluargaClientProps) {
 
           <select
             value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
+            onChange={(event) =>
+              setStatusFilter(event.target.value as StatusVerifikasi | "")
+            }
             className="h-12 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-700 outline-none"
           >
             <option value="">Semua Status</option>
@@ -747,6 +781,19 @@ export function KeluargaClient({ data, errorMessage }: KeluargaClientProps) {
           >
             <option value="">Semua Kelurahan</option>
             {kelurahanList.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+
+          <select
+            value={dusunFilter}
+            onChange={(event) => setDusunFilter(event.target.value)}
+            className="h-12 rounded-xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-slate-700 outline-none"
+          >
+            <option value="">Semua Dusun</option>
+            {dusunList.map((item) => (
               <option key={item} value={item}>
                 {item}
               </option>
