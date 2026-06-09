@@ -20,12 +20,12 @@ type KriteriaEditState = {
   bobot_ahp: string;
 };
 
-const formatBobot = (value?: string | null) => {
-  if (!value) {
+const formatBobot = (value?: string | number | null) => {
+  if (value === null || value === undefined || value === "") {
     return "-";
   }
 
-  const parsed = Number.parseFloat(value);
+  const parsed = typeof value === "number" ? value : Number.parseFloat(value);
 
   if (Number.isNaN(parsed)) {
     return "-";
@@ -36,20 +36,24 @@ const formatBobot = (value?: string | null) => {
 
 export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
   const router = useRouter();
+
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
   const [error, setError] = useState("");
   const [deleteError, setDeleteError] = useState("");
+
   const [formState, setFormState] = useState<KriteriaEditState>({
     kode: kriteria.kode,
     nama: kriteria.nama,
     jenis: kriteria.jenis,
     aktif: kriteria.aktif,
     urutan: kriteria.urutan?.toString() ?? "",
-    bobot_ahp: kriteria.bobot_ahp ?? "",
+    bobot_ahp: kriteria.bobot_ahp?.toString() ?? "",
   });
 
   const handleOpenEdit = () => {
@@ -60,12 +64,16 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
       jenis: kriteria.jenis,
       aktif: kriteria.aktif,
       urutan: kriteria.urutan?.toString() ?? "",
-      bobot_ahp: kriteria.bobot_ahp ?? "",
+      bobot_ahp: kriteria.bobot_ahp?.toString() ?? "",
     });
     setIsEditOpen(true);
   };
 
   const handleCloseEdit = () => {
+    if (isSubmitting) {
+      return;
+    }
+
     setIsEditOpen(false);
   };
 
@@ -78,6 +86,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
     if (isDeleting) {
       return;
     }
+
     setIsDeleteOpen(false);
   };
 
@@ -160,6 +169,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
         >
           <Eye className="h-4 w-4" />
         </button>
+
         <button
           type="button"
           onClick={handleOpenEdit}
@@ -168,6 +178,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
         >
           <Pencil className="h-4 w-4" />
         </button>
+
         <button
           type="button"
           onClick={handleOpenDelete}
@@ -190,6 +201,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
             onClick={() => setIsDetailOpen(false)}
             role="presentation"
           />
+
           <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
@@ -200,6 +212,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                   Informasi lengkap kriteria yang dipilih.
                 </p>
               </div>
+
               <button
                 type="button"
                 onClick={() => setIsDetailOpen(false)}
@@ -216,15 +229,19 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                   <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600">
                     Kode: {kriteria.kode}
                   </span>
+
                   <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600">
                     Jenis: {kriteria.jenis}
                   </span>
+
                   <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600">
                     Bobot: {formatBobot(kriteria.bobot_ahp)}
                   </span>
+
                   <span className="rounded-full bg-white px-3 py-1 text-xs font-semibold text-slate-600">
                     Urutan: {kriteria.urutan ?? "-"}
                   </span>
+
                   <span
                     className={`rounded-full px-3 py-1 text-xs font-semibold ${
                       kriteria.aktif
@@ -246,6 +263,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                     {kriteria.nama}
                   </p>
                 </div>
+
                 <div className="rounded-2xl border border-slate-100 bg-white px-4 py-3">
                   <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
                     Status Penggunaan
@@ -281,10 +299,12 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-xs font-semibold text-slate-500">
                             {index + 1}
                           </span>
+
                           <span className="font-semibold text-slate-700">
                             {item.nama}
                           </span>
                         </div>
+
                         <span className="text-sm font-bold text-slate-900">
                           {item.nilai}
                         </span>
@@ -309,6 +329,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
             onClick={handleCloseDelete}
             role="presentation"
           />
+
           <div className="relative w-full max-w-md rounded-3xl bg-white p-6 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
@@ -319,6 +340,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                   Tindakan ini akan menghapus kriteria beserta detailnya.
                 </p>
               </div>
+
               <button
                 type="button"
                 onClick={handleCloseDelete}
@@ -330,7 +352,11 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
             </div>
 
             <p className="mt-5 text-sm text-slate-600">
-              Apakah kamu yakin ingin menghapus kriteria {kriteria.nama}?
+              Apakah kamu yakin ingin menghapus kriteria{" "}
+              <span className="font-semibold text-slate-900">
+                {kriteria.nama}
+              </span>
+              ?
             </p>
 
             {deleteError ? (
@@ -348,6 +374,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
               >
                 Batal
               </button>
+
               <button
                 type="button"
                 onClick={handleDelete}
@@ -368,6 +395,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
             onClick={handleCloseEdit}
             role="presentation"
           />
+
           <div className="relative w-full max-w-lg rounded-3xl bg-white p-6 shadow-xl">
             <div className="flex items-start justify-between">
               <div>
@@ -378,6 +406,7 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                   Perbarui informasi kriteria sesuai kebutuhan.
                 </p>
               </div>
+
               <button
                 type="button"
                 onClick={handleCloseEdit}
@@ -489,9 +518,11 @@ export function KriteriaRowActions({ kriteria }: KriteriaRowActionsProps) {
                   type="button"
                   onClick={handleCloseEdit}
                   className="rounded-2xl border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+                  disabled={isSubmitting}
                 >
                   Batal
                 </button>
+
                 <button
                   type="submit"
                   disabled={isSubmitting}
