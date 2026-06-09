@@ -2,22 +2,45 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || "/backend-api";
 
 type QueryValue = string | number | boolean | null | undefined;
 
+function getAppOrigin() {
+  if (typeof window !== "undefined") {
+    return window.location.origin;
+  }
+
+  if (process.env.NEXT_PUBLIC_APP_URL) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
+  }
+
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+
+  return "http://localhost:3000";
+}
+
 function gabungUrl(endpoint: string) {
   const baseUrl = API_URL.replace(/\/$/, "");
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
 
-  return `${baseUrl}${cleanEndpoint}`;
-}
-
-function bikinUrl(endpoint: string, query?: Record<string, QueryValue>) {
-  const fullPath = gabungUrl(endpoint);
+  const fullPath = `${baseUrl}${cleanEndpoint}`;
 
   const isAbsoluteUrl =
     fullPath.startsWith("http://") || fullPath.startsWith("https://");
 
-  const url = isAbsoluteUrl
-    ? new URL(fullPath)
-    : new URL(fullPath, "https://dummy.local");
+  if (isAbsoluteUrl) {
+    return fullPath;
+  }
+
+  if (typeof window === "undefined") {
+    return `${getAppOrigin()}${fullPath}`;
+  }
+
+  return fullPath;
+}
+
+function bikinUrl(endpoint: string, query?: Record<string, QueryValue>) {
+  const fullUrl = gabungUrl(endpoint);
+  const url = new URL(fullUrl);
 
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
@@ -27,11 +50,11 @@ function bikinUrl(endpoint: string, query?: Record<string, QueryValue>) {
     });
   }
 
-  if (isAbsoluteUrl) {
-    return url.toString();
+  if (typeof window !== "undefined" && API_URL.startsWith("/")) {
+    return `${url.pathname}${url.search}`;
   }
 
-  return `${url.pathname}${url.search}`;
+  return url.toString();
 }
 
 async function handleResponse<T>(response: Response): Promise<T> {
