@@ -1,11 +1,11 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { Suspense, type FormEvent, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Eye, EyeOff, Loader2, Lock, UserRound } from "lucide-react";
 
-export default function LoginPage() {
+function LoginPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -136,5 +136,35 @@ export default function LoginPage() {
         </form>
       </section>
     </main>
+  );
+}
+
+function LoginPageFallback() {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4 py-10 [font-family:var(--font-geist)]">
+      <section className="w-full max-w-md rounded-2xl border border-emerald-100 bg-white p-8 shadow-sm">
+        <div className="text-center">
+          <p className="text-xs font-bold uppercase tracking-[0.2em] text-emerald-700">
+            SPK Bantuan Keluarga Miskin
+          </p>
+
+          <h1 className="mt-3 [font-family:var(--font-oswald)] text-4xl font-bold text-slate-950">
+            Memuat Login...
+          </h1>
+
+          <p className="mt-2 text-sm leading-6 text-slate-500">
+            Menyiapkan halaman masuk akun.
+          </p>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginPageFallback />}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
