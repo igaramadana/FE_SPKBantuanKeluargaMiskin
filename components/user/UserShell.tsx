@@ -1,9 +1,19 @@
+"use client";
+
+import type { ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import {
+  ChevronRight,
   Home,
   LockKeyhole,
+  Menu,
   Medal,
+  PanelLeftClose,
+  PanelLeftOpen,
   UserRound,
+  X,
 } from "lucide-react";
 
 import { LogoutButton } from "@/components/auth/LogoutButton";
@@ -15,7 +25,7 @@ type UserShellMenuHref =
   | "/user/ubah-password";
 
 type UserShellProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   activeHref: UserShellMenuHref;
   title: string;
   description?: string;
@@ -28,55 +38,54 @@ type SidebarItemProps = {
   label: string;
   icon: typeof Home;
   active?: boolean;
+  collapsed?: boolean;
 };
+
+const menuItems: SidebarItemProps[] = [
+  { href: "/user/dashboard", label: "Dashboard", icon: Home },
+  { href: "/user/profil", label: "Profil Saya", icon: UserRound },
+  // { href: "/user/hasil", label: "Hasil Seleksi", icon: Medal },
+  { href: "/user/ubah-password", label: "Ubah Password", icon: LockKeyhole },
+];
+
+function getInitial(name?: string | null) {
+  if (!name) return "W";
+
+  return name.trim().charAt(0).toUpperCase();
+}
 
 function SidebarItem({
   href,
   label,
   icon: Icon,
   active = false,
+  collapsed = false,
 }: SidebarItemProps) {
   return (
     <Link
       href={href}
-      className={[
-        "group flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold transition",
+      title={collapsed ? label : undefined}
+      className={`group flex items-center rounded-xl text-sm font-semibold transition-all ${
+        collapsed ? "h-12 justify-center px-0" : "px-4 py-3"
+      } ${
         active
-          ? "bg-emerald-600 text-white shadow-sm shadow-emerald-100"
-          : "text-slate-500 hover:bg-emerald-50 hover:text-emerald-700",
-      ].join(" ")}
+          ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
+          : "text-slate-600 hover:bg-emerald-50 hover:text-emerald-700"
+      }`}
     >
-      <Icon
-        className={[
-          "h-5 w-5 transition",
-          active ? "text-white" : "text-slate-400 group-hover:text-emerald-700",
-        ].join(" ")}
-      />
-      {label}
-    </Link>
-  );
-}
+      <span
+        className={`transition ${collapsed ? "mr-0" : "mr-3"} ${
+          active ? "text-white" : "text-slate-400 group-hover:text-emerald-600"
+        }`}
+      >
+        <Icon className="h-5 w-5" />
+      </span>
 
-function MobileMenuItem({
-  href,
-  label,
-  active,
-}: {
-  href: UserShellMenuHref;
-  label: string;
-  active?: boolean;
-}) {
-  return (
-    <Link
-      href={href}
-      className={[
-        "rounded-lg border px-3 py-2 text-xs font-bold transition",
-        active
-          ? "border-emerald-600 bg-emerald-600 text-white"
-          : "border-emerald-200 bg-white text-emerald-700 hover:bg-emerald-50",
-      ].join(" ")}
-    >
-      {label}
+      {!collapsed ? <span>{label}</span> : null}
+
+      {!collapsed && active ? (
+        <ChevronRight className="ml-auto h-4 w-4 text-white/80" />
+      ) : null}
     </Link>
   );
 }
@@ -89,136 +98,219 @@ export function UserShell({
   userName,
   userIdentifier,
 }: UserShellProps) {
-  const menuItems: SidebarItemProps[] = [
-    {
-      href: "/user/dashboard",
-      label: "Dashboard",
-      icon: Home,
-    },
-    {
-      href: "/user/profil",
-      label: "Profil Saya",
-      icon: UserRound,
-    },
-    {
-      href: "/user/hasil",
-      label: "Hasil Seleksi",
-      icon: Medal,
-    },
-    {
-      href: "/user/ubah-password",
-      label: "Ubah Password",
-      icon: LockKeyhole,
-    },
-  ];
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
 
-  return (
-    <main className="min-h-screen bg-slate-50 [font-family:var(--font-geist)]">
-      <div className="flex min-h-screen">
-        <aside className="fixed inset-y-0 left-0 z-40 hidden w-72 border-r border-slate-200 bg-white md:flex md:flex-col">
-          <div className="border-b border-slate-100 p-6">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 text-white">
-                <UserRound className="h-5 w-5" />
-              </div>
+  const activeMenu = menuItems.find((item) => item.href === activeHref);
+  const breadcrumbTitle = activeMenu?.label || title;
 
-              <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
-                  SPK
-                </p>
-                <h1 className="text-lg font-bold text-slate-950">
-                  Panel Warga
-                </h1>
-              </div>
-            </div>
-          </div>
-
-          <nav className="flex-1 space-y-2 p-4">
-            {menuItems.map((item) => (
-              <SidebarItem
-                key={item.href}
-                href={item.href}
-                label={item.label}
-                icon={item.icon}
-                active={activeHref === item.href}
+  function SidebarContent({
+    collapsed = false,
+    mobile = false,
+  }: {
+    collapsed?: boolean;
+    mobile?: boolean;
+  }) {
+    return (
+      <aside
+        className={`flex h-full flex-col border-r border-emerald-100 bg-white transition-all duration-300 ease-in-out ${
+          collapsed ? "w-[92px]" : "w-[292px]"
+        }`}
+      >
+        <div
+          className={`flex h-20 items-center ${
+            collapsed ? "justify-center px-4" : "justify-between px-5"
+          }`}
+        >
+          <Link
+            href="/user/dashboard"
+            className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
+            onClick={() => setIsMobileSidebarOpen(false)}
+          >
+            <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl border border-emerald-100 bg-emerald-50 p-0.5 shadow-sm">
+              <Image
+                src="/logospkbansos.png"
+                alt="SIMBANTU"
+                fill
+                className="object-contain"
+                priority
               />
-            ))}
-
-            <LogoutButton />
-          </nav>
-
-          <div className="border-t border-slate-100 p-4">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
-              <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                Akun Login
-              </p>
-
-              <p className="mt-2 text-sm font-bold text-slate-900">
-                {userName || "Warga"}
-              </p>
-
-              <p className="mt-1 break-all text-xs leading-5 text-slate-500">
-                {userIdentifier || "-"}
-              </p>
             </div>
-          </div>
-        </aside>
 
-        <section className="min-w-0 flex-1 md:pl-72">
-          <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/90 px-4 py-4 backdrop-blur md:px-8">
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            {!collapsed ? (
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+                <h1 className="text-xl font-black tracking-tight text-slate-950">
+                  SIMBANTU
+                </h1>
+
+                <p className="text-xs font-medium text-slate-500">
                   Dashboard Warga
                 </p>
+              </div>
+            ) : null}
+          </Link>
 
-                <h2 className="mt-1 text-2xl font-bold text-slate-950">
-                  {title}
-                </h2>
+          {mobile ? (
+            <button
+              type="button"
+              onClick={() => setIsMobileSidebarOpen(false)}
+              className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-emerald-100 bg-white text-slate-600 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 lg:hidden"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          ) : null}
+        </div>
 
-                {description ? (
-                  <p className="mt-1 max-w-2xl text-sm leading-6 text-slate-500">
-                    {description}
+        <nav className={`mt-6 flex-1 space-y-1 ${collapsed ? "px-3" : "px-4"}`}>
+          {!collapsed ? (
+            <p className="mb-3 px-3 text-[11px] font-bold uppercase tracking-[0.2em] text-slate-400">
+              Menu
+            </p>
+          ) : null}
+
+          {menuItems.map((item) => (
+            <SidebarItem
+              key={item.href}
+              href={item.href}
+              label={item.label}
+              icon={item.icon}
+              active={activeHref === item.href}
+              collapsed={collapsed}
+            />
+          ))}
+
+          <LogoutButton
+            label={collapsed ? "" : "Keluar"}
+            className={`mt-2 inline-flex w-full items-center gap-3 rounded-xl text-sm font-bold text-slate-500 transition hover:bg-red-50 hover:text-red-600 ${
+              collapsed ? "h-12 justify-center px-0" : "px-4 py-3"
+            }`}
+            iconClassName="h-5 w-5 text-slate-400 transition group-hover:text-red-600"
+          />
+        </nav>
+
+        <div className="p-4" />
+      </aside>
+    );
+  }
+
+  return (
+    <main className="min-h-screen bg-[#F6FAF7]">
+      <div
+        className={`fixed inset-0 z-50 transition lg:hidden ${
+          isMobileSidebarOpen ? "pointer-events-auto" : "pointer-events-none"
+        }`}
+      >
+        <button
+          type="button"
+          aria-label="Tutup sidebar"
+          onClick={() => setIsMobileSidebarOpen(false)}
+          className={`absolute inset-0 bg-slate-950/40 transition-opacity duration-300 ${
+            isMobileSidebarOpen ? "opacity-100" : "opacity-0"
+          }`}
+        />
+
+        <div
+          className={`relative h-full w-[292px] max-w-[85vw] transform transition-transform duration-300 ease-in-out ${
+            isMobileSidebarOpen ? "translate-x-0" : "-translate-x-full"
+          }`}
+        >
+          <SidebarContent mobile />
+        </div>
+      </div>
+
+      <div
+        className={`grid min-h-screen transition-[grid-template-columns] duration-300 ease-in-out ${
+          isDesktopSidebarOpen
+            ? "lg:grid-cols-[292px_1fr]"
+            : "lg:grid-cols-[92px_1fr]"
+        }`}
+      >
+        <div className="sticky top-0 hidden h-screen lg:block">
+          <SidebarContent collapsed={!isDesktopSidebarOpen} />
+        </div>
+
+        <div className="min-w-0">
+          <header className="sticky top-0 z-30 border-b border-emerald-100 bg-white/85 backdrop-blur-xl">
+            <div className="flex h-20 items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+              <div className="flex min-w-0 items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setIsMobileSidebarOpen(true)}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl border border-emerald-100 bg-white text-slate-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 lg:hidden"
+                >
+                  <Menu className="h-5 w-5" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsDesktopSidebarOpen((prev) => !prev)}
+                  className="hidden h-11 w-11 items-center justify-center rounded-xl border border-emerald-100 bg-white text-slate-700 shadow-sm transition hover:bg-emerald-50 hover:text-emerald-700 lg:inline-flex"
+                >
+                  {isDesktopSidebarOpen ? (
+                    <PanelLeftClose className="h-5 w-5" />
+                  ) : (
+                    <PanelLeftOpen className="h-5 w-5" />
+                  )}
+                </button>
+
+                <div className="min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+                    SIMBANTU
                   </p>
-                ) : null}
+
+                  <h2 className="truncate text-xl font-black tracking-tight text-slate-950 sm:text-2xl">
+                    {title}
+                  </h2>
+                </div>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 md:hidden">
-                <MobileMenuItem
-                  href="/user/dashboard"
-                  label="Dashboard"
-                  active={activeHref === "/user/dashboard"}
-                />
+              <div className="hidden items-center gap-3 rounded-xl border border-slate-200 bg-white px-3 py-2 shadow-sm md:flex">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-emerald-600 text-sm font-black text-white">
+                  {getInitial(userName)}
+                </div>
 
-                <MobileMenuItem
-                  href="/user/profil"
-                  label="Profil"
-                  active={activeHref === "/user/profil"}
-                />
+                <div className="hidden text-left md:block">
+                  <p className="max-w-[150px] truncate text-sm font-bold text-slate-900">
+                    {userName || "Warga"}
+                  </p>
 
-                <MobileMenuItem
-                  href="/user/hasil"
-                  label="Hasil"
-                  active={activeHref === "/user/hasil"}
-                />
-
-                <MobileMenuItem
-                  href="/user/ubah-password"
-                  label="Password"
-                  active={activeHref === "/user/ubah-password"}
-                />
-
-                <LogoutButton
-                  label="Keluar"
-                  className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-bold text-red-600 transition hover:bg-red-50"
-                  iconClassName="hidden"
-                />
+                  <p className="text-xs font-medium text-slate-500">
+                    {userIdentifier || "Pengguna"}
+                  </p>
+                </div>
               </div>
             </div>
           </header>
 
-          <div className="p-4 md:p-8">{children}</div>
-        </section>
+          <section className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
+            <div className="mb-6 overflow-hidden rounded-3xl border border-emerald-100 bg-white shadow-sm">
+              <div className="px-5 py-5 sm:px-6">
+                <nav
+                  aria-label="Breadcrumb"
+                  className="flex flex-wrap items-center gap-2 text-sm"
+                >
+                  <Link
+                    href="/user/dashboard"
+                    className="inline-flex items-center gap-2 rounded-full border border-emerald-100 bg-white px-3 py-1.5 font-semibold text-emerald-700 shadow-sm transition hover:border-emerald-200 hover:bg-emerald-50"
+                  >
+                    <Home className="h-3.5 w-3.5" />
+                    Beranda
+                  </Link>
+
+                  <ChevronRight className="h-4 w-4 text-slate-300" />
+
+                  <span className="inline-flex items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 font-semibold text-slate-700">
+                    {breadcrumbTitle}
+                  </span>
+                </nav>
+              </div>
+            </div>
+
+            {description ? <p className="sr-only">{description}</p> : null}
+
+            {children}
+          </section>
+        </div>
       </div>
     </main>
   );
