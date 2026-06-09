@@ -4,11 +4,8 @@ import type { ImportBatch } from "@/types/import-data";
 import type { Keluarga } from "@/types/keluarga";
 import type { Kriteria } from "@/types/kriteria";
 import type { RiwayatSaw, SawResult } from "@/types/saw";
-import {
-  autoGeneratePenilaianDariImport,
-  hitungSawDariDatabase,
-  simpanPenilaianSaw,
-} from "@/services/saw.service";
+import { autoGeneratePenilaianDataset } from "@/services/import-data.service";
+import { hitungSawDariDatabase, simpanPenilaianSaw } from "@/services/saw.service";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useMemo, useState } from "react";
@@ -319,7 +316,7 @@ export function SawCalculateClient({
     }
 
     if (kriteria.length === 0) {
-      setInfo("error", "Belum ada kriteria aktif C1-C6.");
+      setInfo("error", "Belum ada kriteria aktif C1-C10.");
       return;
     }
 
@@ -332,8 +329,10 @@ export function SawCalculateClient({
     setMessage("");
 
     try {
-      const result = await autoGeneratePenilaianDariImport({
+      const result = await autoGeneratePenilaianDataset({
         import_batch_id: selectedImportBatchId,
+        preview_only: false,
+        limit_preview: 50,
       });
 
       let extraMessage = "";
@@ -346,10 +345,14 @@ export function SawCalculateClient({
 
       setInfo(
         result.total_gagal > 0 ? "info" : "success",
-        `${result.message} Diproses: ${formatAngka(
-          result.total_diproses
-        )}, berhasil: ${formatAngka(
-          result.total_berhasil
+        `${result.message} Raw: ${formatAngka(
+          result.total_raw
+        )}, group keluarga: ${formatAngka(
+          result.total_grouped
+        )}, data warga tersimpan: ${formatAngka(
+          result.total_keluarga_berhasil
+        )}, penilaian C1-C10 tersimpan: ${formatAngka(
+          result.total_penilaian_berhasil
         )}, gagal: ${formatAngka(result.total_gagal)}.${extraMessage}`
       );
 
@@ -522,7 +525,7 @@ export function SawCalculateClient({
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
               Isi nilai setiap kriteria untuk keluarga terverifikasi, atau
               auto-generate nilai dari dataset testing yang sudah punya skor C1
-              sampai C6.
+              sampai C10.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -753,7 +756,7 @@ export function SawCalculateClient({
                   Auto Generate Penilaian
                 </h2>
                 <p className="mt-1 text-sm leading-6 text-slate-500">
-                  Ambil nilai skor C1-C6 dari raw import dataset testing.
+                  Ambil nilai skor C1-C10 dari raw import dataset testing.
                 </p>
               </div>
             </div>
@@ -796,7 +799,7 @@ export function SawCalculateClient({
 
               <p className="text-xs leading-5 text-slate-400">
                 Pastikan data warga sudah terverifikasi dan kriteria aktif
-                memakai kode C1 sampai C6.
+                memakai kode C1 sampai C10.
               </p>
             </div>
           </div>
@@ -829,10 +832,10 @@ export function SawCalculateClient({
 
               <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
                 <p className="font-bold text-amber-800">
-                  2. Kriteria harus pakai kode C1-C6
+                  2. Kriteria harus pakai kode C1-C10
                 </p>
                 <p className="mt-1 text-amber-700">
-                  Auto generate membaca skor_C1 sampai skor_C6 dari raw import.
+                  Auto generate membaca skor C1 sampai C10 dari raw import.
                 </p>
               </div>
 
