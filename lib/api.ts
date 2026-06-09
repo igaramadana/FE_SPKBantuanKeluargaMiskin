@@ -18,16 +18,16 @@ function getAppOrigin() {
   return "http://localhost:3000";
 }
 
+function isAbsoluteUrl(url: string) {
+  return url.startsWith("http://") || url.startsWith("https://");
+}
+
 function gabungUrl(endpoint: string) {
   const baseUrl = API_URL.replace(/\/$/, "");
   const cleanEndpoint = endpoint.startsWith("/") ? endpoint : `/${endpoint}`;
-
   const fullPath = `${baseUrl}${cleanEndpoint}`;
 
-  const isAbsoluteUrl =
-    fullPath.startsWith("http://") || fullPath.startsWith("https://");
-
-  if (isAbsoluteUrl) {
+  if (isAbsoluteUrl(fullPath)) {
     return fullPath;
   }
 
@@ -40,7 +40,10 @@ function gabungUrl(endpoint: string) {
 
 function bikinUrl(endpoint: string, query?: Record<string, QueryValue>) {
   const fullUrl = gabungUrl(endpoint);
-  const url = new URL(fullUrl);
+
+  const url = isAbsoluteUrl(fullUrl)
+    ? new URL(fullUrl)
+    : new URL(fullUrl, getAppOrigin());
 
   if (query) {
     Object.entries(query).forEach(([key, value]) => {
