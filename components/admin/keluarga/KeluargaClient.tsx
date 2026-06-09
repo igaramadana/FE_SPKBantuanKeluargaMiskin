@@ -7,6 +7,7 @@ import type {
   StatusVerifikasi,
 } from "@/types/keluarga";
 import {
+  ambilDetailKeluarga,
   hapusKeluarga,
   tambahKeluarga,
   updateKeluarga,
@@ -64,6 +65,10 @@ type FormState = {
   skor_c4: string;
   skor_c5: string;
   skor_c6: string;
+  skor_c7: string;
+  skor_c8: string;
+  skor_c9: string;
+  skor_c10: string;
 };
 
 const emptyForm: FormState = {
@@ -82,6 +87,10 @@ const emptyForm: FormState = {
   skor_c4: "",
   skor_c5: "",
   skor_c6: "",
+  skor_c7: "",
+  skor_c8: "",
+  skor_c9: "",
+  skor_c10: "",
 };
 
 const statusOptions: {
@@ -114,7 +123,16 @@ const statusOptions: {
 const skorFields: {
   key: keyof Pick<
     FormState,
-    "skor_c1" | "skor_c2" | "skor_c3" | "skor_c4" | "skor_c5" | "skor_c6"
+    | "skor_c1"
+    | "skor_c2"
+    | "skor_c3"
+    | "skor_c4"
+    | "skor_c5"
+    | "skor_c6"
+    | "skor_c7"
+    | "skor_c8"
+    | "skor_c9"
+    | "skor_c10"
   >;
   kode: string;
   label: string;
@@ -123,38 +141,125 @@ const skorFields: {
   {
     key: "skor_c1",
     kode: "C1",
-    label: "Kondisi Rumah",
-    hint: "Semakin tidak layak, skor makin tinggi.",
+    label: "Jumlah Anggota Keluarga",
+    hint: "Semakin banyak anggota/tanggungan, skor makin tinggi.",
   },
   {
     key: "skor_c2",
     kode: "C2",
-    label: "Jumlah Tanggungan",
-    hint: "Semakin banyak tanggungan, skor makin tinggi.",
+    label: "Luas Lantai Rumah",
+    hint: "Kriteria cost. Semakin kecil luas lantai, semakin prioritas.",
   },
   {
     key: "skor_c3",
     kode: "C3",
-    label: "Pekerjaan Kepala Keluarga",
-    hint: "Semakin rentan pekerjaan, skor makin tinggi.",
+    label: "Kondisi Lantai",
+    hint: "Tanah/bambu/semen sederhana mendapat skor lebih tinggi.",
   },
   {
     key: "skor_c4",
     kode: "C4",
-    label: "Kepemilikan Aset",
-    hint: "Untuk cost, semakin mampu/aset besar nilainya makin tinggi.",
+    label: "Kondisi Dinding",
+    hint: "Dinding rusak/material sederhana mendapat skor lebih tinggi.",
   },
   {
     key: "skor_c5",
     kode: "C5",
-    label: "Fasilitas Dasar",
-    hint: "Semakin buruk akses fasilitas, skor makin tinggi.",
+    label: "Kondisi Atap",
+    hint: "Atap rusak/material sederhana mendapat skor lebih tinggi.",
   },
   {
     key: "skor_c6",
     kode: "C6",
-    label: "Pendidikan Kepala Keluarga",
-    hint: "Semakin rendah pendidikan, skor makin tinggi.",
+    label: "Sumber Air Minum",
+    hint: "Air kurang layak seperti air permukaan/hujan mendapat skor tinggi.",
+  },
+  {
+    key: "skor_c7",
+    kode: "C7",
+    label: "Daya Listrik",
+    hint: "Tidak ada listrik/450VA mendapat skor lebih tinggi.",
+  },
+  {
+    key: "skor_c8",
+    kode: "C8",
+    label: "Fasilitas BAB",
+    hint: "Tidak punya fasilitas BAB mendapat skor paling tinggi.",
+  },
+  {
+    key: "skor_c9",
+    kode: "C9",
+    label: "Kepemilikan Kendaraan",
+    hint: "Tidak punya kendaraan mendapat skor paling tinggi.",
+  },
+  {
+    key: "skor_c10",
+    kode: "C10",
+    label: "Kepemilikan Aset dan Ternak",
+    hint: "Semakin sedikit aset/ternak, skor makin tinggi.",
+  },
+];
+
+const simnangkisMappingInfo = [
+  {
+    kode: "C1",
+    label: "Jumlah Anggota Keluarga",
+    sumber: "jml_anggota_keluarga",
+    mapping: "1 anggota=1, 2=2, 3=3, 4-5=4, ≥6=5",
+  },
+  {
+    kode: "C2",
+    label: "Luas Lantai Rumah",
+    sumber: "luas_lantai",
+    mapping: "Nilai asli luas lantai dipakai sebagai cost; semakin kecil semakin prioritas.",
+  },
+  {
+    kode: "C3",
+    label: "Kondisi Lantai",
+    sumber: "lantai",
+    mapping: "Marmer/keramik rendah, semen/bambu/tanah lebih tinggi.",
+  },
+  {
+    kode: "C4",
+    label: "Kondisi Dinding",
+    sumber: "dinding + kondisi_dinding",
+    mapping: "Tembok baik rendah, kayu/bambu/rusak lebih tinggi.",
+  },
+  {
+    kode: "C5",
+    label: "Kondisi Atap",
+    sumber: "atap + kondisi_atap",
+    mapping: "Beton/genteng baik rendah, asbes/bambu/rumbia/rusak lebih tinggi.",
+  },
+  {
+    kode: "C6",
+    label: "Sumber Air Minum",
+    sumber: "sumber_air_minum",
+    mapping: "Air kemasan/ledeng rendah, sumur tak terlindung/air hujan/air permukaan tinggi.",
+  },
+  {
+    kode: "C7",
+    label: "Daya Listrik",
+    sumber: "sumber_penerangan + daya",
+    mapping: "Tidak ada listrik=5, 450VA=4, 900VA=3, 1300VA=2, >1300VA=1.",
+  },
+  {
+    kode: "C8",
+    label: "Fasilitas BAB",
+    sumber: "fas_bab + kloset",
+    mapping: "Sendiri rendah, bersama/umum sedang, tidak ada tinggi.",
+  },
+  {
+    kode: "C9",
+    label: "Kepemilikan Kendaraan",
+    sumber: "ada_sepeda + ada_motor + ada_mobil",
+    mapping: "Mobil=1, motor=2, sepeda=3, tidak punya=5.",
+  },
+  {
+    kode: "C10",
+    label: "Kepemilikan Aset dan Ternak",
+    sumber: "aset rumah tangga + jumlah ternak",
+    mapping: "Aset/ternak banyak rendah, tidak punya aset/ternak tinggi.",
   },
 ];
 
@@ -176,6 +281,43 @@ function formatTanggal(value?: string | null) {
     hour: "2-digit",
     minute: "2-digit",
   }).format(date);
+}
+
+
+function formatNilai(value?: string | number | null) {
+  if (value === undefined || value === null || value === "") return "-";
+
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed)) return String(value);
+
+  return new Intl.NumberFormat("id-ID", {
+    maximumFractionDigits: 4,
+  }).format(parsed);
+}
+
+function getPenilaianByKode(keluarga: Keluarga | null, kode: string) {
+  return keluarga?.penilaian?.find(
+    (item) => item.kode_kriteria?.toUpperCase() === kode.toUpperCase()
+  );
+}
+
+function getScoreBadgeClass(value?: string | number | null) {
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed)) {
+    return "border-slate-200 bg-slate-50 text-slate-500";
+  }
+
+  if (parsed >= 4) {
+    return "border-red-100 bg-red-50 text-red-700";
+  }
+
+  if (parsed >= 3) {
+    return "border-amber-100 bg-amber-50 text-amber-700";
+  }
+
+  return "border-emerald-100 bg-emerald-50 text-emerald-700";
 }
 
 function getStatusLabel(status: StatusVerifikasi) {
@@ -291,6 +433,7 @@ export function KeluargaClient({
   const [selectedKeluarga, setSelectedKeluarga] = useState<Keluarga | null>(
     null
   );
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [form, setForm] = useState<FormState>(emptyForm);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [actionMessage, setActionMessage] = useState("");
@@ -387,10 +530,24 @@ export function KeluargaClient({
     setModalMode("create");
   }
 
-  function openDetailModal(item: Keluarga) {
+  async function openDetailModal(item: Keluarga) {
     setSelectedKeluarga(item);
     setActionMessage("");
     setModalMode("detail");
+    setIsLoadingDetail(true);
+
+    try {
+      const detail = await ambilDetailKeluarga(item.id);
+      setSelectedKeluarga(detail);
+    } catch (error) {
+      setActionMessage(
+        error instanceof Error
+          ? error.message
+          : "Gagal mengambil detail penilaian warga."
+      );
+    } finally {
+      setIsLoadingDetail(false);
+    }
   }
 
   function openEditModal(item: Keluarga) {
@@ -411,6 +568,10 @@ export function KeluargaClient({
       skor_c4: "",
       skor_c5: "",
       skor_c6: "",
+      skor_c7: "",
+      skor_c8: "",
+      skor_c9: "",
+      skor_c10: "",
     });
     setActionMessage("");
     setModalMode("edit");
@@ -666,7 +827,7 @@ export function KeluargaClient({
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-slate-500 sm:text-base">
-              Tambah, edit, verifikasi data warga, dan isi skor penilaian C1-C6
+              Tambah, edit, verifikasi data warga, dan isi skor penilaian C1-C10
               secara manual untuk data yang tidak berasal dari import dataset.
             </p>
 
@@ -986,7 +1147,7 @@ export function KeluargaClient({
                 </h3>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Isi data warga dan skor C1-C6 jika ingin langsung masuk
+                  Isi data warga dan skor C1-C10 jika ingin langsung masuk
                   penilaian SAW.
                 </p>
               </div>
@@ -1141,7 +1302,7 @@ export function KeluargaClient({
                       </p>
 
                       <h4 className="mt-2 [font-family:var(--font-oswald)] text-2xl font-semibold text-slate-950">
-                        Isi Skor C1 - C6
+                        Isi Skor C1 - C10
                       </h4>
 
                       <p className="mt-1 text-sm leading-6 text-slate-500">
@@ -1216,8 +1377,8 @@ export function KeluargaClient({
             className="absolute inset-0 bg-slate-950/55 backdrop-blur-md"
           />
 
-          <div className="relative z-10 w-full max-w-2xl rounded-2xl border border-emerald-100 bg-white p-6 shadow-2xl">
-            <div className="flex items-start justify-between gap-4">
+          <div className="relative z-10 max-h-[90vh] w-full max-w-6xl overflow-y-auto rounded-2xl border border-emerald-100 bg-white shadow-2xl">
+            <div className="sticky top-0 z-20 flex items-start justify-between gap-4 border-b border-slate-100 bg-white/95 p-6 backdrop-blur">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
                   Detail Warga
@@ -1241,72 +1402,207 @@ export function KeluargaClient({
               </button>
             </div>
 
-            <div className="mt-6 grid gap-3 md:grid-cols-2">
-              <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                  Alamat
-                </p>
-                <p className="mt-2 text-sm font-semibold text-slate-700">
-                  {selectedKeluarga.alamat || "-"}
-                </p>
-              </div>
+            <div className="space-y-5 p-6">
+              {actionMessage ? (
+                <div className="flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                  <AlertCircle className="mt-0.5 h-5 w-5 shrink-0" />
+                  <p className="font-semibold">{actionMessage}</p>
+                </div>
+              ) : null}
 
-              <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                  Status
-                </p>
-                <div className="mt-2">
-                  <StatusBadge status={selectedKeluarga.status_verifikasi} />
+              <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Alamat
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-slate-700">
+                    {selectedKeluarga.alamat || "-"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Status
+                  </p>
+                  <div className="mt-2">
+                    <StatusBadge status={selectedKeluarga.status_verifikasi} />
+                  </div>
+                </div>
+
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Kelurahan
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-slate-700">
+                    {selectedKeluarga.kelurahan || "-"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Dusun
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-slate-700">
+                    {selectedKeluarga.dusun || "-"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Jumlah Anggota
+                  </p>
+                  <p className="mt-2 [font-family:var(--font-oswald)] text-3xl font-bold text-slate-950">
+                    {selectedKeluarga.jumlah_anggota || "-"}
+                  </p>
+                </div>
+
+                <div className="rounded-xl bg-slate-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                    Tanggal Dibuat
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-slate-700">
+                    {formatTanggal(selectedKeluarga.created_at)}
+                  </p>
                 </div>
               </div>
 
-              <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                  Kelurahan
-                </p>
-                <p className="mt-2 text-sm font-semibold text-slate-700">
-                  {selectedKeluarga.kelurahan || "-"}
-                </p>
-              </div>
+              <section className="rounded-2xl border border-emerald-100 bg-emerald-50/40 p-5">
+                <div className="flex flex-col gap-3 md:flex-row md:items-start md:justify-between">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+                      Nilai Penilaian SAW
+                    </p>
 
-              <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                  Dusun
-                </p>
-                <p className="mt-2 text-sm font-semibold text-slate-700">
-                  {selectedKeluarga.dusun || "-"}
-                </p>
-              </div>
+                    <h4 className="mt-2 [font-family:var(--font-oswald)] text-2xl font-semibold text-slate-950">
+                      Skor C1 - C10
+                    </h4>
 
-              <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                  Jumlah Anggota
-                </p>
-                <p className="mt-2 [font-family:var(--font-oswald)] text-3xl font-bold text-slate-950">
-                  {selectedKeluarga.jumlah_anggota || "-"}
-                </p>
-              </div>
+                    <p className="mt-1 text-sm leading-6 text-slate-500">
+                      Nilai ini berasal dari input manual atau hasil Auto Generate dari dataset SIMNANGKIS. Skor tinggi berarti keluarga lebih prioritas, kecuali C2 yang diproses sebagai cost saat SAW.
+                    </p>
+                  </div>
 
-              <div className="rounded-xl bg-slate-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
-                  Tanggal Dibuat
-                </p>
-                <p className="mt-2 text-sm font-semibold text-slate-700">
-                  {formatTanggal(selectedKeluarga.created_at)}
-                </p>
-              </div>
+                  {isLoadingDetail ? (
+                    <span className="inline-flex items-center gap-2 rounded-xl border border-emerald-100 bg-white px-4 py-2 text-xs font-bold text-emerald-700">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      Memuat nilai...
+                    </span>
+                  ) : null}
+                </div>
+
+                {selectedKeluarga.penilaian?.length ? (
+                  <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+                    {skorFields.map((item) => {
+                      const penilaian = getPenilaianByKode(selectedKeluarga, item.kode);
+
+                      return (
+                        <div
+                          key={item.kode}
+                          className="rounded-xl border border-white bg-white p-4 shadow-sm"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div>
+                              <p className="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">
+                                {item.kode}
+                              </p>
+                              <h5 className="mt-1 text-sm font-bold leading-5 text-slate-800">
+                                {item.label}
+                              </h5>
+                            </div>
+
+                            <span
+                              className={`inline-flex min-w-12 justify-center rounded-lg border px-2.5 py-1 [font-family:var(--font-oswald)] text-xl font-bold ${getScoreBadgeClass(
+                                penilaian?.nilai_awal
+                              )}`}
+                            >
+                              {formatNilai(penilaian?.nilai_awal)}
+                            </span>
+                          </div>
+
+                          <p className="mt-3 text-xs leading-5 text-slate-500">
+                            {item.hint}
+                          </p>
+
+                          <div className="mt-3 rounded-lg bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-500">
+                            Normalisasi: {formatNilai(penilaian?.nilai_normalisasi)}
+                            <br />
+                            Terbobot: {formatNilai(penilaian?.nilai_terbobot)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="mt-5 rounded-xl border border-dashed border-emerald-200 bg-white p-5 text-center">
+                    <p className="text-sm font-bold text-slate-700">
+                      Nilai C1-C10 belum tersedia.
+                    </p>
+                    <p className="mt-1 text-sm leading-6 text-slate-500">
+                      Jalankan Auto Generate Nilai di menu SAW atau isi nilai manual saat edit data warga.
+                    </p>
+                  </div>
+                )}
+              </section>
+
+              <section className="rounded-2xl border border-slate-100 bg-white p-5 shadow-sm">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-700">
+                    Mapping SIMNANGKIS
+                  </p>
+
+                  <h4 className="mt-2 [font-family:var(--font-oswald)] text-2xl font-semibold text-slate-950">
+                    Acuan Konversi Dataset ke C1-C10
+                  </h4>
+
+                  <p className="mt-1 text-sm leading-6 text-slate-500">
+                    Ringkasan ini mengikuti file backend <b>simnangkis_mapping.py</b>. Gunanya supaya admin tahu kolom dataset mana yang menjadi nilai setiap kriteria.
+                  </p>
+                </div>
+
+                <div className="mt-5 overflow-x-auto rounded-xl border border-slate-100">
+                  <table className="w-full min-w-[850px] border-collapse">
+                    <thead className="bg-slate-50">
+                      <tr className="border-b border-slate-100 text-left text-xs font-bold uppercase tracking-[0.14em] text-slate-400">
+                        <th className="px-4 py-3">Kode</th>
+                        <th className="px-4 py-3">Kriteria</th>
+                        <th className="px-4 py-3">Kolom Dataset</th>
+                        <th className="px-4 py-3">Mapping Ringkas</th>
+                      </tr>
+                    </thead>
+
+                    <tbody className="divide-y divide-slate-100">
+                      {simnangkisMappingInfo.map((item) => (
+                        <tr key={item.kode} className="align-top text-sm">
+                          <td className="px-4 py-3 font-bold text-emerald-700">
+                            {item.kode}
+                          </td>
+                          <td className="px-4 py-3 font-semibold text-slate-800">
+                            {item.label}
+                          </td>
+                          <td className="px-4 py-3 font-mono text-xs font-semibold text-slate-500">
+                            {item.sumber}
+                          </td>
+                          <td className="px-4 py-3 leading-6 text-slate-500">
+                            {item.mapping}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </section>
+
+              {selectedKeluarga.catatan_admin ? (
+                <div className="rounded-xl border border-amber-100 bg-amber-50 p-4">
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-amber-700">
+                    Catatan Admin
+                  </p>
+                  <p className="mt-2 text-sm leading-6 text-amber-800">
+                    {selectedKeluarga.catatan_admin}
+                  </p>
+                </div>
+              ) : null}
             </div>
-
-            {selectedKeluarga.catatan_admin ? (
-              <div className="mt-3 rounded-xl border border-amber-100 bg-amber-50 p-4">
-                <p className="text-xs font-bold uppercase tracking-[0.14em] text-amber-700">
-                  Catatan Admin
-                </p>
-                <p className="mt-2 text-sm leading-6 text-amber-800">
-                  {selectedKeluarga.catatan_admin}
-                </p>
-              </div>
-            ) : null}
           </div>
         </div>
       ) : null}

@@ -5,38 +5,23 @@ import { adminMenu } from "@/constants/admin-menu";
 import { ambilImportBatch } from "@/services/import-data.service";
 import { ambilSemuaKeluarga } from "@/services/keluarga.service";
 import { ambilSemuaKriteria } from "@/services/kriteria.service";
-import {
-  ambilHasilSawTerbaru,
-  ambilRiwayatSaw,
-} from "@/services/saw.service";
 import type { ImportBatch } from "@/types/import-data";
 import type { Keluarga } from "@/types/keluarga";
 import type { Kriteria } from "@/types/kriteria";
-import type { RiwayatSaw, SawResult } from "@/types/saw";
 
 export default async function AdminSawPage() {
   const session = await auth();
 
   let keluarga: Keluarga[] = [];
   let kriteria: Kriteria[] = [];
-  let hasilSaw: SawResult[] = [];
-  let riwayatSaw: RiwayatSaw[] = [];
   let importBatches: ImportBatch[] = [];
   let errorMessage = "";
 
-  const [
-    keluargaResult,
-    kriteriaResult,
-    hasilResult,
-    riwayatResult,
-    importBatchResult,
-  ] = await Promise.allSettled([
+  const [keluargaResult, kriteriaResult, importBatchResult] = await Promise.allSettled([
     ambilSemuaKeluarga({
       status_verifikasi: "terverifikasi",
     }),
     ambilSemuaKriteria(),
-    ambilHasilSawTerbaru(),
-    ambilRiwayatSaw(),
     ambilImportBatch(),
   ]);
 
@@ -48,13 +33,6 @@ export default async function AdminSawPage() {
     kriteria = kriteriaResult.value;
   }
 
-  if (hasilResult.status === "fulfilled") {
-    hasilSaw = hasilResult.value;
-  }
-
-  if (riwayatResult.status === "fulfilled") {
-    riwayatSaw = riwayatResult.value;
-  }
 
   if (importBatchResult.status === "fulfilled") {
     importBatches = importBatchResult.value;
@@ -63,8 +41,6 @@ export default async function AdminSawPage() {
   const rejected = [
     keluargaResult,
     kriteriaResult,
-    hasilResult,
-    riwayatResult,
     importBatchResult,
   ].find((item) => item.status === "rejected");
 
@@ -89,7 +65,7 @@ export default async function AdminSawPage() {
   return (
     <DashboardShell
       title="Penilaian SAW"
-      description="Input nilai kriteria, auto-generate dari dataset, simpan penilaian, lalu jalankan perhitungan ranking bantuan."
+      description="Generate nilai C1-C10 dari dataset atau Data Warga, lalu jalankan perhitungan SAW."
       userName={session?.user?.name || "Admin"}
       role="admin"
       menu={adminMenu}
@@ -98,8 +74,6 @@ export default async function AdminSawPage() {
       <SawCalculateClient
         keluarga={keluarga}
         kriteria={kriteriaAktif}
-        hasilSaw={hasilSaw}
-        riwayatSaw={riwayatSaw}
         importBatches={importBatches}
         errorMessage={errorMessage}
         userName={session?.user?.name || "Admin"}

@@ -9,6 +9,20 @@ export type PenilaianManualItem = {
   nilai_awal: number;
 };
 
+export type PenilaianKeluarga = {
+  id: string;
+  keluarga_id: string;
+  kriteria_id: string;
+  kode_kriteria: string;
+  nama_kriteria: string;
+  sub_kriteria_id?: string | null;
+  nilai_awal: string | number;
+  nilai_normalisasi?: string | number | null;
+  nilai_terbobot?: string | number | null;
+  created_at?: string | null;
+  updated_at?: string | null;
+};
+
 export type Keluarga = {
   id: string;
   user_id?: string | null;
@@ -23,6 +37,7 @@ export type Keluarga = {
   created_by?: string | null;
   created_at?: string | null;
   updated_at?: string | null;
+  penilaian?: PenilaianKeluarga[];
 };
 
 export type KeluargaCreatePayload = {
@@ -62,17 +77,7 @@ export type KeluargaMutationResponse = {
   message: string;
   data: Keluarga;
   user_account?: UserAccountInfo | null;
-  penilaian?: {
-    id: string;
-    keluarga_id: string;
-    kriteria_id: string;
-    sub_kriteria_id?: string | null;
-    nilai_awal: string | number;
-    nilai_normalisasi?: string | number | null;
-    nilai_terbobot?: string | number | null;
-    created_at?: string | null;
-    updated_at?: string | null;
-  }[];
+  penilaian?: PenilaianKeluarga[];
 };
 
 export type VerifikasiKeluargaPayload = {
