@@ -47,9 +47,21 @@ export type KeluargaUpdatePayload = {
   penilaian?: PenilaianManualItem[];
 };
 
+export type UserAccountInfo = {
+  created: boolean;
+  already_exists?: boolean;
+  linked?: boolean;
+  user_id?: string | null;
+  email?: string | null;
+  nik?: string | null;
+  password_awal?: string | null;
+  message?: string;
+};
+
 export type KeluargaMutationResponse = {
   message: string;
   data: Keluarga;
+  user_account?: UserAccountInfo | null;
   penilaian?: {
     id: string;
     keluarga_id: string;
@@ -66,4 +78,9 @@ export type KeluargaMutationResponse = {
 export type VerifikasiKeluargaPayload = {
   status_verifikasi: StatusVerifikasi;
   catatan_admin?: string;
+  /**
+   * Jika true dan status_verifikasi = "terverifikasi", backend akan membuat
+   * akun user otomatis untuk warga yang belum punya akun.
+   */
+  create_user_account?: boolean;
 };

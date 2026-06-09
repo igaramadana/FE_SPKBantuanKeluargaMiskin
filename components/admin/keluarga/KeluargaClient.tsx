@@ -592,16 +592,52 @@ export function KeluargaClient({
 
     if (!selectedKeluarga) return;
 
+    const shouldCreateUserAccount =
+      form.status_verifikasi === "terverifikasi" && !selectedKeluarga.user_id;
+
     setIsSubmitting(true);
     setActionMessage("");
 
     try {
-      await verifikasiKeluarga(selectedKeluarga.id, {
+      const result = await verifikasiKeluarga(selectedKeluarga.id, {
         status_verifikasi: form.status_verifikasi,
         catatan_admin: form.catatan_admin.trim() || undefined,
+        create_user_account: form.status_verifikasi === "terverifikasi",
       });
 
-      setInfo("success", "Status verifikasi berhasil diperbarui.");
+      const account = result.user_account;
+
+      if (form.status_verifikasi === "terverifikasi") {
+        if (account?.created) {
+          setInfo(
+            "success",
+            `Data warga berhasil diverifikasi dan akun user otomatis dibuat. Login user: NIK ${
+              account.nik || selectedKeluarga.nik
+            }, password awal: ${account.password_awal || selectedKeluarga.nik}.`
+          );
+        } else if (account?.linked || account?.already_exists) {
+          setInfo(
+            "success",
+            account.message ||
+              "Data warga berhasil diverifikasi. Akun user sudah tersedia dan terhubung."
+          );
+        } else if (selectedKeluarga.user_id) {
+          setInfo(
+            "success",
+            "Data warga berhasil diverifikasi. Warga ini sudah punya akun user."
+          );
+        } else {
+          setInfo(
+            "success",
+            shouldCreateUserAccount
+              ? "Data warga berhasil diverifikasi. Jika backend sudah dipatch, akun user otomatis dibuat."
+              : "Status verifikasi berhasil diperbarui."
+          );
+        }
+      } else {
+        setInfo("success", "Status verifikasi berhasil diperbarui.");
+      }
+
       closeModal();
       router.refresh();
     } catch (error) {
@@ -1298,7 +1334,8 @@ export function KeluargaClient({
                 </h3>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  Ubah status validasi data warga.
+                  Ubah status validasi data warga. Jika status dibuat
+                  terverifikasi, sistem akan mencoba membuat akun user otomatis.
                 </p>
               </div>
 
@@ -1319,6 +1356,20 @@ export function KeluargaClient({
             ) : null}
 
             <div className="mt-6 space-y-4">
+              <div className="rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm leading-6 text-emerald-800">
+                {selectedKeluarga.user_id ? (
+                  <p className="font-semibold">
+                    Warga ini sudah punya akun user yang terhubung.
+                  </p>
+                ) : (
+                  <p>
+                    Kalau status diubah menjadi <b>Terverifikasi</b>, backend akan
+                    membuat akun user otomatis. Login warga memakai NIK, dan
+                    password awal memakai NIK.
+                  </p>
+                )}
+              </div>
+
               <label className="space-y-2 block">
                 <span className="text-sm font-bold text-slate-700">
                   Status Verifikasi
@@ -1377,7 +1428,9 @@ export function KeluargaClient({
                 {isSubmitting ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : null}
-                Simpan
+                {form.status_verifikasi === "terverifikasi" && !selectedKeluarga.user_id
+                  ? "Verifikasi & Buat Akun"
+                  : "Simpan"}
               </button>
             </div>
           </form>
