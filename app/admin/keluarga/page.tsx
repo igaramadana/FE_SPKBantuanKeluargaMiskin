@@ -14,12 +14,27 @@ type PageProps = {
   }>;
 };
 
+const statusVerifikasiOptions: StatusVerifikasi[] = [
+  "pending",
+  "terverifikasi",
+  "ditolak",
+  "perlu_perbaikan",
+];
+
+function isStatusVerifikasi(value: string): value is StatusVerifikasi {
+  return statusVerifikasiOptions.includes(value as StatusVerifikasi);
+}
+
 export default async function AdminKeluargaPage({ searchParams }: PageProps) {
   const session = await auth();
   const params = await searchParams;
 
   const search = params?.search ?? "";
-  const status = params?.status_verifikasi ?? "";
+  const rawStatus = params?.status_verifikasi ?? "";
+  const status: StatusVerifikasi | "" = isStatusVerifikasi(rawStatus)
+    ? rawStatus
+    : "";
+
   const kelurahan = params?.kelurahan ?? "";
   const dusun = params?.dusun ?? "";
 
@@ -31,7 +46,7 @@ export default async function AdminKeluargaPage({ searchParams }: PageProps) {
     const [filteredData, rawData] = await Promise.all([
       ambilSemuaKeluarga({
         search,
-        status_verifikasi: status as StatusVerifikasi | "",
+        status_verifikasi: status,
         kelurahan,
         dusun,
       }),
