@@ -89,7 +89,7 @@ export async function apiGet<T>(
   return handleResponse<T>(response);
 }
 
-export async function apiPost<TResponse, TBody>(
+export async function apiPost<TResponse, TBody = unknown>(
   endpoint: string,
   body: TBody
 ): Promise<TResponse> {
@@ -104,7 +104,7 @@ export async function apiPost<TResponse, TBody>(
   return handleResponse<TResponse>(response);
 }
 
-export async function apiPut<TResponse, TBody>(
+export async function apiPut<TResponse, TBody = unknown>(
   endpoint: string,
   body: TBody
 ): Promise<TResponse> {
@@ -119,7 +119,7 @@ export async function apiPut<TResponse, TBody>(
   return handleResponse<TResponse>(response);
 }
 
-export async function apiPatch<TResponse, TBody>(
+export async function apiPatch<TResponse, TBody = unknown>(
   endpoint: string,
   body: TBody
 ): Promise<TResponse> {
